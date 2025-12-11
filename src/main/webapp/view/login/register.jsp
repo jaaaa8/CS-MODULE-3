@@ -1,3 +1,4 @@
+
 <%--
   Created by IntelliJ IDEA.
   User: DELL G3
@@ -6,11 +7,63 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Title</title>
+    <c:import url="${pageContext.request.contextPath}/view/customer/layout/library.jsp"/>
 </head>
 <body>
+<c:import url="${pageContext.request.contextPath}/view/customer/layout/navbar.jsp" />
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card p-4 shadow-sm" style="width: 450px; border-radius: 12px;">
 
+        <h3 class="text-center mb-3 fw-bold text-danger">Tạo Tài Khoản</h3>
+        <p class="text-center text-secondary">Điền thông tin để đăng ký</p>
+
+        <form action="/register" method="post">
+
+            <!-- Full Name -->
+            <div class="mb-3">
+                <label class="form-label">Họ và tên</label>
+                <input type="text" class="form-control" name="fullName" required>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3">
+                <label class="form-label">Số điện thoại</label>
+                <input type="text" class="form-control" name="phone" required maxlength="10">
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label class="form-label">Mật khẩu</label>
+                <input type="password" class="form-control" name="password" required minlength="6">
+            </div>
+
+            <!-- Confirm -->
+            <div class="mb-3">
+                <label class="form-label">Nhập lại mật khẩu</label>
+                <input type="password" class="form-control" name="confirm" required minlength="6">
+            </div>
+
+            <button class="btn btn-danger w-100 py-2 fw-bold">Đăng ký</button>
+
+            <div class="text-center mt-3">
+                Đã có tài khoản?
+                <a href="login.jsp" class="text-danger fw-bold text-decoration-none">Đăng nhập</a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<c:import url="${pageContext.request.contextPath}/view/customer/layout/footer.jsp" />
 </body>
 </html>
