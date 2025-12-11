@@ -1,4 +1,4 @@
-package dto;
+package data;
 
 public class DataToObject {
 }
