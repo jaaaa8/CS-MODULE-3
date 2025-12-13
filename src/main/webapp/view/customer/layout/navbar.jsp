@@ -128,7 +128,7 @@
     <div class="container-fluid">
 
         <!-- LOGO -->
-        <a class="navbar-brand d-flex align-items-center" href="../home/home.jsp">
+        <a class="navbar-brand d-flex align-items-center" href="${pageContext.request.contextPath}/view/customer/home/home.jsp">
             <p class="mb-0 logo-text fw-bold fs-4">TTT.COM</p>
         </a>
 

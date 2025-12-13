@@ -35,74 +35,44 @@
     <div class="row g-4">
 
         <!-- CARD SẢN PHẨM -->
-        <div class="col-md-3">
-            <div class="card h-100 shadow-sm product-card">
-                <img src="https://m.media-amazon.com/images/I/81cL2H23nVL._AC_UF1000,1000_QL80_.jpg"
-                     class="card-img-top" alt="book">
+        <div class="row g-4">
 
-                <div class="card-body">
-                    <h5 class="card-title">Iron Flame</h5>
-                    <p class="text-muted mb-1">Rebecca Yarros</p>
-                    <span class="badge bg-secondary">Bìa cứng</span>
-                    <h5 class="fw-bold mt-2 text-danger">$18.99</h5>
-                </div>
+            <c:forEach items="${productList}" var="p">
+                <div class="col-md-3">
+                    <div class="card h-100 shadow-sm product-card">
 
-                <div class="card-footer bg-white border-0">
-                    <a href="../product/detail.jsp" class="btn btn-outline-danger w-100">Xem chi tiết</a>
+                        <img src="${p.imgURL}"
+                             class="card-img-top"
+                             alt="${p.title}"
+                             onerror="this.src='https://via.placeholder.com/300x400'">
+
+                        <div class="card-body">
+                            <h5 class="card-title">${p.title}</h5>
+                            <p class="text-muted mb-1">${p.authorName}</p>
+
+                            <span class="badge bg-secondary">
+                                    ${p.categoryName}
+                            </span>
+
+                            <h5 class="fw-bold mt-2 text-danger">
+                                $${p.price}
+                            </h5>
+                        </div>
+
+                        <div class="card-footer bg-white border-0">
+                            <a href="/products?action=detail&id=${p.id}"
+                               class="btn btn-outline-danger w-100">
+                                Xem chi tiết
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </c:forEach>
+
         </div>
 
-        <!-- CARD 2 -->
-        <div class="col-md-3">
-            <div class="card h-100 shadow-sm product-card">
-                <img src="https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1733493019i/127305853.jpg"
-                     class="card-img-top" alt="book">
-                <div class="card-body">
-                    <h5 class="card-title">The Women</h5>
-                    <p class="text-muted mb-1">Kristin Hannah</p>
-                    <span class="badge bg-primary">Bìa cứng</span>
-                    <h5 class="fw-bold mt-2 text-danger">$21.00</h5>
-                </div>
-                <div class="card-footer bg-white border-0">
-                    <a href="../product/detail.jsp" class="btn btn-outline-danger w-100">Xem chi tiết</a>
-                </div>
-            </div>
-        </div>
 
-        <!-- CARD 3 -->
-        <div class="col-md-3">
-            <div class="card h-100 shadow-sm product-card">
-                <img src="https://m.media-amazon.com/images/I/71aFt4+OTOL.jpg"
-                     class="card-img-top" alt="book">
-                <div class="card-body">
-                    <h5 class="card-title">The Alchemist</h5>
-                    <p class="text-muted mb-1">Paulo Coelho</p>
-                    <span class="badge bg-success">Bìa mềm</span>
-                    <h5 class="fw-bold mt-2 text-danger">$14.50</h5>
-                </div>
-                <div class="card-footer">
-                    <a href="../product/detail.jsp" class="btn btn-outline-danger w-100">Xem chi tiết</a>
-                </div>
-            </div>
-        </div>
 
-        <!-- CARD 4 -->
-        <div class="col-md-3">
-            <div class="card h-100 shadow-sm product-card">
-                <img src="https://m.media-amazon.com/images/I/91uwocAMtSL.jpg"
-                     class="card-img-top" alt="book">
-                <div class="card-body">
-                    <h5 class="card-title">Harry Potter</h5>
-                    <p class="text-muted mb-1">J.K. Rowling</p>
-                    <span class="badge bg-warning">Bộ sách</span>
-                    <h5 class="fw-bold mt-2 text-danger">$65.00</h5>
-                </div>
-                <div class="card-footer">
-                    <a href="../product/detail.jsp" class="btn btn-outline-danger w-100">Xem chi tiết</a>
-                </div>
-            </div>
-        </div>
 
     </div>
 </section>
