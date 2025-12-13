@@ -87,7 +87,7 @@
                 <p class="mini-item-title">${title}</p>
                 <p class="mini-item-price">$${itemTotal.toFixed(2)} x ${qty}</p>
             </div>
-            <span class="mini-delete" data-id="${id}">&times;</span>
+            <span class="mini-delete" dto-id="${id}">&times;</span>
         `;
       miniItemsContainer.appendChild(miniItem);
     });
@@ -142,7 +142,7 @@
     document.querySelectorAll('.mini-delete').forEach(btn=>{
       btn.addEventListener('click',()=>{
         const id=btn.dataset.id;
-        const card=document.querySelector(`.cart-item[data-id="${id}"]`);
+        const card=document.querySelector(`.cart-item[dto-id="${id}"]`);
         if(card){ card.classList.add('fade-out'); setTimeout(()=>{card.remove();updateTotals();},300);}
       });
     });
