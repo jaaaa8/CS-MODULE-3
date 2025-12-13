@@ -75,4 +75,22 @@ CREATE TABLE OrderItem (
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),
     FOREIGN KEY (book_id) REFERENCES Book(book_id)
 );
+INSERT INTO publisher (name, address, phone) VALUES
+                                                 ('NXB Trẻ', 'TP. Hồ Chí Minh', '02838201234'),
+                                                 ('NXB Kim Đồng', 'Hà Nội', '02439434730'),
+                                                 ('NXB Giáo Dục', 'Hà Nội', '02437471234'),
+                                                 ('NXB Lao Động', 'Hà Nội', '02438522345'),
+                                                 ('NXB Văn Học', 'TP. Hồ Chí Minh', '02839301234');
+INSERT INTO category (name) VALUES
+                                ('Văn học'),
+                                ('Khoa học'),
+                                ('Thiếu nhi'),
+                                ('Công nghệ thông tin'),
+                                ('Kinh tế');
+INSERT INTO author (name, bio) VALUES
+                                   ('Nguyễn Nhật Ánh', 'Nhà văn nổi tiếng với các tác phẩm dành cho thiếu nhi.'),
+                                   ('Paulo Coelho', 'Nhà văn người Brazil, tác giả của "Nhà giả kim".'),
+                                   ('Dale Carnegie', 'Chuyên gia về phát triển bản thân và giao tiếp.'),
+                                   ('J.K. Rowling', 'Tác giả bộ truyện Harry Potter nổi tiếng thế giới.'),
+                                   ('Robert C. Martin', 'Chuyên gia phần mềm, tác giả Clean Code.');
 
