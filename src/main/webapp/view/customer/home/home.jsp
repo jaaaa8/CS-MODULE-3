@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -16,7 +16,9 @@
     <c:import url="../layout/library.jsp"/>
 </head>
 <body class="d-flex flex-column min-vh-100">
+
 <c:import url="../layout/navbar.jsp" />
+
 <!-- HERO BANNER -->
 <section class="mt-5 pt-5">
     <div class="container mt-4">
@@ -32,9 +34,8 @@
 <section class="container my-5" id="products">
     <h2 class="fw-bold mb-4 text-danger"><i class="bi bi-stars"></i> Sách nổi bật</h2>
 
-    <div class="row g-4">
-
         <!-- CARD SẢN PHẨM -->
+
         <div class="row g-4">
 
             <c:forEach items="${productList}" var="p">
@@ -65,16 +66,12 @@
                                 Xem chi tiết
                             </a>
                         </div>
+
                     </div>
                 </div>
             </c:forEach>
 
         </div>
-
-
-
-
-    </div>
 </section>
 <c:import url="../layout/footer.jsp" />
 </body>

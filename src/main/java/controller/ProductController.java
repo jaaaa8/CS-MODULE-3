@@ -12,9 +12,12 @@ import service.ProductService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "CustomerController", urlPatterns = "/customers")
+
+@WebServlet(name = "ProductController", urlPatterns = "/products")
 public class ProductController extends HttpServlet {
+
     private IProductService productService = new ProductService();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -32,28 +35,32 @@ public class ProductController extends HttpServlet {
         }
     }
 
-    private void search(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        String searchTitle = req.getParameter("searchTitle");
-        String searchAuthorName = req.getParameter("searchAuthorName");
-
-        List<ProductDto> productList =
-                productService.search(searchTitle, null, searchAuthorName, null);
-
-        req.setAttribute("productList", productList);
-        req.setAttribute("searchTitle", searchTitle);
-        req.setAttribute("searchAuthorName", searchAuthorName);
-
-        req.getRequestDispatcher("/view/home.jsp").forward(req, resp);
-    }
-
     private void showProductsToHome(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        req.setAttribute("productList", productService.findAll());
-        req.getRequestDispatcher("/view/home.jsp").forward(req, resp);
+        List<ProductDto> productList = productService.findAll();
+        System.out.println("Product size = " + productList.size());
+
+        req.setAttribute("productList", productList);
+        req.getRequestDispatcher("/view/customer/home/home.jsp")
+                .forward(req, resp);
     }
+
+    private void search(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String keyword = req.getParameter("keyword");
+
+        List<ProductDto> productList =
+                productService.search(keyword);
+
+        req.setAttribute("productList", productList);
+        req.setAttribute("keyword", keyword);
+
+        req.getRequestDispatcher("/view/customer/home/home.jsp")
+                .forward(req, resp);
+    }
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -61,3 +68,4 @@ public class ProductController extends HttpServlet {
         doGet(req, resp);
     }
 }
+
