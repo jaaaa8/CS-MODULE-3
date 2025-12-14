@@ -61,7 +61,7 @@
                         </div>
 
                         <div class="card-footer bg-white border-0">
-                            <a href="/products?action=detail&id=${p.id}"
+                            <a href="${pageContext.request.contextPath}/products?action=detail&id=${p.id}"
                                class="btn btn-outline-danger w-100">
                                 Xem chi tiết
                             </a>

@@ -26,6 +26,9 @@ public class ProductController extends HttpServlet {
         if (action == null) action = "";
 
         switch (action) {
+            case "detail":
+                showDetail(req, resp);
+                break;
             case "search":
                 search(req, resp);
                 break;
@@ -34,6 +37,21 @@ public class ProductController extends HttpServlet {
                 break;
         }
     }
+
+    private void showDetail(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        int id = Integer.parseInt(req.getParameter("id"));
+
+        ProductDto product = productService.findById(id);
+
+        req.setAttribute("product", product);
+
+        req.getRequestDispatcher(
+                "/view/customer/product/detail.jsp"
+        ).forward(req, resp);
+    }
+
 
     private void showProductsToHome(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
