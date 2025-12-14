@@ -9,6 +9,7 @@ import java.util.List;
 
 public class AccountService implements IAccountService {
     private final IAccountRepository accountRepository = new repository.AccountRepository();
+
     @Override
     public List<AccountDto> getAllAccounts() {
         return accountRepository.getAllAccounts();
