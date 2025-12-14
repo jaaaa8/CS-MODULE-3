@@ -128,7 +128,7 @@
     <div class="container-fluid">
 
         <!-- LOGO -->
-        <a class="navbar-brand d-flex align-items-center" href="../home/home.jsp">
+        <a class="navbar-brand d-flex align-items-center" href="${pageContext.request.contextPath}/products">
             <p class="mb-0 logo-text fw-bold fs-4">TTT.COM</p>
         </a>
 
@@ -184,10 +184,27 @@
             </ul>
 
             <!-- SEARCH -->
-            <form class="d-flex mx-auto" role="search" style="width:500px; max-width: 100%;">
-                <input class="form-control me-2 shadow-sm" type="search" placeholder="Tìm kiếm sách...">
-                <button class="btn btn-light shadow-sm" type="submit"><i class="bi bi-search"></i></button>
+            <form class="d-flex mx-auto gap-2"
+                  role="search"
+                  action="${pageContext.request.contextPath}/products"
+                  method="get"
+                  style="width:500px; max-width: 100%;">
+
+                <input type="hidden" name="action" value="search">
+
+                <input class="form-control shadow-sm"
+                       type="search"
+                       name="keyword"
+                       value="${keyword}"
+                       placeholder="Tìm theo tên sách hoặc tác giả...">
+
+                <button class="btn btn-light shadow-sm" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
             </form>
+
+
+
 
             <ul class="navbar-nav ms-auto align-items-center">
 
@@ -202,9 +219,9 @@
                 <li class="nav-item me-3 position-relative cart-wrapper">
 
                     <!-- CLICK → chuyển trang -->
-                    <a class="btn text-white position-relative cart-link" href="../cart/cart.jsp">
+                    <a class="btn text-white position-relative cart-link"
+                       href="${pageContext.request.contextPath}/view/customer/cart/cart.jsp">
                         <i class="bi bi-cart-fill me-1"></i>Giỏ hàng
-                        <span class="cart-count" id="cart-count-header">3</span>
                     </a>
 
                     <!-- MINI CART -->
@@ -220,8 +237,10 @@
                             <span id="mini-total" class="text-danger">0₫</span>
                         </div>
 
-                        <a href="../payment/payment.jsp" class="btn btn-danger w-100 mt-2">Thanh Toán</a>
-
+                        <a href="${pageContext.request.contextPath}/view/customer/payment/payment.jsp"
+                           class="btn btn-danger w-100 mt-2">
+                            Thanh Toán
+                        </a>
                     </div>
                 </li>
 
