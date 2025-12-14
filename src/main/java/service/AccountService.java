@@ -1,4 +1,37 @@
 package service;
 
-public class AccountService {
+import dto.AccountDto;
+import entity.Account;
+import repository.impl.IAccountRepository;
+import service.impl.IAccountService;
+
+import java.util.List;
+
+public class AccountService implements IAccountService {
+    private final IAccountRepository accountRepository = new repository.AccountRepository();
+
+    @Override
+    public List<AccountDto> getAllAccounts() {
+        return accountRepository.getAllAccounts();
+    }
+
+    @Override
+    public boolean addNewAccount(Account account) {
+        return accountRepository.addNewAccount(account);
+    }
+
+    @Override
+    public boolean updatePassword(int accountId, String newPassword) {
+        return accountRepository.updatePassword(accountId, newPassword);
+    }
+
+    @Override
+    public boolean deleteAccount(int accountId) {
+        return accountRepository.deleteAccount(accountId);
+    }
+
+    @Override
+    public Account findAccountByUsername(String username) {
+        return accountRepository.findAccountByUsername(username);
+    }
 }
