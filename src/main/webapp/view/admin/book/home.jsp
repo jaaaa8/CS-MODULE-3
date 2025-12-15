@@ -15,8 +15,8 @@
 </head>
 <body>
 <h1>Book List</h1>
-<a class="btn btn-sm btn-success" href="/book?action=add">Add new product</a>
-<input type="text" name="search"><a class="btn btn-sm btn-primary" href="/book?action=search">Search</a>
+<a class="btn btn-sm btn-success" href="${pageContext.request.contextPath}/book?action=add">Add new product</a>
+<input type="text" name="search"><a class="btn btn-sm btn-primary" href="${pageContext.request.contextPath}/book?action=search">Search</a>
 <h2>${param.mess}</h2>
 
 <table class="table table-sub-heading-color table-striped">
@@ -70,7 +70,7 @@
 <div class="modal fade" id="exampleModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/book?action=delete" method="post">
+            <form action="${pageContext.request.contextPath}/book?action=delete" method="post">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5">Delete Product</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

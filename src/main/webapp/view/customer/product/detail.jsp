@@ -1,9 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: DELL G3
-  Date: 12/2/2025
-  Time: 2:10 PM
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -12,66 +6,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Chi tiết sản phẩm | TTT Bookstore</title>
+    <title>${product.title} | TTT Bookstore</title>
+
     <c:import url="../layout/library.jsp"/>
+
+    <style>
+        /* ===================== */
+        /* IMAGE FIX */
+        /* ===================== */
+        .product-main-img {
+            width: 100%;
+            height: 420px;
+            object-fit: contain;
+            background: #f8f9fa;
+        }
+
+        .thumb-img {
+            width: 80px;
+            height: 100px;
+            object-fit: contain;
+            cursor: pointer;
+            background: #f8f9fa;
+        }
+
+        @media (max-width: 768px) {
+            .product-main-img {
+                height: 320px;
+            }
+        }
+    </style>
 </head>
+
 <body class="bg-light">
 
-<c:import url="../layout/navbar.jsp"/>
+<c:import url="../layout/navbar.jsp" />
 
-<div class="container my-5">
+<!-- PRODUCT DETAIL -->
+<div class="container my-5 pt-4">
+    <div class="row g-4">
 
-    <!-- ✅ TRƯỜNG HỢP CÓ SẢN PHẨM -->
-    <c:if test="${product != null}">
-        <div class="row">
+        <!-- IMAGE -->
+        <div class="col-lg-5 col-md-6">
+            <div class="card shadow-sm p-3">
+                <img src="${product.imgURL}"
+                     class="product-main-img"
+                     alt="${product.title}"
+                     onerror="this.src='https://via.placeholder.com/400x500'">
 
-            <!-- IMAGE -->
-            <div class="col-md-5">
-                <div class="card shadow-sm">
-                    <img src="${product.imgURL}"
-                         class="card-img-top"
-                         alt="${product.title}"
-                         onerror="this.src='https://via.placeholder.com/400x550'">
+                <!-- THUMB (có thể mở rộng sau) -->
+                <div class="d-flex justify-content-center gap-2 mt-3">
+                    <img src="${product.imgURL}" class="thumb-img img-thumbnail">
+                    <img src="${product.imgURL}" class="thumb-img img-thumbnail">
+                    <img src="${product.imgURL}" class="thumb-img img-thumbnail">
                 </div>
             </div>
+        </div>
 
-            <!-- DETAIL -->
-            <div class="col-md-7">
-                <h3 class="fw-bold">${product.title}</h3>
+        <!-- DETAIL -->
+        <div class="col-lg-7 col-md-6">
+            <h3 class="fw-bold mb-2">${product.title}</h3>
 
-                <p class="text-muted mb-1">
-                    Tác giả: <b>${product.authorName}</b>
-                </p>
+            <p class="text-muted mb-1">
+                Tác giả: <b>${product.authorName}</b>
+            </p>
 
-                <p class="text-muted mb-2">
-                    Thể loại: <b>${product.categoryName}</b>
-                </p>
+            <span class="badge bg-secondary mb-3">
+                ${product.categoryName}
+            </span>
 
-                <h4 class="text-danger fw-bold">
-                        ${product.price} ₫
-                </h4>
+            <!-- PRICE -->
+            <h4 class="text-danger fw-bold mt-3">
+                ${product.price} ₫
+            </h4>
 
-                <p class="mt-3">
-                    <b>Mô tả:</b><br>
-                        ${product.description}
-                </p>
+            <!-- DESCRIPTION -->
+            <p class="mt-3">
+                <b>Mô tả:</b><br>
+                ${product.description}
+            </p>
 
-                <!-- QUANTITY -->
+            <!-- QUANTITY -->
+            <form action="${pageContext.request.contextPath}/cart" method="post">
+                <input type="hidden" name="action" value="add">
+                <input type="hidden" name="bookId" value="${product.id}">
+
                 <div class="d-flex align-items-center mb-3">
                     <label class="me-2 fw-bold">Số lượng:</label>
                     <input type="number"
+                           name="quantity"
                            value="1"
                            min="1"
-                           max="${product.stock}"
                            class="form-control"
                            style="width:90px;">
-                    <span class="ms-2 text-muted">
-                        (Còn ${product.stock} sản phẩm)
-                    </span>
                 </div>
 
                 <!-- BUTTONS -->
-                <div class="d-flex gap-3">
+                <div class="d-flex gap-3 flex-wrap">
                     <button class="btn btn-danger px-4">
                         <i class="bi bi-cart-plus"></i> Thêm vào giỏ
                     </button>
@@ -80,23 +110,22 @@
                         <i class="bi bi-lightning-fill"></i> Mua ngay
                     </button>
                 </div>
+            </form>
 
-                <!-- EXTRA INFO -->
-                <div class="mt-4">
-                    <h5>Thông tin chi tiết</h5>
-                    <ul>
-                        <li>Tác giả: ${product.authorName}</li>
-                        <li>Nhà xuất bản: ${product.publisherName}</li>
-                        <li>Tồn kho: ${product.stock}</li>
-                    </ul>
-                </div>
+            <!-- EXTRA INFO -->
+            <div class="mt-4">
+                <h6 class="fw-bold">Thông tin chi tiết:</h6>
+                <ul class="mb-0">
+                    <li>Tác giả: ${product.authorName}</li>
+                    <li>Danh mục: ${product.categoryName}</li>
+                    <li>Số lượng còn: ${product.stock}</li>
+                </ul>
             </div>
         </div>
-    </c:if>
-
+    </div>
 </div>
 
-<c:import url="../layout/footer.jsp"/>
+<c:import url="../layout/footer.jsp" />
 
 </body>
 </html>
