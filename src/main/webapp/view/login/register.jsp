@@ -21,32 +21,27 @@
         <h3 class="text-center mb-3 fw-bold text-danger">Tạo Tài Khoản</h3>
         <p class="text-center text-secondary">Điền thông tin để đăng ký</p>
 
-        <form action="${pageContext.request.contextPath}/register" method="post">
+        <form action="${pageContext.request.contextPath}/auth" method="post">
+            <input type="hidden" name="action" value="register">
 
-            <!-- Full Name -->
             <div class="mb-3">
-                <label class="form-label">Tên đăng nhập: </label>
+                <label class="form-label">Tên đăng nhập:</label>
                 <input type="text" class="form-control" name="username" required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Mật khẩu</label>
-                <input type="email" class="form-control" name="password" required>
+                <input type="password" class="form-control" name="password" required>
             </div>
 
-            <!-- Confirm -->
             <div class="mb-3">
                 <label class="form-label">Nhập lại mật khẩu</label>
-                <input type="password" class="form-control" name="confirm" required minlength="6">
+                <input type="password" class="form-control" name="confirm" required>
             </div>
 
-            <button class="btn btn-danger w-100 py-2 fw-bold">Đăng ký</button>
-
-            <div class="text-center mt-3">
-                Đã có tài khoản?
-                <a href="${pageContext.request.contextPath}/login" class="text-danger fw-bold text-decoration-none">Đăng nhập</a>
-            </div>
-
+            <button class="btn btn-danger w-100 py-2 fw-bold" type="submit">
+                Đăng ký
+            </button>
         </form>
 
     </div>

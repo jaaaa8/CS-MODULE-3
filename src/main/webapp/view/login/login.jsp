@@ -19,22 +19,30 @@
 
         <h3 class="text-center mb-3 fw-bold text-danger">Đăng Nhập</h3>
         <p class="text-center text-secondary">Chào mừng bạn quay lại</p>
+        <c:if test="${not empty sessionScope.message}">
+            <div class="alert alert-success text-center">
+                    ${sessionScope.message}
+            </div>
+            <c:remove var="message" scope="session"/>
+        </c:if>
 
-        <form action="${pageContext.request.contextPath}/login" method="post">
 
-            <!-- Email -->
+        <form action="${pageContext.request.contextPath}/auth" method="post">
+            <input type="hidden" name="action" value="login">
+
+        <!-- Email -->
             <div class="mb-3">
-                <label class="form-label">Email hoặc Số điện thoại</label>
+                <label class="form-label">Tên đăng nhập</label>
                 <input type="text" class="form-control" name="username" required>
             </div>
 
             <!-- Password -->
             <div class="mb-3">
                 <label class="form-label">Mật khẩu</label>
-                <input type="password" class="form-control" name="password" required minlength="6">
+                <input type="password" class="form-control" name="password" required>
             </div>
 
-            <button class="btn btn-danger w-100 py-2 fw-bold">Đăng nhập</button>
+            <button class="btn btn-danger w-100 py-2 fw-bold" type="submit">Đăng nhập</button>
 
             <div class="text-center mt-3">
                 <a href="#" class="text-decoration-none text-danger">Quên mật khẩu?</a>
@@ -42,7 +50,11 @@
 
             <div class="text-center mt-3">
                 Bạn chưa có tài khoản?
-                <a href="register.jsp" class="text-danger fw-bold text-decoration-none">Đăng ký</a>
+                <a href="${pageContext.request.contextPath}/auth?action=register"
+                   class="text-danger fw-bold text-decoration-none">
+                    Đăng ký
+                </a>
+
             </div>
 
         </form>

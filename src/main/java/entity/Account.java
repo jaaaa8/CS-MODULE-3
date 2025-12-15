@@ -7,10 +7,10 @@ public class Account {
     private String username;
     private String password;
     private String role;
-    private Date createAt;
+    private Date createdAt;
 
     public Account(String username,String password, String role, Date createAt) {
-        this.createAt = createAt;
+        this.createdAt = createAt;
         this.password = password;
         this.role = role;
         this.username = username;
@@ -34,11 +34,11 @@ public class Account {
     }
 
     public Date getCreateAt() {
-        return createAt;
+        return createdAt;
     }
 
     public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
+        this.createdAt = createAt;
     }
 
     public String getPassword() {

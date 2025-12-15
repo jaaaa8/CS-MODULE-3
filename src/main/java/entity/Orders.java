@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Orders {
     private int id;
-    private int customerID;
+    private int customerId;
     private String status;
     private double totalPrice;
     private Date createAt;
@@ -13,7 +13,7 @@ public class Orders {
     public Orders( int id, int customerID, String status, double totalPrice, Date createAt, int confirmById) {
         this.confirmById = confirmById;
         this.createAt = createAt;
-        this.customerID = customerID;
+        this.customerId = customerID;
         this.id = id;
         this.status = status;
         this.totalPrice = totalPrice;
@@ -38,12 +38,12 @@ public class Orders {
         this.createAt = createAt;
     }
 
-    public int getCustomerID() {
-        return customerID;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public int getId() {
