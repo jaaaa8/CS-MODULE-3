@@ -10,5 +10,5 @@ public interface IService <T>{
     boolean delete(int id);
     boolean update(T t);
     boolean search(T t);
-    Book findById(int id);
+    T findById(int id);
 }

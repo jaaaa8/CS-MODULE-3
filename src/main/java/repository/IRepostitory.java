@@ -1,8 +1,7 @@
 package repository;
 
-import entity.Book;
+import entity.Customer;
 
-import java.sql.Struct;
 import java.util.List;
 
 public interface IRepostitory <T>{
@@ -11,5 +10,5 @@ public interface IRepostitory <T>{
     boolean delete(int id);
     boolean update(T t);
     boolean search(T t);
-    Book findById(int id);
+    T findById(int id);
 }
