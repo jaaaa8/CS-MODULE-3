@@ -249,10 +249,21 @@
                     <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown">
                         <i class="bi bi-person-circle me-1"></i>Tài khoản
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/view/login/login.jsp">Đăng nhập</a></li>
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/view/login/register.jsp">Đăng ký</a></li>
-                    </ul>
+                    <c:if test="${account == null}">
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/view/login/login.jsp">Đăng nhập</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/view/login/register.jsp">Đăng ký</a></li>
+                        </ul>
+                    </c:if>
+                    <c:if test="${account != null}">
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#">Xin chào, ${account.username}</a></li>
+                            <li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
+                            <li><a class="dropdown-item" href="#">Đơn hàng của tôi</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/auth?action=logout">Đăng xuất</a></li>
+                        </ul>
+                    </c:if>
                 </li>
 
             </ul>
