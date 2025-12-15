@@ -40,22 +40,22 @@ public class ProductRepository implements IProductRepository {
                     WHERE b.title LIKE ? OR a.name LIKE ?;
                     """;
     String sql = """
-    SELECT 
-        b.book_id AS id,
-        b.title,
-        b.price,
-        b.description,
-        b.image_url AS imgURL,
-        a.name AS authorName,
-        c.name AS categoryName,
-        p.name AS publisherName,
-        b.stock
-    FROM Book b
-    JOIN Author a ON b.author_id = a.author_id
-    JOIN Category c ON b.category_id = c.category_id
-    JOIN Publisher p ON b.publisher_id = p.publisher_id
-    WHERE b.book_id = ?
-""";
+                    SELECT 
+                    b.book_id AS id,
+                    b.title,
+                    b.price,
+                    b.description,
+                    b.image_url AS imgURL,
+                    a.name AS authorName,
+                    c.name AS categoryName,
+                    p.name AS publisherName,
+                    b.stock
+                    FROM Book b
+                    JOIN Author a ON b.author_id = a.author_id
+                    JOIN Category c ON b.category_id = c.category_id
+                    JOIN Publisher p ON b.publisher_id = p.publisher_id
+                    WHERE b.book_id = ?
+                    """;
 
     @Override
     public List<ProductDto> findAll() {
@@ -66,7 +66,17 @@ public class ProductRepository implements IProductRepository {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                productList.add(mapRow(rs));
+                productList.add(new ProductDto(
+                        rs.getInt("id"),
+                        rs.getString("categoryName"),
+                        rs.getString("authorName"),
+                        rs.getString("publisherName"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getInt("stock"),
+                        rs.getString("imgURL")
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -143,18 +153,6 @@ public class ProductRepository implements IProductRepository {
 
 
 
-    private ProductDto mapRow(ResultSet rs) throws SQLException {
-        return new ProductDto(
-                rs.getInt("id"),
-                rs.getString("categoryName"),
-                rs.getString("authorName"),
-                rs.getString("publisherName"),
-                rs.getString("title"),
-                rs.getString("description"),
-                rs.getDouble("price"),
-                rs.getInt("stock"),
-                rs.getString("imgURL")
-        );
-    }
+
 
 }

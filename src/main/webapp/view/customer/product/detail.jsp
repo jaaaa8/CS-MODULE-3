@@ -96,6 +96,7 @@
                            name="quantity"
                            value="1"
                            min="1"
+                           max="${product.stock}"
                            class="form-control"
                            style="width:90px;">
                 </div>
@@ -126,6 +127,19 @@
 </div>
 
 <c:import url="../layout/footer.jsp" />
+<script>
+    const qtyInput = document.querySelector('input[name="quantity"]');
+    const maxStock = ${product.stock};
 
+    qtyInput.addEventListener('input', function () {
+        if (this.value > maxStock) {
+            this.value = maxStock;
+            alert("Số lượng tối đa còn lại là " + maxStock);
+        }
+        if (this.value < 1) {
+            this.value = 1;
+        }
+    });
+</script>
 </body>
 </html>
