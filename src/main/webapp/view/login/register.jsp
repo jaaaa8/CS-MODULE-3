@@ -21,30 +21,17 @@
         <h3 class="text-center mb-3 fw-bold text-danger">Tạo Tài Khoản</h3>
         <p class="text-center text-secondary">Điền thông tin để đăng ký</p>
 
-        <form action="/register" method="post">
+        <form action="${pageContext.request.contextPath}/register" method="post">
 
             <!-- Full Name -->
             <div class="mb-3">
-                <label class="form-label">Họ và tên</label>
-                <input type="text" class="form-control" name="fullName" required>
+                <label class="form-label">Tên đăng nhập: </label>
+                <input type="text" class="form-control" name="username" required>
             </div>
 
-            <!-- Email -->
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-control" name="email" required>
-            </div>
-
-            <!-- Phone -->
-            <div class="mb-3">
-                <label class="form-label">Số điện thoại</label>
-                <input type="text" class="form-control" name="phone" required maxlength="10">
-            </div>
-
-            <!-- Password -->
             <div class="mb-3">
                 <label class="form-label">Mật khẩu</label>
-                <input type="password" class="form-control" name="password" required minlength="6">
+                <input type="email" class="form-control" name="password" required>
             </div>
 
             <!-- Confirm -->
@@ -57,7 +44,7 @@
 
             <div class="text-center mt-3">
                 Đã có tài khoản?
-                <a href="login.jsp" class="text-danger fw-bold text-decoration-none">Đăng nhập</a>
+                <a href="${pageContext.request.contextPath}/login" class="text-danger fw-bold text-decoration-none">Đăng nhập</a>
             </div>
 
         </form>

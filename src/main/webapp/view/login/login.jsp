@@ -20,7 +20,7 @@
         <h3 class="text-center mb-3 fw-bold text-danger">Đăng Nhập</h3>
         <p class="text-center text-secondary">Chào mừng bạn quay lại</p>
 
-        <form action="/login" method="post">
+        <form action="${pageContext.request.contextPath}/login" method="post">
 
             <!-- Email -->
             <div class="mb-3">
