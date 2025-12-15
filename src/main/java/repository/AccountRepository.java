@@ -11,9 +11,9 @@ import java.util.List;
 
 public class AccountRepository implements IAccountRepository {
     private final String SELECT_ALL_ACCOUNTS = "SELECT * FROM account";
-    private final String INSERT_ACCOUNT = "INSERT INTO account (username, password, role, create_at) VALUES (?, ?, ?, ?)";
-    private final String UPDATE_PASSWORD = "UPDATE account SET password = ? WHERE id = ?";
-    private final String DELETE_ACCOUNT = "DELETE FROM account WHERE id = ?";
+    private final String INSERT_ACCOUNT = "INSERT INTO account(username, password, role) VALUES (?, ?, ?)";
+    private final String UPDATE_PASSWORD = "UPDATE account SET password = ? WHERE account_id = ?";
+    private final String DELETE_ACCOUNT = "DELETE FROM account WHERE account_id = ?";
     private final String FIND_ACCOUNT_BY_USERNAME = "SELECT * FROM account WHERE username = ?";
 
     @Override
@@ -24,7 +24,7 @@ public class AccountRepository implements IAccountRepository {
             System.out.println(preparedStatement);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()){
-                int id = rs.getInt("id");
+                int id = rs.getInt("account_id");
                 String username = rs.getString("username");
                 String role = rs.getString("role");
                 accountList.add(new AccountDto(id,username, role));
@@ -42,10 +42,10 @@ public class AccountRepository implements IAccountRepository {
             preparedStatement.setString(1, account.getUsername());
             preparedStatement.setString(2, account.getPassword());
             preparedStatement.setString(3, account.getRole());
-            preparedStatement.setDate(4, new java.sql.Date(account.getCreateAt().getTime()));
             int effectRow = preparedStatement.executeUpdate();
             return effectRow == 1;
         } catch (SQLException e) {
+            e.printStackTrace();
             System.err.println("LOI ADD!");
         }
         return false;
@@ -87,11 +87,11 @@ public class AccountRepository implements IAccountRepository {
             System.out.println(preparedStatement);
             ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()){
-                int id = rs.getInt("id");
+                int id = rs.getInt("account_id");
                 String password = rs.getString("password");
                 String role = rs.getString("role");
-                Date createAt = rs.getDate("create_at");
-                account = new Account(username,password, role, createAt);
+                Date createdAt = rs.getDate("created_at");
+                account = new Account(username,password, role, createdAt);
                 account.setId(id);
             }
             return account;
