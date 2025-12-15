@@ -30,7 +30,6 @@ public class AuthService implements IAuthService {
         Account newAccount = new Account(username, password);
         boolean isAdded = accountRepository.addNewAccount(newAccount);
         if(isAdded){
-            System.out.println("REGISTER SERVICE CALLED");
             return newAccount;
         }
         return null;
