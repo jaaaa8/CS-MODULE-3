@@ -5,13 +5,13 @@ public class AccountDto {
     private String username;
     private String role;
 
+    public AccountDto() {
+    }
+
     public AccountDto(int id, String username, String role) {
         this.id = id;
         this.username = username;
         this.role = role;
-    }
-
-    public AccountDto() {
     }
 
     public int getId() {
@@ -25,7 +25,6 @@ public class AccountDto {
     public String getUsername() {
         return username;
     }
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -37,4 +36,5 @@ public class AccountDto {
     public void setRole(String role) {
         this.role = role;
     }
+
 }

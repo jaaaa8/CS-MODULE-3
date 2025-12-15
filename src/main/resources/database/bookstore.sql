@@ -6,7 +6,7 @@ CREATE TABLE Account (
     account_id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role ENUM('CUSTOMER','ADMIN','STAFF') NOT NULL DEFAULT 'CUSTOMER',
+    role ENUM('CUSTOMER','ADMIN') DEFAULT 'CUSTOMER',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -94,3 +94,5 @@ INSERT INTO author (name, bio) VALUES
                                    ('J.K. Rowling', 'Tác giả bộ truyện Harry Potter nổi tiếng thế giới.'),
                                    ('Robert C. Martin', 'Chuyên gia phần mềm, tác giả Clean Code.');
 
+INSERT INTO account(username, password, role)
+VALUES ('test123', '123456', 'CUSTOMER');
