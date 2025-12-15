@@ -5,41 +5,34 @@
   Time: 8:21 CH
   To change this template use File | Settings | File Templates.
 --%>
+<%--
+  File: home.jsp
+  Description: Hiển thị danh sách Customer
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
-    <title>Book Management</title>
+    <title>Customer Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        /* Tùy chỉnh nhỏ để tăng tính thẩm mỹ */
-        .table th, .table td {
-            vertical-align: middle;
-        }
-        .action-column {
-            min-width: 150px; /* Đảm bảo đủ không gian cho 2 nút */
-        }
-        /* Giảm padding cho các nút action */
-        .action-btn {
-            padding: .25rem .5rem;
-            font-size: .875rem;
-            line-height: 1.5;
-        }
+        .table th, .table td { vertical-align: middle; }
+        .action-column { min-width: 150px; }
+        .action-btn { padding: .25rem .5rem; font-size: .875rem; }
     </style>
 </head>
 <body>
 <%@ include file="/view/admin/layout/navbar.jsp" %>
 
 <div class="container mt-5">
-    <h1 class="mb-4 text-primary">📚 Book Management List</h1>
+    <h1 class="mb-4 text-success"><i class="bi bi-people-fill me-2"></i> Customer List Management</h1>
 
-    <%-- Hiển thị thông báo --%>
-    <c:if test="${param.mess != null && param.mess != ''}">
+    <%-- Hiển thị thông báo (ví dụ: ${requestScope.mess} hoặc ${param.mess}) --%>
+    <c:if test="${requestScope.mess != null && requestScope.mess != ''}">
         <div class="alert alert-info alert-dismissible fade show" role="alert">
-                ${param.mess}
+                ${requestScope.mess}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </c:if>
@@ -47,14 +40,14 @@
     <%-- Thanh công cụ (Thêm mới và Tìm kiếm) --%>
     <div class="row mb-3 d-flex justify-content-between align-items-center">
         <div class="col-auto">
-            <a class="btn btn-success" href="/book?action=add">
-                <i class="bi bi-plus-circle"></i> Add New Book
+            <a class="btn btn-success" href="/customer?action=add">
+                <i class="bi bi-person-plus-fill"></i> Add New Customer
             </a>
         </div>
         <div class="col-md-4">
-            <form action="/book" method="get" class="d-flex">
+            <form action="/customer" method="get" class="d-flex">
                 <input type="hidden" name="action" value="search">
-                <input type="text" name="search" class="form-control me-2" placeholder="Search by Title..." value="${param.search}">
+                <input type="text" name="search" class="form-control me-2" placeholder="Search by Name/Email...">
                 <button type="submit" class="btn btn-outline-primary">
                     <i class="bi bi-search"></i> Search
                 </button>
@@ -63,68 +56,55 @@
     </div>
 
     <%-- Card chứa Bảng --%>
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-dark text-white">
-            <h5 class="mb-0">📖 Book Inventory Details</h5>
-        </div>
+    <div class="card shadow border-0">
         <div class="card-body p-0">
-
             <div class="table-responsive">
                 <table class="table table-hover table-striped mb-0">
-                    <thead class="table-light">
+                    <thead class="table-dark">
                     <tr>
                         <th class="text-center" style="width: 5%;">#</th>
                         <th style="width: 5%;">ID</th>
-                        <th>Title</th>
-                        <th style="width: 10%;">Category ID</th>
-                        <th style="width: 10%;">Author ID</th>
-                        <th class="text-end" style="width: 10%;">Price</th>
-                        <th class="text-center" style="width: 8%;">Stock</th>
+                        <th style="width: 10%;">Account ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th style="width: 10%;">Phone</th>
+                        <th>Address</th>
                         <th class="text-center action-column">Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach var="book" items="${bookList}" varStatus="status">
+                    <%-- Sử dụng customerList được truyền từ Servlet --%>
+                    <c:forEach var="customer" items="${requestScope.customerList}" varStatus="status">
                         <tr>
                             <td class="text-center">${status.count}</td>
-                            <td class="text-muted small">${book.id}</td>
-                            <td>
-                                **${book.title}**
-                                <p class="mb-0 text-truncate small text-secondary" style="max-width: 250px;">
-                                        ${book.description}
-                                </p>
-                            </td>
-                            <td>${book.categoryId}</td>
-                            <td>${book.authorId}</td>
-                            <td class="text-end fw-bold text-success">
-                                <fmt:formatNumber value="${book.price}" type="number" pattern="#,##0"/>
-                            </td>
-                            <td class="text-center ${book.stock <= 5 ? 'text-danger fw-bold' : ''}">
-                                    ${book.stock}
-                            </td>
+                            <td class="text-muted small">${customer.id}</td>
+                            <td class="text-center">${customer.accountId}</td>
+                            <td class="fw-bold">${customer.name}</td>
+                            <td>${customer.email}</td>
+                            <td>${customer.phone}</td>
+                            <td><span class="text-truncate" style="max-width: 250px; display: block;">${customer.address}</span></td>
                             <td class="text-center">
-                                <button onclick="getInfoToDelete('${book.id}','${book.title}')"
-                                        type="button" class="btn btn-outline-danger action-btn"
+                                <button onclick="getInfoToDelete('${customer.id}','${customer.name}')"
+                                        type="button" class="btn btn-outline-danger action-btn me-1"
                                         data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                    <i class="bi bi-trash"></i> Delete
+                                    <i class="bi bi-trash"></i>
                                 </button>
-                                <a href="/book?action=showUpdate&id=${book.id}"
+                                <a href="/customer?action=showUpdate&id=${customer.id}"
                                    class="btn btn-outline-primary action-btn">
-                                    <i class="bi bi-pencil-square"></i> Update
+                                    <i class="bi bi-pencil-square"></i>
                                 </a>
                             </td>
                         </tr>
                     </c:forEach>
 
-                    <c:if test="${bookList == null || bookList.isEmpty()}">
+                    <c:if test="${requestScope.customerList == null || requestScope.customerList.isEmpty()}">
                         <tr><td colspan="8" class="text-center text-muted py-4">
-                            <i class="bi bi-info-circle"></i> No book found in the inventory.
+                            <i class="bi bi-info-circle"></i> No customer found.
                         </td></tr>
                     </c:if>
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 
@@ -133,7 +113,7 @@
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/book?action=delete" method="post">
+            <form action="/customer?action=delete" method="post">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title" id="deleteModalLabel"><i class="bi bi-exclamation-triangle"></i> Confirm Deletion</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -141,8 +121,8 @@
 
                 <div class="modal-body">
                     <input type="hidden" name="deleteId" id="deleteId">
-                    Bạn có chắc chắn muốn xóa cuốn sách: <br>
-                    **<span id="deleteTitle" class="text-danger fw-bold"></span>** ?
+                    Bạn có chắc chắn muốn xóa khách hàng: <br>
+                    **<span id="deleteName" class="text-danger fw-bold"></span>** ?
                     <p class="mt-2 text-warning"><small>Hành động này không thể hoàn tác.</small></p>
                 </div>
 
@@ -157,9 +137,9 @@
 
 <script>
     // Hàm lấy thông tin để xóa
-    function getInfoToDelete(id, title){
+    function getInfoToDelete(id, name){
         document.getElementById("deleteId").value = id;
-        document.getElementById("deleteTitle").innerHTML = title;
+        document.getElementById("deleteName").innerHTML = name;
     }
 </script>
 </body>
