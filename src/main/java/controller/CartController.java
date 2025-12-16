@@ -92,7 +92,7 @@ public class CartController extends HttpServlet {
             if (exists) {
                 orderItemService.increaseQuantity(cart.getId(), bookId, quantity);
             } else {
-                orderItemService.addItem(cart.getId(), bookId, quantity);
+                orderItemService.addItem(cart.getId(), bookId, quantity, 0);
             }
 
             // 5️⃣ Redirect (PRG pattern)
