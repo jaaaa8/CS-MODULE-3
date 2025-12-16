@@ -63,13 +63,41 @@ public class BookRepository implements IRepostitory<Book>{
 
     @Override
     public boolean delete(int id) {
-        try(Connection connection = ConnectDB.getConnection()){
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE);
-            preparedStatement.setInt(1, id);
-            int effectRow = preparedStatement.executeUpdate();
-            return effectRow == 1;
+        Connection conn = null;
+        try {
+            conn = ConnectDB.getConnection();
+            conn.setAutoCommit(false);
+
+            String sqlDeleteItem = "DELETE FROM OrderItem WHERE book_id = ?";
+            try(PreparedStatement psItem = conn.prepareStatement(sqlDeleteItem)) {
+                psItem.setInt(1, id);
+                psItem.executeUpdate();
+            }
+
+            try(PreparedStatement psBook = conn.prepareStatement(DELETE)) {
+                psBook.setInt(1, id);
+                int rowsAffected = psBook.executeUpdate();
+                conn.commit();
+                return rowsAffected > 0;
+            }
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            System.out.println("Lỗi khi xóa Book (Foreign Key): " + e.getMessage());
+            return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

@@ -10,9 +10,9 @@ import java.util.List;
 
 public class OrderRepository implements IOrderRepository {
     private final String SELECT_ALL = "select * from orders";
-    private final String INSERT_INTO = "insert into orders(customer_id,status,total,created_ad,confirmed_by) values (?,?,?,?,?)";
+    private final String INSERT_INTO = "insert into orders(customer_id,status,total,created_at,confirmed_by) values (?,?,?,?,?)";
     private final String DELETE = "delete from book where order_id=?";
-    private final String UPDATE = "update orders set customer_id,status,total,created_ad,confirmed_by";
+    private final String UPDATE = "update orders set customer_id,status,total,created_at,confirmed_by";
     // SQL cho việc chuyển trạng thái cần cập nhật confirmed_by
     private final String UPDATE_STATUS_CONFIRMED_SQL = "UPDATE Orders SET status = ?, confirmed_by = ?, updated_at = CURRENT_TIMESTAMP() WHERE order_id = ?";
     // SQL cho các lần chuyển trạng thái sau đó (không cần cập nhật confirmed_by)
@@ -29,10 +29,10 @@ public class OrderRepository implements IOrderRepository {
                 int customer_id = resultSet.getInt("customer_id");
                 String status = resultSet.getString("status");
                 double total = resultSet.getDouble("total");
-                Date created_ad = resultSet.getDate("created_ad");
+                Date created_at = resultSet.getDate("created_at");
                 int confirmed_by = resultSet.getInt("confirmed_by");
 
-                Orders order = new Orders(order_id, customer_id, status, total, created_ad, confirmed_by);
+                Orders order = new Orders(order_id, customer_id, status, total, created_at, confirmed_by);
                 listOrder.add(order);
             }
         } catch (SQLException e) {
@@ -162,7 +162,5 @@ public class OrderRepository implements IOrderRepository {
         // Mặc định truyền 0 nếu không cần confirmed_by, hoặc nên dùng phương thức trên
         return updateStatus(id, newStatus, 0);
     }
-
-    // ... (Cần đảm bảo tất cả phương thức của IRepostitory đều được triển khai)
 }
 
