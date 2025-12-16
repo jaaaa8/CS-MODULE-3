@@ -1,6 +1,7 @@
 package repository;
 
 import dto.ProductDto;
+import entity.Orders;
 import util.ConnectDB;
 
 import java.sql.Connection;
@@ -150,4 +151,5 @@ public class ProductRepository implements IProductRepository {
         }
         return null;
     }
+
 }

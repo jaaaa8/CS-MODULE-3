@@ -37,4 +37,8 @@ public class CustomerService implements IService<Customer>{
     public Customer findById(int id) {
         return customerRepostitory.findById(id);
     }
+    public Customer findByAccountId(int accountId) {
+        return customerRepostitory.findById(accountId);
+    }
+
 }
