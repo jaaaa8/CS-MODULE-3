@@ -127,9 +127,20 @@
                         <span class="text-danger">${total} ₫</span>
                     </div>
 
-                    <button class="btn btn-danger w-100 py-2 fw-bold">
-                        ĐẶT HÀNG
-                    </button>
+                    <form action="${pageContext.request.contextPath}/payment" method="post">
+                        <input type="hidden" name="action" value="checkout">
+
+                        <!-- gửi kèm thông tin cần thiết -->
+                        <input type="hidden" name="orderId" value="${cart.id}">
+                        <input type="hidden" name="subtotal" value="${subtotal}">
+                        <input type="hidden" name="tax" value="${tax}">
+                        <input type="hidden" name="shipping" value="${shipping}">
+                        <input type="hidden" name="total" value="${total}">
+
+                        <button type="submit" class="btn btn-danger w-100 py-2 fw-bold">
+                            ĐẶT HÀNG
+                        </button>
+                    </form>
                 </div>
             </div>
 
