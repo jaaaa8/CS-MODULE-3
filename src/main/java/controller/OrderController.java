@@ -1,21 +1,27 @@
 package controller;
 
+import entity.Account;
 import entity.Orders;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import service.IService;
 import service.OrderService;
+import service.OrdersService;
 import service.impl.IOrderService;
+import service.impl.IOrdersService;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @WebServlet(name = "OrderController", urlPatterns="/order")
 public class OrderController extends HttpServlet {
     private final IOrderService orderService = new OrderService();
+    private final IOrdersService ordersService = new OrdersService();
     private static final String JSP_PATH = "/view/admin/order/";
 
     @Override
@@ -23,6 +29,9 @@ public class OrderController extends HttpServlet {
         String action = req.getParameter("action");
         if (action == null) action = "";
         switch (action) {
+            case "add":
+                addOrder(req, resp);
+                break;
             case "delete":
                 deleteById(req, resp);
                 break;
@@ -47,6 +56,9 @@ public class OrderController extends HttpServlet {
         if (action == null) action = "";
 
         switch (action) {
+            case "add":
+                req.getRequestDispatcher(JSP_PATH + "add.jsp").forward(req, resp);
+                break;
             case "delete":
                 deleteById(req, resp);
                 break;
@@ -55,6 +67,7 @@ public class OrderController extends HttpServlet {
                 break;
         }
     }
+
     private void showOrderList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Orders> ordersList = orderService.findAll();
         req.setAttribute("orderList", ordersList); // Đã sửa tên attribute
@@ -75,15 +88,26 @@ public class OrderController extends HttpServlet {
     }
     private void confirmAdmin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String mess;
+        HttpSession session = req.getSession(false);
+        if (session == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+            return;
+        }
+
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+            return;
+        }
         try {
             int orderId = Integer.parseInt(req.getParameter("orderId"));
-            // **LƯU Ý:** Bạn cần đảm bảo OrderService có hàm updateStatus(id, status)
-            boolean isSuccess = orderService.updateStatus(orderId, "CONFIRMED");
+            boolean isSuccess = ordersService.confirmOrder(orderId,account.getId());
             mess = isSuccess ? "Đã xác nhận đơn hàng ID " + orderId : "Xác nhận thất bại.";
         } catch (NumberFormatException e) {
             mess = "Lỗi: ID đơn hàng không hợp lệ.";
         }
-        resp.sendRedirect("/order?mess=" + mess);
+        req.setAttribute("mess", mess);
+        resp.sendRedirect("/order");
     }
 
     // CONFIRMED -> SHIPPED
@@ -108,6 +132,29 @@ public class OrderController extends HttpServlet {
             mess = isSuccess ? "Đơn hàng ID " + orderId + " đã HOÀN THÀNH." : "Hoàn thành đơn hàng thất bại.";
         } catch (NumberFormatException e) {
             mess = "Lỗi: ID đơn hàng không hợp lệ.";
+        }
+        resp.sendRedirect("/order?mess=" + mess);
+    }
+    private void addOrder(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String mess;
+        try {
+            // 1. Lấy dữ liệu cơ bản (Giả định bạn có một form đơn giản)
+            int customerId = Integer.parseInt(req.getParameter("customerId"));
+            double total = Double.parseDouble(req.getParameter("total"));
+            String status = req.getParameter("status"); // VD: PENDING
+
+            // 2. Tạo đối tượng Orders
+            Orders newOrder = new Orders(0, customerId, status, total, new Date(), 0);
+
+            // 3. Gọi Service để thêm vào DB
+            boolean isSuccess = orderService.add(newOrder);
+
+            // Lưu ý: Hàm này chỉ thêm Orders. Bạn sẽ cần thêm OrderItem riêng biệt sau đó!
+
+            mess = isSuccess ? "Thêm đơn hàng gốc thành công!" : "Thêm đơn hàng thất bại.";
+        } catch (Exception e) {
+            mess = "Lỗi nhập liệu: " + e.getMessage();
+            e.printStackTrace();
         }
         resp.sendRedirect("/order?mess=" + mess);
     }

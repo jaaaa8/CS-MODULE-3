@@ -89,29 +89,11 @@
             <form action="${pageContext.request.contextPath}/cart" method="post">
                 <input type="hidden" name="action" value="add">
                 <input type="hidden" name="bookId" value="${product.id}">
-
-                <div class="d-flex align-items-center mb-3">
-                    <label class="me-2 fw-bold">Số lượng:</label>
-                    <input type="number"
-                           name="quantity"
-                           value="1"
-                           min="1"
-                           max="${product.stock}"
-                           class="form-control"
-                           style="width:90px;">
-                </div>
-
-                <!-- BUTTONS -->
-                <div class="d-flex gap-3 flex-wrap">
-                    <button class="btn btn-danger px-4">
-                        <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                    </button>
-
-                    <button class="btn btn-warning px-4">
-                        <i class="bi bi-lightning-fill"></i> Mua ngay
-                    </button>
-                </div>
+                <button type="submit" class="btn btn-primary">
+                    Thêm vào giỏ hàng
+                </button>
             </form>
+
 
             <!-- EXTRA INFO -->
             <div class="mt-4">

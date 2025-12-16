@@ -27,6 +27,15 @@
 
 <%-- INCLUDE ADMIN NAVBAR --%>
 <%@ include file="/view/admin/layout/navbar.jsp" %>
+<div class="row mb-3 d-flex justify-content-between align-items-center">
+  <div class="col-auto">
+    <%-- NÚT THÊM MỚI (ADD) --%>
+    <a class="btn btn-primary" href='<c:url value="/order?action=add"/>'>
+      <i class="bi bi-plus-circle-fill"></i> Add New Order
+    </a>
+  </div>
+  <%-- Thêm Form tìm kiếm tại đây --%>
+</div>
 
 <div class="container mt-5">
   <h1 class="mb-4 text-primary"><i class="bi bi-receipt me-2"></i> Order List Management</h1>
@@ -59,14 +68,14 @@
           <c:forEach var="order" items="${requestScope.orderList}">
             <tr>
               <td class="text-center">${order.id}</td>
-              <td>${order.customerID}</td>
+              <td>${order.customerId}</td>
               <td>
                   <%-- Sử dụng tag fmt để format ngày tháng --%>
-                <fmt:formatDate value="${order.createAt}" pattern="yyyy-MM-dd HH:mm"/>
+                    <fmt:formatDate value="${order.createAt}" pattern="yyyy-MM-dd HH:mm"/>
               </td>
               <td>
                   <%-- Format tiền tệ --%>
-                <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="$"/>
+                <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="$"/>
               </td>
               <td>
                   <%-- Hiển thị trạng thái với màu sắc tương ứng --%>

@@ -6,7 +6,7 @@ public class Orders {
     private int id;
     private int customerId;
     private String status;
-    private double totalPrice;
+    private double total;
     private Date createAt;
     private int confirmById;
 
@@ -16,7 +16,15 @@ public class Orders {
         this.customerId = customerID;
         this.id = id;
         this.status = status;
-        this.totalPrice = totalPrice;
+        this.total = totalPrice;
+    }
+
+    public Orders(int customerID, String status, double totalPrice, Date createAt, int confirmById) {
+        this.confirmById = confirmById;
+        this.createAt = createAt;
+        this.customerId = customerID;
+        this.status = status;
+        this.total = totalPrice;
     }
 
     public Orders() {
@@ -46,12 +54,12 @@ public class Orders {
         this.status = status;
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
+    public double getTotal() {
+        return total;
     }
 
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setTotal(double totalPrice) {
+        this.total = totalPrice;
     }
 
     public Date getCreateAt() {

@@ -25,7 +25,7 @@
     <div class="col-lg-8" id="cart-items-container">
       <c:choose>
 
-        <c:when test="${empty cartItems}">
+        <c:when test="${empty orderItems}">
           <div class="alert alert-warning mt-4">
             Giỏ hàng của bạn đang trống.
           </div>
@@ -34,26 +34,24 @@
         <c:otherwise>
 
           <p class="text-muted">
-            Bạn có <b>${cartItems.size()}</b> sản phẩm trong giỏ hàng
+            Bạn có <b>${orderItems.size()}</b> sản phẩm trong giỏ hàng
           </p>
 
-          <c:forEach items="${cartItems}" var="item">
+          <c:forEach items="${orderItems}" var="item">
             <div class="card mb-3">
               <div class="row g-0">
-                <div class="col-md-3">
-                  <img src="${item.imageUrl}" class="img-fluid">
-                </div>
-                <div class="col-md-6">
-                  <h5>${item.title}</h5>
+                <div class="col-md-8">
+                  <h5>${item.bookName}</h5>
                   <p>Giá: ${item.price}</p>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                   SL: ${item.quantity}<br>
-                  Tổng: ${item.total}
+                  Tổng: ${item.price * item.quantity}
                 </div>
               </div>
             </div>
           </c:forEach>
+
 
 
         </c:otherwise>
@@ -82,7 +80,7 @@
           <input type="text" class="form-control" id="promoCode" placeholder="Mã giảm giá">
           <button class="btn btn-outline-secondary" id="applyPromo">Áp dụng</button>
         </div>
-        <a href="../payment/payment.jsp" class="btn btn-primary w-100 py-2 btn-gradient">
+        <a href="${pageContext.request.contextPath}/payments" class="btn btn-primary w-100 py-2 btn-gradient">
           <i class="bi bi-lock-fill"></i> TIẾN HÀNH THANH TOÁN
         </a>
       </div>

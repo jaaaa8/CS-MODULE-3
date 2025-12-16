@@ -1,7 +1,6 @@
 package repository;
 
 import entity.Customer;
-import entity.Orders;
 import util.ConnectDB;
 
 import java.sql.Connection;
@@ -114,31 +113,4 @@ public class CustomerRepository implements IRepostitory<Customer> {
         }
         return null;
     }
-    public List<Orders> findByCustomerId(int customerId) {
-        List<Orders> ordersList = new ArrayList<>();
-        String sql = "SELECT * FROM orders WHERE customer_id = ? ORDER BY created_at DESC";
-
-        try (Connection connection = ConnectDB.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setInt(1, customerId);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Orders orders = new Orders(
-                        rs.getInt("order_id"),
-                        rs.getInt("customer_id"),
-                        rs.getString("status"),
-                        rs.getDouble("totalPrice"),
-                        rs.getTimestamp("created_at"),
-                        rs.getInt("confirmed_by")
-                );
-                ordersList.add(orders);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ordersList;
-    }
-
 }
