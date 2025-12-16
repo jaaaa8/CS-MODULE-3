@@ -19,4 +19,9 @@ public class ProductService implements IProductService {
     public List<ProductDto> search(String keyword) {
         return productRepository.search(keyword);
     }
+    @Override
+    public ProductDto findById(int id) {
+        return productRepository.findById(id);
+    }
+
 }

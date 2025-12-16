@@ -25,6 +25,8 @@ public class ProductDto {
         this.imgURL = imgURL;
     }
 
+
+
     public int getId() {
         return id;
     }

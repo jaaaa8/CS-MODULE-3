@@ -23,9 +23,42 @@
 <div class="container my-5">
   <div class="row">
     <div class="col-lg-8" id="cart-items-container">
-      <h2 class="fw-bold">Giỏ hàng của bạn</h2>
-      <p class="text-muted">Bạn có <span id="cart-count">3</span> sản phẩm trong giỏ hàng</p>
+      <c:choose>
 
+        <c:when test="${empty cartItems}">
+          <div class="alert alert-warning mt-4">
+            Giỏ hàng của bạn đang trống.
+          </div>
+        </c:when>
+
+        <c:otherwise>
+
+          <p class="text-muted">
+            Bạn có <b>${cartItems.size()}</b> sản phẩm trong giỏ hàng
+          </p>
+
+          <c:forEach items="${cartItems}" var="item">
+            <div class="card mb-3">
+              <div class="row g-0">
+                <div class="col-md-3">
+                  <img src="${item.imageUrl}" class="img-fluid">
+                </div>
+                <div class="col-md-6">
+                  <h5>${item.title}</h5>
+                  <p>Giá: ${item.price}</p>
+                </div>
+                <div class="col-md-3">
+                  SL: ${item.quantity}<br>
+                  Tổng: ${item.total}
+                </div>
+              </div>
+            </div>
+          </c:forEach>
+
+
+        </c:otherwise>
+
+      </c:choose>
 
     </div>
 
@@ -58,105 +91,6 @@
 </div>
 </div>
 <c:import url="../layout/footer.jsp" />
-<%--<script>--%>
-<%--  let discountRate = 0;--%>
-
-<%--  function updateTotals() {--%>
-<%--    let subtotal = 0;--%>
-<%--    const cartItems = document.querySelectorAll('.cart-item');--%>
-<%--    const miniItemsContainer = document.getElementById('mini-items');--%>
-<%--    miniItemsContainer.innerHTML = '';--%>
-<%--    cartItems.forEach(item=>{--%>
-<%--      const id=item.dataset.id;--%>
-<%--      const price=parseFloat(item.dataset.price);--%>
-<%--      const qty=parseInt(item.querySelector('.qty-input').value);--%>
-<%--      const itemTotal=price*qty;--%>
-<%--      subtotal+=itemTotal;--%>
-<%--      item.querySelector('.item-price').innerText='$'+itemTotal.toFixed(2);--%>
-
-<%--      // Mini cart--%>
-<%--      const imgSrc=item.querySelector('img').src;--%>
-<%--      const title=item.querySelector('h5').innerText;--%>
-<%--      const miniItem=document.createElement('div');--%>
-<%--      miniItem.classList.add('mini-item');--%>
-<%--      // Dịch nội dung mini-cart--%>
-<%--      miniItem.innerHTML=`--%>
-<%--            <img src="${imgSrc}" alt="book">--%>
-<%--            <div class="mini-item-info">--%>
-<%--                <p class="mini-item-title">${title}</p>--%>
-<%--                <p class="mini-item-price">$${itemTotal.toFixed(2)} x ${qty}</p>--%>
-<%--            </div>--%>
-<%--            <span class="mini-delete" dto-id="${id}">&times;</span>--%>
-<%--        `;--%>
-<%--      miniItemsContainer.appendChild(miniItem);--%>
-<%--    });--%>
-
-<%--    const tax=subtotal*0.08;--%>
-<%--    const shipping=subtotal>0?5.99:0;--%>
-<%--    const total=subtotal*(1-discountRate)+tax+shipping;--%>
-
-<%--    document.getElementById('subtotal').innerText='$'+subtotal.toFixed(2);--%>
-<%--    document.getElementById('tax').innerText='$'+tax.toFixed(2);--%>
-
-<%--    document.getElementById('shipping').innerText='$'+shipping.toFixed(2);--%>
-<%--    document.getElementById('total').innerText='$'+total.toFixed(2);--%>
-<%--    document.getElementById('cart-count').innerText=cartItems.length;--%>
-<%--    document.getElementById('cart-count-header').innerText=cartItems.length;--%>
-
-<%--    // Cập nhật tổng cộng trong mini-cart--%>
-<%--    document.getElementById('mini-total').innerText='$'+total.toFixed(2);--%>
-
-<%--    bindMiniCartDelete();--%>
-<%--  }--%>
-
-<%--  function bindCartEvents(){--%>
-<%--    document.querySelectorAll('.btn-plus').forEach(btn=>{--%>
-<%--      btn.addEventListener('click',()=>{--%>
-<%--        const input=btn.parentElement.querySelector('.qty-input');--%>
-<%--        input.value=parseInt(input.value)+1;--%>
-<%--        updateTotals();--%>
-<%--      });--%>
-<%--    });--%>
-<%--    document.querySelectorAll('.btn-minus').forEach(btn=>{--%>
-<%--      btn.addEventListener('click',()=>{--%>
-<%--        const input=btn.parentElement.querySelector('.qty-input');--%>
-<%--        input.value=Math.max(0,parseInt(input.value)-1);--%>
-<%--        if(parseInt(input.value)===0){--%>
-<%--          const card=btn.closest('.cart-item');--%>
-<%--          card.classList.add('fade-out');--%>
-<%--          setTimeout(()=>{card.remove();updateTotals();},300);--%>
-<%--        } else updateTotals();--%>
-<%--      });--%>
-<%--    });--%>
-<%--    document.querySelectorAll('.btn-delete').forEach(btn=>{--%>
-<%--      btn.addEventListener('click',()=>{--%>
-<%--        const card=btn.closest('.cart-item');--%>
-<%--        card.classList.add('fade-out');--%>
-<%--        setTimeout(()=>{card.remove();updateTotals();},300);--%>
-<%--      });--%>
-<%--    });--%>
-<%--  }--%>
-
-<%--  function bindMiniCartDelete(){--%>
-<%--    document.querySelectorAll('.mini-delete').forEach(btn=>{--%>
-<%--      btn.addEventListener('click',()=>{--%>
-<%--        const id=btn.dataset.id;--%>
-<%--        const card=document.querySelector(`.cart-item[dto-id="${id}"]`);--%>
-<%--        if(card){ card.classList.add('fade-out'); setTimeout(()=>{card.remove();updateTotals();},300);}--%>
-<%--      });--%>
-<%--    });--%>
-<%--  }--%>
-
-<%--  document.getElementById('applyPromo').addEventListener('click',()=>{--%>
-<%--    const code=document.getElementById('promoCode').value.trim().toUpperCase();--%>
-<%--    discountRate=0;--%>
-<%--    if(code==='SALE10') discountRate=0.1;--%>
-<%--    if(code==='SALE20') discountRate=0.2;--%>
-<%--    updateTotals();--%>
-<%--  });--%>
-
-<%--  window.onload=()=>{ bindCartEvents(); updateTotals(); };--%>
-<%--</script>--%>
 </body>
 </html>
 
