@@ -69,20 +69,24 @@ public class BookController extends HttpServlet {
     }
 
     private void save(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        int categoryId = Integer.parseInt(req.getParameter("categoryId"));
-        int authorId = Integer.parseInt(req.getParameter("authorId"));
-        int publisherId = Integer.parseInt(req.getParameter("publisherId"));
-        String title = req.getParameter("title");
-        String description = req.getParameter("description");
-        double price = Double.parseDouble(req.getParameter("price"));
-        int stock = Integer.parseInt(req.getParameter("stock"));
-        String imgURL = req.getParameter("imgURL");
+        try {
+            int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+            int authorId = Integer.parseInt(req.getParameter("authorId"));
+            int publisherId = Integer.parseInt(req.getParameter("publisherId"));
+            String title = req.getParameter("title");
+            String description = req.getParameter("description");
+            double price = Double.parseDouble(req.getParameter("price"));
+            int stock = Integer.parseInt(req.getParameter("stock"));
+            String imgURL = req.getParameter("imgURL");
 
-        Book book = new Book(0, categoryId, authorId, publisherId, title, description, price, stock, imgURL);
-        boolean isSuccess = bookService.add(book);
+            Book book = new Book(0, categoryId, authorId, publisherId, title, description, price, stock, imgURL);
+            boolean isSuccess = bookService.add(book);
 
-        String mess = isSuccess ? "Thêm mới thành công" : "Thêm mới thất bại";
-        resp.sendRedirect("/book?mess=" + mess);
+            String mess = isSuccess ? "Thêm mới thành công" : "Thêm mới thất bại";
+            resp.sendRedirect("/book?mess=" + mess);
+        }catch(Exception e) {
+            resp.sendRedirect("/book?mess=Lỗi định dạng dữ liệu, thêm sách thất bại.");
+        }
     }
     private void showUpdate(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

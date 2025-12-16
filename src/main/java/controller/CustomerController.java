@@ -65,6 +65,7 @@ public class CustomerController extends HttpServlet {
     }
 
     private void save(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try{
         int accountId = Integer.parseInt(req.getParameter("accountId"));
         String name = req.getParameter("name");
         String email = req.getParameter("email");
@@ -75,6 +76,9 @@ public class CustomerController extends HttpServlet {
 
         String mess = isSuccess ? "Thêm mới thành công" : "Thêm mới thất bại";
         resp.sendRedirect("/customer?mess=" + mess);
+        }catch(Exception e){
+            resp.sendRedirect("/customer?mess=Lỗi định dạng dữ liệu, thêm sách thất bại.");
+        }
     }
     private void showUpdate(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

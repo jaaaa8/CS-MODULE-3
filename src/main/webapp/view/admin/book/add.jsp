@@ -50,30 +50,30 @@
                                                           class="form-label fw-semibold">Category</label> <select
                                 name="categoryId" id="categoryId" class="form-select" required>
                             <option value="" disabled selected>Select Category</option>
-                            <option value="1">Fiction</option>
-                            <option value="2">Science</option>
-                            <option value="3">History</option>
-                            <option value="4">Cooking</option>
-                            <option value="5">Art</option>
+                            <option value="1">Văn Học</option>
+                            <option value="2">Khoa Học</option>
+                            <option value="3">Thiếu Nhi</option>
+                            <option value="4">Công Nghệ Thông Tin</option>
+                            <option value="5">Kinh Tế</option>
                         </select></div>
                         <div class="col-md-4 mb-3"><label for="authorId" class="form-label fw-semibold">Author</label>
                             <select name="authorId" id="authorId" class="form-select" required>
                                 <option value="" disabled selected>Select Author</option>
-                                <option value="1">Author A</option>
-                                <option value="2">Author B</option>
-                                <option value="3">Author C</option>
-                                <option value="4">Author D</option>
-                                <option value="5">Author E</option>
+                                <option value="1">Nguyễn Nhật Ánh</option>
+                                <option value="2">Paulo Coelho</option>
+                                <option value="3">Dale Carnegie</option>
+                                <option value="4">J.K. <Rowling></Rowling></option>
+                                <option value="5">Robert C. Martin</option>
                             </select></div>
                         <div class="col-md-4 mb-3"><label for="publisherId"
                                                           class="form-label fw-semibold">Publisher</label> <select
                                 name="publisherId" id="publisherId" class="form-select" required>
                             <option value="" disabled selected>Select Publisher</option>
-                            <option value="1">Publisher X</option>
-                            <option value="2">Publisher Y</option>
-                            <option value="3">Publisher Z</option>
-                            <option value="4">Publisher W</option>
-                            <option value="5">Publisher K</option>
+                            <option value="1">NXB Trẻ</option>
+                            <option value="2">NXB Kim Đồng</option>
+                            <option value="3">NXB Giáo Dục</option>
+                            <option value="4">NXB Lao Động</option>
+                            <option value="5">NXB Văn Học</option>
                         </select></div>
                     </div>
                 </fieldset>
