@@ -11,16 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductRepository implements IProductRepository {
-    private static final String SELECT_ALL =
-            "SELECT b.book_id AS id, " +
-                    "c.name AS categoryName, " +
-                    "a.name AS authorName, " +
-                    "p.name AS publisherName, " +
-                    "b.title, b.description, b.price, b.stock, b.image_url AS imgURL " +
-                    "FROM Book b " +
-                    "LEFT JOIN Category c ON b.category_id = c.category_id " +
-                    "LEFT JOIN Author a ON b.author_id = a.author_id " +
-                    "LEFT JOIN Publisher p ON b.publisher_id = p.publisher_id";
+    private static final String SELECT_ALL = """
+                    SELECT b.book_id AS id,
+                    c.name AS categoryName,
+                    a.name AS authorName,
+                    p.name AS publisherName,
+                    b.title, b.description, b.price, b.stock, b.image_url AS imgURL
+                    FROM Book b
+                    LEFT JOIN Category c ON b.category_id = c.category_id
+                    LEFT JOIN Author a ON b.author_id = a.author_id
+                    LEFT JOIN Publisher p ON b.publisher_id = p.publisher_id;
+                  """;
 
     private static final String SEARCH_BY_KEYWORD = """
                     SELECT
@@ -39,8 +40,8 @@ public class ProductRepository implements IProductRepository {
                     JOIN Publisher p ON b.publisher_id = p.publisher_id
                     WHERE b.title LIKE ? OR a.name LIKE ?;
                     """;
-    String sql = """
-                    SELECT 
+    private static final String sql = """
+                    SELECT
                     b.book_id AS id,
                     b.title,
                     b.price,
@@ -54,7 +55,7 @@ public class ProductRepository implements IProductRepository {
                     JOIN Author a ON b.author_id = a.author_id
                     JOIN Category c ON b.category_id = c.category_id
                     JOIN Publisher p ON b.publisher_id = p.publisher_id
-                    WHERE b.book_id = ?
+                    WHERE b.book_id = ?;
                     """;
 
     @Override
@@ -79,7 +80,7 @@ public class ProductRepository implements IProductRepository {
                 ));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("lỗi do truỳ vấn dữ liệu");
         }
         return productList;
     }
@@ -117,7 +118,7 @@ public class ProductRepository implements IProductRepository {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("lỗi do truỳ vấn dữ liệu");
         }
 
         return productList;
@@ -145,7 +146,7 @@ public class ProductRepository implements IProductRepository {
                 );
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("lỗi do truỳ vấn dữ liệu");
         }
         return null;
     }
