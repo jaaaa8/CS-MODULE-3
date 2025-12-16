@@ -13,13 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderItemRepository implements IOrderItemRepository {
-    private final String ADD_NEW_ITEM = "INSERT INTO order_item (order_id, book_id, quantity, price) VALUES (?, ?, ?, ?)";
-    private final String UPDATE_QUANTITY = "UPDATE order_item SET quantity = ? WHERE order_item_id = ?";
-    private final String REMOVE_ITEM = "DELETE FROM order_item WHERE order_item_id = ?";
+    private final String ADD_NEW_ITEM = "INSERT INTO orderitem (order_id, book_id, quantity, price) VALUES (?, ?, ?, ?)";
+    private final String UPDATE_QUANTITY = "UPDATE orderitem SET quantity = ? WHERE order_item_id = ?";
+    private final String REMOVE_ITEM = "DELETE FROM orderitem WHERE order_item_id = ?";
     private final String FIND_ITEMS_BY_ORDER_ID = "SELECT * FROM orderitem WHERE order_id = ? AND book_id = ?";
-    private final String CALCULATE_TOTAL_PRICE = "SELECT SUM(price * quantity) AS total_price FROM order_item WHERE order_id = ?";
+    private final String CALCULATE_TOTAL_PRICE = "SELECT SUM(price * quantity) AS total_price FROM orderitem WHERE order_id = ?";
     private final String CANCEL_ITEMS_BY_ORDER_ID = "DELETE FROM orderitem WHERE order_id = ?";
     private final String SHOW_ALL_ITEMS_IN_ORDERS = "SELECT oi.order_id,b.title AS book_name,oi.quantity,oi.price FROM orderitem oi JOIN book b ON oi.book_id = b.book_id WHERE oi.order_id = ?";
+    private final String FIND_BY_ORDER_AND_BOOK = "SELECT * FROM orderitem WHERE order_id = ? AND book_id = ?";
+    private final String UPDATE_QUANTITY_BY_ORDER_AND_BOOK = "UPDATE orderitem SET quantity = quantity + ? WHERE order_id = ? AND book_id = ?";
 
     @Override
     public boolean addItem(int orderId, int bookId, int quantity, double price) {
@@ -118,7 +120,7 @@ public class OrderItemRepository implements IOrderItemRepository {
         }catch (SQLException e){
             System.out.println("Error calculating total price");
         }
-        return -1;
+        return 0;
     }
 
     @Override
@@ -132,5 +134,37 @@ public class OrderItemRepository implements IOrderItemRepository {
             System.out.println("Error canceling items by order ID");
         }
         return false;
+    }
+
+    @Override
+    public boolean increaseQuantity(int orderId, int bookId, int quantity) {
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(UPDATE_QUANTITY_BY_ORDER_AND_BOOK)) {
+
+            ps.setInt(1, quantity);
+            ps.setInt(2, orderId);
+            ps.setInt(3, bookId);
+
+            return ps.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean existItemInOrder(int orderId, int bookId) {
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(FIND_BY_ORDER_AND_BOOK)) {
+
+            ps.setInt(1, orderId);
+            ps.setInt(2, bookId);
+
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

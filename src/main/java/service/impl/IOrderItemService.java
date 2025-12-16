@@ -1,12 +1,11 @@
-package repository.impl;
+package service.impl;
 
 import dto.OrderItemDto;
 import entity.OrderItem;
 
 import java.util.List;
 
-
-public interface IOrderItemRepository {
+public interface IOrderItemService {
     boolean addItem(int orderId, int bookId, int quantity, double price);
     boolean updateQuantity(int orderItemId, int quantity);
     boolean removeItem(int orderItemId);

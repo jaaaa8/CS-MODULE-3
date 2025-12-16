@@ -117,7 +117,7 @@ public class OrdersRepository implements IOrderRepository {
                 int orderId = rs.getInt("order_id");
                 String status = rs.getString("status");
                 double total = rs.getDouble("total");
-                Date orderDate = rs.getDate("order_date");
+                Date orderDate = rs.getDate("created_at");
                 int confirmedBy = rs.getInt("confirmed_by");
                 return new Orders(orderId, customerId, status, total, orderDate, confirmedBy);
             }

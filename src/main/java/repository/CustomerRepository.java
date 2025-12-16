@@ -15,6 +15,7 @@ public class CustomerRepository implements IRepostitory<Customer> {
     private final String INSERT_INTO ="insert into customer(account_id,name,email,phone,address) values (?,?,?,?,?)";
     private final String DELETE ="delete from customer where customer_id=?";
     private final String UPDATE ="update customer set account_id=?,name=?,email=?,phone=?,address=? where customer_id= ?";
+    private final String FIND_BY_ACCOUNT_ID ="select * from customer where account_id=? limit 1";
     @Override
     public List<Customer> findAll() {
         List<Customer> customers = new ArrayList<>();
@@ -110,6 +111,25 @@ public class CustomerRepository implements IRepostitory<Customer> {
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public Customer findByAccountId(int accountId) {
+        try (Connection connection = ConnectDB.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ACCOUNT_ID)) {
+            preparedStatement.setInt(1, accountId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int customer_id = resultSet.getInt("customer_id");
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String phone = resultSet.getString("phone");
+                String address = resultSet.getString("address");
+                return new Customer(customer_id, accountId, name, email, phone, address);
+            }
+        } catch (SQLException e) {
+            System.out.println("Find by Account ID Error");
         }
         return null;
     }

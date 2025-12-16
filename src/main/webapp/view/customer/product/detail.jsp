@@ -49,7 +49,7 @@
                 <span class="text-dark">(4.5/5 - 123 đánh giá)</span>
             </div>
 
-            <h4 class="text-danger fw-bold">120.000₫</h4>
+            <h4 class="text-danger fw-bold" name="price">120.000₫</h4>
             <p class="text-decoration-line-through text-secondary">150.000₫</p>
 
             <p class="mt-3">
@@ -65,13 +65,24 @@
 
             <!-- BUTTONS -->
             <div class="d-flex gap-3">
-                <button class="btn btn-danger px-4 py-2">
-                    <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                </button>
+                <form action="${pageContext.request.contextPath}/cart" method="post">
+                    <input type="hidden" name="action" value="add">
+                    <input type="hidden" name="bookId" value="${book.id}">
+                    <input type="hidden" name="quantity" value="1">
 
-                <button class="btn btn-warning px-4 py-2">
-                    <i class="bi bi-lightning-fill"></i> Mua ngay
-                </button>
+                    <button type="submit" class="btn btn-danger px-4 py-2">
+                        <i class="bi bi-cart-plus"></i> Thêm vào giỏ
+                    </button>
+                </form>
+
+                <form action="${pageContext.request.contextPath}/checkout" method="post">
+                    <input type="hidden" name="bookId" value="${book.id}">
+                    <input type="hidden" name="quantity" value="1">
+
+                    <button type="submit" class="btn btn-warning px-4 py-2">
+                        <i class="bi bi-lightning-fill"></i> Mua ngay
+                    </button>
+                </form>
             </div>
 
             <div class="mt-4">

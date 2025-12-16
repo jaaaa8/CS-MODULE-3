@@ -220,7 +220,7 @@
 
                     <!-- CLICK → chuyển trang -->
                     <a class="btn text-white position-relative cart-link"
-                       href="${pageContext.request.contextPath}/view/customer/cart/cart.jsp">
+                       href="${pageContext.request.contextPath}/cart?action=view">
                         <i class="bi bi-cart-fill me-1"></i>Giỏ hàng
                     </a>
 
