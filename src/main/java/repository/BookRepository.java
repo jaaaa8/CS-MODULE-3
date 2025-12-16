@@ -1,6 +1,7 @@
 package repository;
 
 import entity.Book;
+import entity.Customer;
 import util.ConnectDB;
 
 import java.sql.Connection;
@@ -100,8 +101,8 @@ public class BookRepository implements IRepostitory<Book>{
     @Override
     public Book findById(int id) {
         String sql = "SELECT * FROM book WHERE book_id = ?";
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        try (Connection connection = ConnectDB.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();

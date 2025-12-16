@@ -65,7 +65,7 @@ public class BookController extends HttpServlet {
         int deleteId = Integer.parseInt(req.getParameter("deleteId"));
         boolean isSuccess = bookService.delete(deleteId);
         String mess = isSuccess ? "Xoá thành công" : "Xoá thất bại";
-        resp.sendRedirect("/product?mess=" + mess);
+        resp.sendRedirect("/book?mess=" + mess);
     }
 
     private void save(HttpServletRequest req, HttpServletResponse resp) throws IOException {
