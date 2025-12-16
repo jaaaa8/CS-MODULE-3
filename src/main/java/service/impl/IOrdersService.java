@@ -5,7 +5,7 @@ import entity.Orders;
 
 import java.util.List;
 
-public interface IOrderService {
+public interface IOrdersService {
     List<OrdersDto> findAllOrders();
     boolean deleteOrder(int orderId);
     Orders findOrderById(int orderId);

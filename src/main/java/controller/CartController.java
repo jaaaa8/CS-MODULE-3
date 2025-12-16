@@ -12,16 +12,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import service.CustomerService;
 import service.OrderItemService;
-import service.OrderService;
+import service.OrdersService;
 import service.impl.IOrderItemService;
-import service.impl.IOrderService;
+import service.impl.IOrdersService;
 
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet (name = "CartController", urlPatterns = "/cart")
 public class CartController extends HttpServlet {
-    private final IOrderService orderService = new OrderService();
+    private final IOrdersService orderService = new OrdersService();
     private final IOrderItemService orderItemService = new OrderItemService();
     private final CustomerService customerService = new CustomerService();
 

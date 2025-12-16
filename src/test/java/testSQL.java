@@ -1,14 +1,12 @@
-import entity.Account;
 import entity.Customer;
 import entity.Orders;
-import repository.AccountRepository;
 import service.CustomerService;
 import service.OrderItemService;
-import service.OrderService;
+import service.OrdersService;
 
 public class testSQL {
     public static void main(String[] args) {
-        OrderService orderService = new OrderService();
+        OrdersService orderService = new OrdersService();
         OrderItemService orderItemService = new OrderItemService();
         CustomerService customerService = new CustomerService();
         Customer customer = new Customer(1,1,"John Doe","as@gmail.comm","1234567890","123 Main St");

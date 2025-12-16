@@ -6,14 +6,14 @@ import repository.OrderItemRepository;
 import repository.OrdersRepository;
 import repository.impl.IOrderItemRepository;
 import repository.impl.IOrderRepository;
-import service.impl.IOrderService;
+import service.impl.IOrdersService;
 import util.ConnectDB;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-public class OrderService implements IOrderService {
+public class OrdersService implements IOrdersService {
     private final IOrderRepository ordersRepository = new OrdersRepository();
     private final IOrderItemRepository orderItemRepository = new OrderItemRepository();
 
