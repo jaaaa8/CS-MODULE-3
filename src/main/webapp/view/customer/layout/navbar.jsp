@@ -108,7 +108,7 @@
 
         <!-- LOGO -->
         <a class="navbar-brand fw-bold fs-4"
-           href="${pageContext.request.contextPath}/products">
+           href="${pageContext.request.contextPath}/home">
             TTT.COM
         </a>
 
@@ -204,12 +204,25 @@
                         <i class="bi bi-person-circle"></i> Tài khoản
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item"
-                               href="${pageContext.request.contextPath}/view/login/login.jsp">
-                            Đăng nhập</a></li>
-                        <li><a class="dropdown-item"
-                               href="${pageContext.request.contextPath}/view/login/register.jsp">
-                            Đăng ký</a></li>
+                        <c:if test="${account != null}">
+                            <li>
+                                <p>
+                                    Xin chào, <b>${account.username}</b>
+                                </p>
+                            </li>
+                            <form action="${pageContext.request.contextPath}/auth" method="post">
+                                <input type="hidden" name="action" value="logout">
+                                <button type="submit">Logout</button>
+                            </form>
+                        </c:if>
+                        <c:if test="${account == null}">
+                            <li><a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/auth?action=login">
+                                Đăng nhập</a></li>
+                            <li><a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/auth?action=register">
+                                Đăng ký</a></li>
+                        </c:if>
                     </ul>
                 </li>
 

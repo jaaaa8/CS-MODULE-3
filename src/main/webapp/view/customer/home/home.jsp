@@ -25,7 +25,7 @@
         <div class="p-5 bg-danger text-white rounded-4 shadow-lg text-center">
             <h1 class="fw-bold">Chào mừng đến với TTT Bookstore</h1>
             <p class="lead">Khám phá hàng ngàn tựa sách hay, best-seller và nhiều ưu đãi hấp dẫn!</p>
-            <a href="#products" class="btn btn-light btn-lg fw-bold"><i class="bi bi-arrow-right-circle"></i> Khám phá ngay</a>
+            <a href="${pageContext.request.contextPath}/products" class="btn btn-light btn-lg fw-bold"><i class="bi bi-arrow-right-circle"></i> Khám phá ngay</a>
         </div>
     </div>
 </section>

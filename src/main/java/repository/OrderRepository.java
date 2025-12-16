@@ -46,9 +46,9 @@ public class OrderRepository implements IOrderRepository {
     public boolean add(Orders orders) {
         try (Connection connection = ConnectDB.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO);
-            preparedStatement.setInt(1, orders.getCustomerID());
+            preparedStatement.setInt(1, orders.getCustomerId());
             preparedStatement.setString(2, orders.getStatus());
-            preparedStatement.setDouble(3, orders.getTotalPrice());
+            preparedStatement.setDouble(3, orders.getTotal());
             preparedStatement.setDate(4, (java.sql.Date) orders.getCreateAt());
             preparedStatement.setInt(5, orders.getConfirmById());
             int effectRow = preparedStatement.executeUpdate();
@@ -76,9 +76,9 @@ public class OrderRepository implements IOrderRepository {
     public boolean update(Orders orders) {
         try (Connection connection = ConnectDB.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
-            preparedStatement.setInt(1, orders.getCustomerID());
+            preparedStatement.setInt(1, orders.getCustomerId());
             preparedStatement.setString(2, orders.getStatus());
-            preparedStatement.setDouble(3, orders.getTotalPrice());
+            preparedStatement.setDouble(3, orders.getTotal());
             preparedStatement.setDate(4, (java.sql.Date) orders.getCreateAt());
             preparedStatement.setInt(5, orders.getConfirmById());
             preparedStatement.setInt(6, orders.getId());

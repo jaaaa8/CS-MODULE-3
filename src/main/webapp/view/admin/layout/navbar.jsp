@@ -49,13 +49,15 @@
 
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle"></i> Admin
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-person-badge"></i> Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                    <ul>
+                        <li>
+                            <p>
+                                Xin chào ADMIN ${account.username}!
+                            </p>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li><a class="dropdown-item text-white" href="${pageContext.request.contextPath}/auth?action=logout"><i class="bi bi-box-arrow-right me-1"></i> Logout</a></li>
                     </ul>
                 </li>
             </ul>
