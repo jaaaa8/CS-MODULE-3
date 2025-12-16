@@ -26,8 +26,7 @@ public class CartController extends HttpServlet {
     private final CustomerService customerService = new CustomerService();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String action = req.getParameter("action");
         if (action == null) action = "";
@@ -36,7 +35,8 @@ public class CartController extends HttpServlet {
             case "add":
                 // thường add dùng POST → không xử lý ở GET
                 break;
-            case "remove":
+            case "done":
+                showSuccessView(req, resp);
                 break;
             case "checkout":
                 break;
@@ -44,6 +44,16 @@ public class CartController extends HttpServlet {
                 // ✅ MẶC ĐỊNH LÀ XEM CART
                 showCartView(req, resp);
                 break;
+        }
+    }
+
+    private void showSuccessView(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            req.getRequestDispatcher("/view/customer/cart/success.jsp")
+                    .forward(req, resp);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -138,10 +148,6 @@ public class CartController extends HttpServlet {
                 removeItem(req, resp);
                 // Implement remove from cart logic here
                 break;
-            case "checkout":
-                // Implement checkout logic here
-                checkout(req, resp);
-                break;
             default:
                 // Implement default cart action here
                 break;
@@ -157,23 +163,6 @@ public class CartController extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/cart");
     }
 
-    private void checkout(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
-        HttpSession session = req.getSession(false);
-        Account account = (Account) session.getAttribute("account");
-
-        Customer customer = customerService.findByAccountId(account.getId());
-        Orders cart = orderService.findCartByCustomerId(customer.getId());
-
-        boolean success = orderService.checkout(cart.getId());
-
-        if (success) {
-            resp.sendRedirect(req.getContextPath() + "/order-success");
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/cart?error=checkout");
-        }
-    }
 
 
 }

@@ -68,14 +68,14 @@
           <c:forEach var="order" items="${requestScope.orderList}">
             <tr>
               <td class="text-center">${order.id}</td>
-              <td>${order.customerID}</td>
+              <td>${order.customerId}</td>
               <td>
                   <%-- Sử dụng tag fmt để format ngày tháng --%>
-                <fmt:formatDate value="${order.createAt}" pattern="yyyy-MM-dd HH:mm"/>
+                    <fmt:formatDate value="${order.createAt}" pattern="yyyy-MM-dd HH:mm"/>
               </td>
               <td>
                   <%-- Format tiền tệ --%>
-                <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="$"/>
+                <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="$"/>
               </td>
               <td>
                   <%-- Hiển thị trạng thái với màu sắc tương ứng --%>
