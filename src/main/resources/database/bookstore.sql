@@ -75,6 +75,7 @@ CREATE TABLE OrderItem (
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),
     FOREIGN KEY (book_id) REFERENCES Book(book_id)
 );
+
 INSERT INTO publisher (name, address, phone) VALUES
                                                  ('NXB Trẻ', 'TP. Hồ Chí Minh', '02838201234'),
                                                  ('NXB Kim Đồng', 'Hà Nội', '02439434730'),
@@ -94,10 +95,19 @@ INSERT INTO author (name, bio) VALUES
                                    ('J.K. Rowling', 'Tác giả bộ truyện Harry Potter nổi tiếng thế giới.'),
                                    ('Robert C. Martin', 'Chuyên gia phần mềm, tác giả Clean Code.');
 
-INSERT INTO account(username, password, role)
-VALUES ('test123', '123456', 'CUSTOMER');
+INSERT INTO Account (username, password, role) VALUES
+('user01', 'password_hash_01', 'CUSTOMER'),
+('user02', 'password_hash_02', 'CUSTOMER'),
+('admin01', 'password_hash_03', 'ADMIN'),
+('user03', 'password_hash_04', 'CUSTOMER'),
+('user04', 'password_hash_05', 'CUSTOMER');
 
--- dto orders
-select o.order_id, c.name as customer_name, o.status, o.total, o.created_at, a.username as confirmed_by_name from Orders o join customer c on o.customer_id = c.customer_id left join account a on o.confirmed_by = a.account_id;
+-- Sample data cho bảng Customer
+INSERT INTO Customer (account_id, name, email, phone, address) VALUES
+(1, 'Nguyen Van A', 'a.nguyen@gmail.com', '0901234567', 'Da Nang'),
+(2, 'Tran Thi B', 'b.tran@gmail.com', '0912345678', 'Ha Noi'),
+(4, 'Le Van C', 'c.le@gmail.com', '0923456789', 'Ho Chi Minh'),
+(5, 'Pham Thi D', 'd.pham@gmail.com', '0934567890', 'Hue'),
+(3, 'Admin User', 'admin@gmail.com', '0999999999', 'System Office');
 
-SELECT oi.order_id,b.title AS book_name,oi.quantity,oi.price FROM orderitem oi JOIN book b ON oi.book_id = b.book_id WHERE oi.order_id = 1;
+

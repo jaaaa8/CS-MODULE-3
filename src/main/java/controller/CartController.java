@@ -26,84 +26,63 @@ public class CartController extends HttpServlet {
     private final CustomerService customerService = new CustomerService();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
         String action = req.getParameter("action");
         if (action == null) action = "";
+
         switch (action){
-            case "view":
-                // Implement cart view logic here
-                showCartView(req, resp);
-                break;
-            case "detail":
-                // Implement cart detail view logic here
-                break;
             case "add":
-                // Implement add to cart logic here
-                addNewItemToCart(req, resp);
+                // thường add dùng POST → không xử lý ở GET
                 break;
             case "remove":
-                // Implement remove from cart logic here
                 break;
             case "checkout":
-                // Implement checkout logic here
                 break;
             default:
-                // Implement default cart view logic here
+                // ✅ MẶC ĐỊNH LÀ XEM CART
+                showCartView(req, resp);
                 break;
         }
     }
 
-    private void addNewItemToCart(HttpServletRequest req, HttpServletResponse resp) {
-        try {
-            HttpSession session = req.getSession(false);
-            if (session == null) {
-                resp.sendRedirect(req.getContextPath() + "/auth?action=login");
-                return;
-            }
 
-            Account account = (Account) session.getAttribute("account");
-            if (account == null) {
-                resp.sendRedirect(req.getContextPath() + "/auth?action=login");
-                return;
-            }
+    private void addNewItemToCart(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
 
-            // 1️⃣ Account → Customer
-            Customer customer = customerService.findByAccountId(account.getId());
-            if (customer == null) {
-                throw new RuntimeException("Customer not found for accountId=" + account.getId());
-            }
-
-            // 2️⃣ Get or create cart
-            Orders cart = orderService.findCartByCustomerId(customer.getId());
-            if (cart == null) {
-                int cartId = orderService.createCartForCustomer(customer.getId());
-                cart = orderService.findOrderById(cartId);
-            }
-
-            // 3️⃣ Get product info
-            int bookId = Integer.parseInt(req.getParameter("bookId"));
-            int quantity = Integer.parseInt(req.getParameter("quantity"));
-
-            if (quantity <= 0) quantity = 1;
-
-            // 4️⃣ Add or update item
-            boolean exists = orderItemService.existItemInOrder(cart.getId(), bookId);
-
-            if (exists) {
-                orderItemService.increaseQuantity(cart.getId(), bookId, quantity);
-            } else {
-                orderItemService.addItem(cart.getId(), bookId, quantity, 0);
-            }
-
-            // 5️⃣ Redirect (PRG pattern)
-            resp.sendRedirect(req.getContextPath() + "/cart");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+        HttpSession session = req.getSession(false);
+        if (session == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+            return;
         }
-    }
 
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+            return;
+        }
+
+        int bookId = Integer.parseInt(req.getParameter("bookId"));
+
+        Customer customer = customerService.findByAccountId(account.getId());
+
+        Orders cart = orderService.findCartByCustomerId(customer.getId());
+        if (cart == null) {
+            int cartId = orderService.createCartForCustomer(customer.getId());
+            cart = orderService.findOrderById(cartId);
+        }
+
+        boolean exists = orderItemService.existItemInOrder(cart.getId(), bookId);
+
+        if (exists) {
+            orderItemService.increaseQuantity(cart.getId(), bookId, 1);
+        } else {
+            orderItemService.addItem(cart.getId(), bookId, 1, 0);
+        }
+
+        resp.sendRedirect(req.getContextPath() + "/cart");
+    }
 
     private void showCartView(HttpServletRequest req, HttpServletResponse resp) {
         try {
@@ -146,8 +125,6 @@ public class CartController extends HttpServlet {
     }
 
 
-
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
@@ -155,16 +132,48 @@ public class CartController extends HttpServlet {
         switch (action){
             case "add":
                 // Implement add to cart logic here
+                addNewItemToCart(req, resp);
                 break;
             case "remove":
+                removeItem(req, resp);
                 // Implement remove from cart logic here
                 break;
             case "checkout":
                 // Implement checkout logic here
+                checkout(req, resp);
                 break;
             default:
                 // Implement default cart action here
                 break;
         }
     }
+
+    private void removeItem(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+
+        int orderItemId = Integer.parseInt(req.getParameter("orderItemId"));
+        orderItemService.removeItem(orderItemId);
+
+        resp.sendRedirect(req.getContextPath() + "/cart");
+    }
+
+    private void checkout(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+
+        HttpSession session = req.getSession(false);
+        Account account = (Account) session.getAttribute("account");
+
+        Customer customer = customerService.findByAccountId(account.getId());
+        Orders cart = orderService.findCartByCustomerId(customer.getId());
+
+        boolean success = orderService.checkout(cart.getId());
+
+        if (success) {
+            resp.sendRedirect(req.getContextPath() + "/order-success");
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/cart?error=checkout");
+        }
+    }
+
+
 }
