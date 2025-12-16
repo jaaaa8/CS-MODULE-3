@@ -1,12 +1,12 @@
 package repository.impl;
 
+import dto.OrdersDto;
 import entity.Orders;
 
 import java.util.List;
 
 public interface IOrderRepository {
-    List<Orders> findAllOrders();
-    boolean addOrder(Orders order);
+    List<OrdersDto> findAllOrders();
     boolean deleteOrder(int orderId);
     Orders findOrderById(int orderId);
     boolean confirmOrder(int orderId, int adminId);
@@ -15,6 +15,5 @@ public interface IOrderRepository {
     Orders findCartByCustomerId(int customerId);
     int createCartForCustomer(int customerId);
 
-    double calculateTotalPrice(int orderId);
-    boolean checkoutOrder(int orderId, double totalPrice);
+    boolean updateOrderStatusAndTotalPrice(int orderId, double totalPrice, String status);
 }

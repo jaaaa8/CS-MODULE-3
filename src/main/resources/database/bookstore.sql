@@ -96,3 +96,8 @@ INSERT INTO author (name, bio) VALUES
 
 INSERT INTO account(username, password, role)
 VALUES ('test123', '123456', 'CUSTOMER');
+
+-- dto orders
+select o.order_id, c.name as customer_name, o.status, o.total, o.created_at, a.username as confirmed_by_name from Orders o join customer c on o.customer_id = c.customer_id left join account a on o.confirmed_by = a.account_id;
+
+SELECT oi.order_id,b.title AS book_name,oi.quantity,oi.price FROM orderitem oi JOIN book b ON oi.book_id = b.book_id WHERE oi.order_id = 1;
