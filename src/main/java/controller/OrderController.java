@@ -1,14 +1,18 @@
 package controller;
 
+import entity.Account;
 import entity.Orders;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import service.IService;
 import service.OrderService;
+import service.OrdersService;
 import service.impl.IOrderService;
+import service.impl.IOrdersService;
 
 import java.io.IOException;
 import java.util.Date;
@@ -17,6 +21,7 @@ import java.util.List;
 @WebServlet(name = "OrderController", urlPatterns="/order")
 public class OrderController extends HttpServlet {
     private final IOrderService orderService = new OrderService();
+    private final IOrdersService ordersService = new OrdersService();
     private static final String JSP_PATH = "/view/admin/order/";
 
     @Override
@@ -62,6 +67,7 @@ public class OrderController extends HttpServlet {
                 break;
         }
     }
+
     private void showOrderList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Orders> ordersList = orderService.findAll();
         req.setAttribute("orderList", ordersList); // Đã sửa tên attribute
@@ -82,15 +88,26 @@ public class OrderController extends HttpServlet {
     }
     private void confirmAdmin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String mess;
+        HttpSession session = req.getSession(false);
+        if (session == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+            return;
+        }
+
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+            return;
+        }
         try {
             int orderId = Integer.parseInt(req.getParameter("orderId"));
-            // **LƯU Ý:** Bạn cần đảm bảo OrderService có hàm updateStatus(id, status)
-            boolean isSuccess = orderService.updateStatus(orderId, "CONFIRMED");
+            boolean isSuccess = ordersService.confirmOrder(orderId,account.getId());
             mess = isSuccess ? "Đã xác nhận đơn hàng ID " + orderId : "Xác nhận thất bại.";
         } catch (NumberFormatException e) {
             mess = "Lỗi: ID đơn hàng không hợp lệ.";
         }
-        resp.sendRedirect("/order?mess=" + mess);
+        req.setAttribute("mess", mess);
+        resp.sendRedirect("/order");
     }
 
     // CONFIRMED -> SHIPPED
