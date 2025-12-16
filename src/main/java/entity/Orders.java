@@ -77,4 +77,5 @@ public class Orders {
     public void setTotal(double totalPrice) {
         this.total = totalPrice;
     }
+
 }

@@ -1,40 +1,49 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: PC
-  Date: 12/9/2025
-  Time: 7:31 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+<!-- BOOTSTRAP -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
 <style>
-    /* RESET MARGIN/PADDING */
-    body {
-        margin: 0 !important;
-        padding: 0 !important;
-        padding-top: 56px !important;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-    html {
+    /* ================= RESET + LAYOUT ================= */
+    html, body {
         height: 100%;
     }
 
-    /* FOOTER FIXED */
-    .footer-fixed {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        z-index: 1030;
+    body {
+        margin: 0;
+        padding-top: 80px; /* phù hợp navbar cao */
+        display: flex;
+        flex-direction: column;
+        background: #f8f9fa;
     }
 
-    /* CART + MINI CART */
+    /* Content grow để footer luôn nằm cuối */
+    main, .flex-grow-1 {
+        flex: 1;
+    }
+
+    /* ================= LOGO ================= */
+    .logo-text {
+        font-weight: bold;
+        font-size: 1.4rem;
+        color: #fff;
+        text-shadow:
+                0 0 5px #ff6a00,
+                0 0 10px #ff6a00,
+                0 0 20px #ff6a00,
+                0 0 40px #ee0979;
+        transition: .3s;
+    }
+    .logo-text:hover {
+        transform: scale(1.1);
+    }
+
+    /* ================= CART ================= */
     .cart-wrapper {
         position: relative;
     }
+
     .cart-count {
         position: absolute;
         top: -5px;
@@ -47,108 +56,78 @@
         padding: 2px 6px;
     }
 
-    /* MINI CART */
+    /* ================= MINI CART ================= */
     .mini-cart {
         position: absolute;
         right: 0;
         top: 48px;
         width: 320px;
         background: #fff;
-        border: 1px solid #ddd;
         border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        padding: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,.2);
+        padding: 12px;
         display: none;
-        opacity: 0;
-        transform: translateY(-10px);
-        transition: all 0.25s ease-in-out;
-        z-index: 9999;
+        z-index: 1050;
     }
 
-    /* ⭐ MINI-CART CHỈ HIỆN KHI HOVER */
-    .cart-wrapper:hover .mini-cart,
-    .mini-cart:hover {
-        display: block !important;
-        opacity: 1;
-        transform: translateY(0);
+    /* Desktop hover */
+    @media (min-width: 992px) {
+        .cart-wrapper:hover .mini-cart {
+            display: block;
+        }
     }
 
-    /* MINI CART ITEMS */
-    .mini-cart .mini-item {
+    /* Mini cart items */
+    .mini-item {
         display: flex;
-        align-items: center;
+        gap: 10px;
         margin-bottom: 10px;
-        transition: all 0.3s;
     }
-    .mini-cart .mini-item:hover {
-        background: #f1f1f1;
-        border-radius: 5px;
-    }
-    .mini-cart img {
-        width: 50px;
-        height: 70px;
+    .mini-item img {
+        width: 45px;
+        height: 65px;
         object-fit: cover;
-        border-radius: 3px;
-        margin-right: 10px;
     }
-    .mini-item-title { font-size: 0.9rem; font-weight: 500; }
-    .mini-item-price { font-size: 0.85rem; color: #555; }
-    .mini-delete { font-size: 1rem; color: red; cursor: pointer; }
+    .mini-item-title {
+        font-size: .9rem;
+        font-weight: 500;
+    }
+    .mini-item-price {
+        font-size: .85rem;
+        color: #666;
+    }
 
-    /* SCROLL ĐẸP */
+    /* Scroll */
     #mini-items {
-        max-height: 250px;
+        max-height: 240px;
         overflow-y: auto;
     }
     #mini-items::-webkit-scrollbar {
-        width: 6px;
+        width: 5px;
     }
     #mini-items::-webkit-scrollbar-thumb {
         background: #aaa;
         border-radius: 10px;
     }
 
-    /* LOGO NEON */
-    .logo-text {
-        font-weight: bold;
-        font-size: 1.3rem;
-        color: #fff;
-        text-shadow:
-                0 0 5px #ff6a00,
-                0 0 10px #ff6a00,
-                0 0 20px #ff6a00,
-                0 0 40px #ff6a00,
-                0 0 60px #ee0979;
-        animation: neonGlow 2s ease-in-out infinite alternate;
-        transition: all 0.3s;
-    }
-    .logo-text:hover {
-        transform: scale(1.15) rotate(-2deg);
-        text-shadow:
-                0 0 12px #ff6a00,
-                0 0 20px #ff6a00,
-                0 0 40px #ff6a00,
-                0 0 70px #ee0979;
-    }
-    @keyframes neonGlow {
-        0% { opacity: 1; }
-        50% { opacity: .9; }
-        100% { opacity: 1; }
+    /* ================= FOOTER ================= */
+    footer {
+        background: #212529;
+        color: #ccc;
+        padding: 30px 0;
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 992px) {
-        .mini-cart {
-            right: -80px;
-            width: 260px;
-        }
-        .footer-fixed {
-            position: static !important;
-        }
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 991px) {
         body {
-            padding-bottom: 0 !important;
+            padding-top: 70px;
+        }
+        .mini-cart {
+            width: 260px;
+            right: -40px;
         }
     }
-
-
 </style>
+
+<!-- BOOTSTRAP JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

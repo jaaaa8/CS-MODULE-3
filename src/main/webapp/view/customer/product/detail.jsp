@@ -1,102 +1,145 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: DELL G3
-  Date: 12/2/2025
-  Time: 2:10 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TTT Bookstore | Chi tiết sản phẩm</title>
+    <title>${product.title} | TTT Bookstore</title>
+
     <c:import url="../layout/library.jsp"/>
+
+    <style>
+        /* ===================== */
+        /* IMAGE FIX */
+        /* ===================== */
+        .product-main-img {
+            width: 100%;
+            height: 420px;
+            object-fit: contain;
+            background: #f8f9fa;
+        }
+
+        .thumb-img {
+            width: 80px;
+            height: 100px;
+            object-fit: contain;
+            cursor: pointer;
+            background: #f8f9fa;
+        }
+
+        @media (max-width: 768px) {
+            .product-main-img {
+                height: 320px;
+            }
+        }
+    </style>
 </head>
-<body>
+
+<body class="bg-light">
+
 <c:import url="../layout/navbar.jsp" />
+
 <!-- PRODUCT DETAIL -->
-<div class="container my-5">
-    <div class="row">
+<div class="container my-5 pt-4">
+    <div class="row g-4">
 
         <!-- IMAGE -->
-        <div class="col-md-5">
-            <div class="card shadow-sm">
-                <img src="https://m.media-amazon.com/images/I/91uwocAMtSL.jpg" class="card-img-top" id="mainImg">
+        <div class="col-lg-5 col-md-6">
+            <div class="card shadow-sm p-3">
+                <img src="${product.imgURL}"
+                     class="product-main-img"
+                     alt="${product.title}"
+                     onerror="this.src='https://via.placeholder.com/400x500'">
 
-                <div class="d-flex justify-content-between p-2">
-                    <img src="https://m.media-amazon.com/images/I/91uwocAMtSL.jpg" class="img-thumbnail small-img" width="100">
-                    <img src="https://m.media-amazon.com/images/I/91uwocAMtSL.jpg" class="img-thumbnail small-img" width="100">
-                    <img src="https://m.media-amazon.com/images/I/91uwocAMtSL.jpg" class="img-thumbnail small-img" width="100">
-                    <img src="https://m.media-amazon.com/images/I/91uwocAMtSL.jpg" class="img-thumbnail small-img" width="100">
+                <!-- THUMB (có thể mở rộng sau) -->
+                <div class="d-flex justify-content-center gap-2 mt-3">
+                    <img src="${product.imgURL}" class="thumb-img img-thumbnail">
+                    <img src="${product.imgURL}" class="thumb-img img-thumbnail">
+                    <img src="${product.imgURL}" class="thumb-img img-thumbnail">
                 </div>
             </div>
         </div>
 
         <!-- DETAIL -->
-        <div class="col-md-7">
-            <h3 class="fw-bold">Tên Sách – Book Title Example</h3>
+        <div class="col-lg-7 col-md-6">
+            <h3 class="fw-bold mb-2">${product.title}</h3>
 
-            <!-- RATING -->
-            <div class="text-warning mb-2">
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-half"></i>
-                <span class="text-dark">(4.5/5 - 123 đánh giá)</span>
-            </div>
+            <p class="text-muted mb-1">
+                Tác giả: <b>${product.authorName}</b>
+            </p>
 
-            <h4 class="text-danger fw-bold" name="price">120.000₫</h4>
-            <p class="text-decoration-line-through text-secondary">150.000₫</p>
+            <span class="badge bg-secondary mb-3">
+                ${product.categoryName}
+            </span>
 
+            <!-- PRICE -->
+            <h4 class="text-danger fw-bold mt-3">
+                ${product.price} ₫
+            </h4>
+
+            <!-- DESCRIPTION -->
             <p class="mt-3">
-                <b>Mô tả:</b>
-                Cuốn sách cung cấp kiến thức toàn diện về kỹ năng lập trình Java, phù hợp cho người mới bắt đầu hoặc chuẩn bị phỏng vấn.
+                <b>Mô tả:</b><br>
+                ${product.description}
             </p>
 
             <!-- QUANTITY -->
-            <div class="d-flex align-items-center mb-3">
-                <label class="me-2 fw-bold">Số lượng:</label>
-                <input type="number" value="1" min="1" class="form-control" style="width:80px;">
-            </div>
+            <form action="${pageContext.request.contextPath}/cart" method="post">
+                <input type="hidden" name="action" value="add">
+                <input type="hidden" name="bookId" value="${product.id}">
 
-            <!-- BUTTONS -->
-            <div class="d-flex gap-3">
-                <form action="${pageContext.request.contextPath}/cart" method="post">
-                    <input type="hidden" name="action" value="add">
-                    <input type="hidden" name="bookId" value="${book.id}">
-                    <input type="hidden" name="quantity" value="1">
+                <div class="d-flex align-items-center mb-3">
+                    <label class="me-2 fw-bold">Số lượng:</label>
+                    <input type="number"
+                           name="quantity"
+                           value="1"
+                           min="1"
+                           max="${product.stock}"
+                           class="form-control"
+                           style="width:90px;">
+                </div>
 
-                    <button type="submit" class="btn btn-danger px-4 py-2">
+                <!-- BUTTONS -->
+                <div class="d-flex gap-3 flex-wrap">
+                    <button class="btn btn-danger px-4">
                         <i class="bi bi-cart-plus"></i> Thêm vào giỏ
                     </button>
-                </form>
 
-                <form action="${pageContext.request.contextPath}/checkout" method="post">
-                    <input type="hidden" name="bookId" value="${book.id}">
-                    <input type="hidden" name="quantity" value="1">
-
-                    <button type="submit" class="btn btn-warning px-4 py-2">
+                    <button class="btn btn-warning px-4">
                         <i class="bi bi-lightning-fill"></i> Mua ngay
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
 
+            <!-- EXTRA INFO -->
             <div class="mt-4">
-                <h5>Thông tin chi tiết:</h5>
-                <ul>
-                    <li>Tác giả: Nguyễn Văn A</li>
-                    <li>Nhà xuất bản: NXB Trẻ</li>
-                    <li>Số trang: 350</li>
-                    <li>Năm xuất bản: 2025</li>
+                <h6 class="fw-bold">Thông tin chi tiết:</h6>
+                <ul class="mb-0">
+                    <li>Tác giả: ${product.authorName}</li>
+                    <li>Danh mục: ${product.categoryName}</li>
+                    <li>Số lượng còn: ${product.stock}</li>
                 </ul>
             </div>
         </div>
     </div>
 </div>
+
 <c:import url="../layout/footer.jsp" />
+<script>
+    const qtyInput = document.querySelector('input[name="quantity"]');
+    const maxStock = ${product.stock};
+
+    qtyInput.addEventListener('input', function () {
+        if (this.value > maxStock) {
+            this.value = maxStock;
+            alert("Số lượng tối đa còn lại là " + maxStock);
+        }
+        if (this.value < 1) {
+            this.value = 1;
+        }
+    });
+</script>
 </body>
 </html>

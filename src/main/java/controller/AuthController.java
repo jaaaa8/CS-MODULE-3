@@ -63,7 +63,7 @@ public class AuthController extends HttpServlet{
         if(account != null){
             HttpSession session = req.getSession();
             session.setAttribute("account", account);
-            resp.sendRedirect(req.getContextPath() + "/home");
+            resp.sendRedirect(req.getContextPath() + "/products");
         } else {
             req.setAttribute("message", "Login failed! Please try again.");
             req.getRequestDispatcher("/view/login/login.jsp").forward(req, resp);
@@ -82,7 +82,7 @@ public class AuthController extends HttpServlet{
         if(newAccount != null){
             HttpSession session = req.getSession();
             session.setAttribute("account", newAccount);
-            resp.sendRedirect(req.getContextPath() + "/home");
+            resp.sendRedirect(req.getContextPath() + "/products");
         } else {
             req.setAttribute("message", "Registration failed! Please try again.");
             req.getRequestDispatcher("/view/login/register.jsp").forward(req, resp);
