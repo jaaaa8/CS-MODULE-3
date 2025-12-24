@@ -27,15 +27,6 @@
 
 <%-- INCLUDE ADMIN NAVBAR --%>
 <%@ include file="/view/admin/layout/navbar.jsp" %>
-<div class="row mb-3 d-flex justify-content-between align-items-center">
-  <div class="col-auto">
-    <%-- NÚT THÊM MỚI (ADD) --%>
-    <a class="btn btn-primary" href='<c:url value="/order?action=add"/>'>
-      <i class="bi bi-plus-circle-fill"></i> Add New Order
-    </a>
-  </div>
-  <%-- Thêm Form tìm kiếm tại đây --%>
-</div>
 
 <div class="container mt-5">
   <h1 class="mb-4 text-primary"><i class="bi bi-receipt me-2"></i> Order List Management</h1>
