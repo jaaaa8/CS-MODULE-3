@@ -182,7 +182,7 @@
                 <!-- CART -->
                 <li class="nav-item cart-wrapper me-3">
                     <a class="btn text-white position-relative"
-                       href="${pageContext.request.contextPath}/view/customer/cart/cart.jsp">
+                       href="${pageContext.request.contextPath}/cart">
                         <i class="bi bi-cart-fill"></i> Giỏ hàng
                         <span class="cart-count">0</span>
                     </a>

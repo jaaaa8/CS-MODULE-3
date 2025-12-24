@@ -1,6 +1,8 @@
 package repository;
 
+import entity.Account;
 import entity.Customer;
+import repository.impl.ICustomerRepository;
 import util.ConnectDB;
 
 import java.sql.Connection;
@@ -10,12 +12,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerRepository implements IRepostitory<Customer> {
+public class CustomerRepository implements ICustomerRepository {
     private final String SELECT_ALL = "select * from customer";
     private final String INSERT_INTO ="insert into customer(account_id,name,email,phone,address) values (?,?,?,?,?)";
     private final String DELETE ="delete from customer where customer_id=?";
     private final String UPDATE ="update customer set account_id=?,name=?,email=?,phone=?,address=? where customer_id= ?";
     private final String FIND_BY_ACCOUNT_ID ="select * from customer where account_id=? limit 1";
+    private final String CREATE_NEW_BY_ACCOUNT_ID ="insert into customer(name,email,phone,address) values (?,?,?,?)";
     @Override
     public List<Customer> findAll() {
         List<Customer> customers = new ArrayList<>();
@@ -115,6 +118,7 @@ public class CustomerRepository implements IRepostitory<Customer> {
         return null;
     }
 
+    @Override
     public Customer findByAccountId(int accountId) {
         try (Connection connection = ConnectDB.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ACCOUNT_ID)) {
@@ -130,6 +134,26 @@ public class CustomerRepository implements IRepostitory<Customer> {
             }
         } catch (SQLException e) {
             System.out.println("Find by Account ID Error");
+        }
+        return null;
+    }
+
+    @Override
+    public Customer createNewCustomerByAccountId(Account account, String name, String email, String phone, String address) {
+        Customer customer = new Customer();
+        customer.setAccountId(account.getId());
+        try(Connection connection = ConnectDB.getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_NEW_BY_ACCOUNT_ID);
+            preparedStatement.setString(1,name);
+            preparedStatement.setString(2,email);
+            preparedStatement.setString(3,phone);
+            preparedStatement.setString(4,address);
+            int effectRow = preparedStatement.executeUpdate();
+            if (effectRow == 1){
+                return customer;
+            }
+        } catch (SQLException e) {
+            System.out.println("Insert into Customer Error");;
         }
         return null;
     }

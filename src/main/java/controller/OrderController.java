@@ -29,9 +29,6 @@ public class OrderController extends HttpServlet {
         String action = req.getParameter("action");
         if (action == null) action = "";
         switch (action) {
-            case "add":
-                addOrder(req, resp);
-                break;
             case "delete":
                 deleteById(req, resp);
                 break;
@@ -56,9 +53,6 @@ public class OrderController extends HttpServlet {
         if (action == null) action = "";
 
         switch (action) {
-            case "add":
-                req.getRequestDispatcher(JSP_PATH + "add.jsp").forward(req, resp);
-                break;
             case "delete":
                 deleteById(req, resp);
                 break;
@@ -135,27 +129,5 @@ public class OrderController extends HttpServlet {
         }
         resp.sendRedirect("/order?mess=" + mess);
     }
-    private void addOrder(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String mess;
-        try {
-            // 1. Lấy dữ liệu cơ bản (Giả định bạn có một form đơn giản)
-            int customerId = Integer.parseInt(req.getParameter("customerId"));
-            double total = Double.parseDouble(req.getParameter("total"));
-            String status = req.getParameter("status"); // VD: PENDING
 
-            // 2. Tạo đối tượng Orders
-            Orders newOrder = new Orders(0, customerId, status, total, new Date(), 0);
-
-            // 3. Gọi Service để thêm vào DB
-            boolean isSuccess = orderService.add(newOrder);
-
-            // Lưu ý: Hàm này chỉ thêm Orders. Bạn sẽ cần thêm OrderItem riêng biệt sau đó!
-
-            mess = isSuccess ? "Thêm đơn hàng gốc thành công!" : "Thêm đơn hàng thất bại.";
-        } catch (Exception e) {
-            mess = "Lỗi nhập liệu: " + e.getMessage();
-            e.printStackTrace();
-        }
-        resp.sendRedirect("/order?mess=" + mess);
-    }
 }

@@ -7,12 +7,8 @@ import service.OrdersService;
 public class testSQL {
     public static void main(String[] args) {
         OrdersService orderService = new OrdersService();
-        OrderItemService orderItemService = new OrderItemService();
-        CustomerService customerService = new CustomerService();
-        Customer customer = new Customer(1,1,"John Doe","as@gmail.comm","1234567890","123 Main St");
-        customerService.add(customer);
 
-        Orders orders = orderService.findCartByCustomerId(1);
-        System.out.println("Cart created for customer with account ID 1" + orders);
+        int bo= orderService.createCartForCustomer(6);
+        System.out.println("Cart created for customer with account ID 1" + bo);
     }
 }

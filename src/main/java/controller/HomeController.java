@@ -1,6 +1,7 @@
 package controller;
 
 import entity.Account;
+import entity.Customer;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import repository.AccountRepository;
+import service.CustomerService;
 
 import java.io.IOException;
 
@@ -21,6 +23,12 @@ public class HomeController extends HttpServlet {
         if ("ADMIN".equals(account.getRole())) {
             req.getRequestDispatcher("/view/admin/book/home.jsp").forward(req, resp);
         } else {
+            Customer customer = new CustomerService().findById(account.getId());
+            if(customer == null){
+                // Nếu chưa có thông tin khách hàng, chuyển hướng đến trang tạo thông tin khách hàng
+                resp.sendRedirect(req.getContextPath() + "/customer?action=addByCustomer");
+                return;
+            }
             req.getRequestDispatcher("/view/customer/home/home.jsp").forward(req, resp);
         }
     }
