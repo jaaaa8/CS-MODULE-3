@@ -182,7 +182,7 @@
                 <!-- CART -->
                 <li class="nav-item cart-wrapper me-3">
                     <a class="btn text-white position-relative"
-                       href="${pageContext.request.contextPath}/view/customer/cart/cart.jsp">
+                       href="${pageContext.request.contextPath}/cart">
                         <i class="bi bi-cart-fill"></i> Giỏ hàng
                         <span class="cart-count">0</span>
                     </a>
@@ -191,7 +191,7 @@
                         <p class="fw-bold mb-2">Sản phẩm mới thêm</p>
                         <div class="text-muted small">Chưa có sản phẩm</div>
                         <a class="btn btn-danger w-100 mt-2"
-                           href="${pageContext.request.contextPath}/view/customer/payment/payment.jsp">
+                           href="${pageContext.request.contextPath}payments">
                             Thanh toán
                         </a>
                     </div>

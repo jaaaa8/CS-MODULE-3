@@ -75,7 +75,7 @@ public class CartController extends HttpServlet {
 
         int bookId = Integer.parseInt(req.getParameter("bookId"));
 
-        Customer customer = customerService.findByAccountId(account.getId());
+        Customer customer = customerService.findById(account.getId());
 
         Orders cart = orderService.findCartByCustomerId(customer.getId());
         if (cart == null) {
@@ -108,7 +108,7 @@ public class CartController extends HttpServlet {
                 return;
             }
 
-            Customer customer = customerService.findByAccountId(account.getId());
+            Customer customer = customerService.findById(account.getId());
             if (customer == null) {
                 throw new RuntimeException("Customer not found for accountId=" + account.getId());
             }

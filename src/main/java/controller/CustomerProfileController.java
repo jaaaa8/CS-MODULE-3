@@ -33,7 +33,7 @@ public class CustomerProfileController extends HttpServlet {
         }
 
         // 🔥 SỬA Ở ĐÂY
-        Customer customer = customerService.findByAccountId(account.getId());
+        Customer customer = customerService.findById(account.getId());
 
         req.setAttribute("customer", customer);
         req.getRequestDispatcher("/view/customer/customer.jsp")

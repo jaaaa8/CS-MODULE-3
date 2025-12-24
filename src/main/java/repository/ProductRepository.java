@@ -128,7 +128,7 @@ public class ProductRepository implements IProductRepository {
     @Override
     public ProductDto findById(int id) {
         try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
