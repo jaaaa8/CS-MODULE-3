@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import service.CustomerService;
 import service.OrderItemService;
 import service.OrdersService;
+import service.impl.ICustomerService;
 import service.impl.IOrderItemService;
 import service.impl.IOrdersService;
 
@@ -23,7 +24,7 @@ import java.util.List;
 public class CartController extends HttpServlet {
     private final IOrdersService orderService = new OrdersService();
     private final IOrderItemService orderItemService = new OrderItemService();
-    private final CustomerService customerService = new CustomerService();
+    private final ICustomerService customerService = new CustomerService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -58,9 +59,7 @@ public class CartController extends HttpServlet {
     }
 
 
-    private void addNewItemToCart(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
+    private void addNewItemToCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(false);
         if (session == null) {
             resp.sendRedirect(req.getContextPath() + "/auth?action=login");
@@ -121,6 +120,9 @@ public class CartController extends HttpServlet {
             }
 
             List<OrderItemDto> items = orderItemService.getItemsByOrderId(cart.getId());
+            if(items.isEmpty()){
+                req.setAttribute("mess","Giỏ hàng của bạn đang trống.");
+            }
 
             req.setAttribute("cart", cart);
             req.setAttribute("orderItems", items);
@@ -154,9 +156,7 @@ public class CartController extends HttpServlet {
         }
     }
 
-    private void removeItem(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
+    private void removeItem(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         int orderItemId = Integer.parseInt(req.getParameter("orderItemId"));
         orderItemService.removeItem(orderItemId);
 

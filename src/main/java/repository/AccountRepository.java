@@ -37,19 +37,26 @@ public class AccountRepository implements IAccountRepository {
 
     @Override
     public boolean addNewAccount(Account account) {
-        try(Connection connection = ConnectDB.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ACCOUNT);) {
-            preparedStatement.setString(1, account.getUsername());
-            preparedStatement.setString(2, account.getPassword());
-            preparedStatement.setString(3, account.getRole());
-            int effectRow = preparedStatement.executeUpdate();
-            return effectRow == 1;
+        try (Connection connection = ConnectDB.getConnection();
+             PreparedStatement ps = connection.prepareStatement(INSERT_ACCOUNT, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, account.getUsername());
+            ps.setString(2, account.getPassword());
+            ps.setString(3, account.getRole());
+            int rows = ps.executeUpdate();
+            if (rows == 1) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    account.setId(rs.getInt(1));
+                }
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             System.err.println("LOI ADD!");
         }
         return false;
     }
+
 
     @Override
     public boolean updatePassword(int accountId, String newPassword) {

@@ -110,4 +110,46 @@ INSERT INTO Customer (account_id, name, email, phone, address) VALUES
 (5, 'Pham Thi D', 'd.pham@gmail.com', '0934567890', 'Hue'),
 (3, 'Admin User', 'admin@gmail.com', '0999999999', 'System Office');
 
+INSERT INTO Book (
+    category_id,
+    author_id,
+    publisher_id,
+    title,
+    description,
+    price,
+    stock,
+    image_url
+) VALUES
+-- Nguyễn Nhật Ánh
+(3, 1, 2,
+ 'Cho Tôi Xin Một Vé Đi Tuổi Thơ',
+ 'Tác phẩm nổi tiếng viết về tuổi thơ trong sáng',
+ 85000, 50, 'images/cho-toi-xin-mot-ve-di-tuoi-tho.jpg'),
+
+-- Paulo Coelho
+(1, 2, 5,
+ 'Nhà Giả Kim',
+ 'Cuốn tiểu thuyết truyền cảm hứng nổi tiếng thế giới',
+ 95000, 40, 'images/nha-gia-kim.jpg'),
+
+-- Dale Carnegie
+(5, 3, 4,
+ 'Đắc Nhân Tâm',
+ 'Nghệ thuật giao tiếp và ứng xử',
+ 120000, 35, 'images/dac-nhan-tam.jpg'),
+
+-- J.K. Rowling
+(3, 4, 2,
+ 'Harry Potter và Hòn Đá Phù Thủy',
+ 'Phần đầu của loạt truyện Harry Potter',
+ 180000, 60, 'images/harry-potter-1.jpg'),
+
+-- Robert C. Martin
+(4, 5, 3,
+ 'Clean Code',
+ 'Cẩm nang viết mã sạch cho lập trình viên',
+ 320000, 25, 'images/clean-code.jpg');
+ 
+ select * from account
+ 
 
