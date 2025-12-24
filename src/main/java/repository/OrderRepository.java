@@ -13,9 +13,7 @@ public class OrderRepository implements IOrderRepository {
     private final String INSERT_INTO = "insert into orders(customer_id,status,total,created_at,confirmed_by) values (?,?,?,?,?)";
     private final String DELETE = "delete from book where order_id=?";
     private final String UPDATE = "update orders set customer_id,status,total,created_at,confirmed_by";
-    // SQL cho việc chuyển trạng thái cần cập nhật confirmed_by
     private final String UPDATE_STATUS_CONFIRMED_SQL = "UPDATE Orders SET status = ?, confirmed_by = ?, updated_at = CURRENT_TIMESTAMP() WHERE order_id = ?";
-    // SQL cho các lần chuyển trạng thái sau đó (không cần cập nhật confirmed_by)
     private final String UPDATE_STATUS_OTHER_SQL = "UPDATE Orders SET status = ?, updated_at = CURRENT_TIMESTAMP() WHERE order_id = ?";
 
     @Override

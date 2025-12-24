@@ -1,21 +1,32 @@
 package dto;
 
 public class OrderItemDto {
-    private int orderId;
+    private int orderItemId;
     private String bookName;
     private int quantity;
     private double price;
     private double subtotal;
+    private int stock;  // Thêm field stock để kiểm soát số lượng
 
     public OrderItemDto() {
     }
 
-    public OrderItemDto(int orderId, String bookName, int quantity, double price) {
-        this.orderId = orderId;
+    public OrderItemDto(int orderItemId, String bookName, int quantity, double price) {
+        this.orderItemId = orderItemId;
         this.bookName = bookName;
         this.quantity = quantity;
         this.price = price;
         this.subtotal = quantity * price;
+        this.stock = quantity;  // Mặc định stock = quantity
+    }
+
+    public OrderItemDto(int orderItemId, String bookName, int quantity, double price, int stock) {
+        this.orderItemId = orderItemId;
+        this.bookName = bookName;
+        this.quantity = quantity;
+        this.price = price;
+        this.subtotal = quantity * price;
+        this.stock = stock;
     }
 
     public String getBookName() {
@@ -26,12 +37,12 @@ public class OrderItemDto {
         this.bookName = bookName;
     }
 
-    public int getOrderId() {
-        return orderId;
+    public int getOrderItemId() {
+        return orderItemId;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setOrderItemId(int orderItemId) {
+        this.orderItemId = orderItemId;
     }
 
     public double getPrice() {
@@ -54,5 +65,11 @@ public class OrderItemDto {
         return subtotal;
     }
 
+    public int getStock() {
+        return stock;
+    }
 
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
 }

@@ -47,7 +47,8 @@ public class AuthFilter implements Filter {
         }
 
         if (uri.startsWith(context + "/checkout")
-                || uri.startsWith(context + "/payment")) {
+                || uri.startsWith(context + "/payment")
+                || uri.startsWith(context + "/cart")) {
 
             if (account == null) {
                 resp.sendRedirect(context + "/auth?action=login");
