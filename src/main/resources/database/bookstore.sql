@@ -150,6 +150,7 @@ INSERT INTO Book (
  'Cẩm nang viết mã sạch cho lập trình viên',
  320000, 25, 'images/clean-code.jpg');
  
- select * from account
+ select * from customer
+ 
  
 
