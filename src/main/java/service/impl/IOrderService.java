@@ -11,5 +11,5 @@ public interface IOrderService {
     boolean update(Orders orders);
     boolean search(Orders orders);
     Orders findById(int id);
-    boolean updateStatus(int orderId, String newStatus);
+    boolean updateStatus(int orderId, String newStatus, int accountId);
 }

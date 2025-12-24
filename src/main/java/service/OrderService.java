@@ -1,7 +1,6 @@
 package service;
 
 import entity.Orders;
-import repository.IRepostitory;
 import repository.OrderRepository;
 import service.impl.IOrderRepository;
 import service.impl.IOrderService;
@@ -41,14 +40,11 @@ public class OrderService implements IOrderService {
         return orderRepository.findById(id);
     }
     @Override
-    public boolean updateStatus(int orderId, String newStatus) {
-        int fakeAdminId = 1;
+    public boolean updateStatus(int orderId, String newStatus,int accountId) {
         if ("CONFIRMED".equalsIgnoreCase(newStatus)) {
-            return orderRepository.updateStatus(orderId, newStatus, fakeAdminId);
+            return orderRepository.updateStatus(orderId, newStatus, accountId);
         } else {
-            // Dùng hàm đơn giản hơn nếu không cần confirmedBy
-            // Lưu ý: Nếu bạn muốn logic chính xác, bạn nên thay đổi IService để chấp nhận confirmedByAccountId
-            return orderRepository.updateStatus(orderId, newStatus, 0); // Dùng 0 hoặc NULL cho các trạng thái khác
+            return orderRepository.updateStatus(orderId, newStatus, 0);
         }
     }
 }

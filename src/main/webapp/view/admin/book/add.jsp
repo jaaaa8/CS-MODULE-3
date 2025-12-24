@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <html>
 <head><title>Add New Book</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -41,42 +43,33 @@
                                                     placeholder="0" min="0" required></div>
                     </div>
                 </fieldset>
-                <fieldset class="mb-4 p-3 border rounded-3">
-                    <legend class="float-none w-auto px-2 fs-6 fw-semibold text-secondary"><i
-                            class="bi bi-person-lines-fill"></i> Metadata
-                    </legend>
-                    <div class="row">
-                        <div class="col-md-4 mb-3"><label for="categoryId"
-                                                          class="form-label fw-semibold">Category</label> <select
-                                name="categoryId" id="categoryId" class="form-select" required>
-                            <option value="" disabled selected>Select Category</option>
-                            <option value="1">Văn Học</option>
-                            <option value="2">Khoa Học</option>
-                            <option value="3">Thiếu Nhi</option>
-                            <option value="4">Công Nghệ Thông Tin</option>
-                            <option value="5">Kinh Tế</option>
-                        </select></div>
-                        <div class="col-md-4 mb-3"><label for="authorId" class="form-label fw-semibold">Author</label>
-                            <select name="authorId" id="authorId" class="form-select" required>
-                                <option value="" disabled selected>Select Author</option>
-                                <option value="1">Nguyễn Nhật Ánh</option>
-                                <option value="2">Paulo Coelho</option>
-                                <option value="3">Dale Carnegie</option>
-                                <option value="4">J.K. <Rowling></Rowling></option>
-                                <option value="5">Robert C. Martin</option>
-                            </select></div>
-                        <div class="col-md-4 mb-3"><label for="publisherId"
-                                                          class="form-label fw-semibold">Publisher</label> <select
-                                name="publisherId" id="publisherId" class="form-select" required>
-                            <option value="" disabled selected>Select Publisher</option>
-                            <option value="1">NXB Trẻ</option>
-                            <option value="2">NXB Kim Đồng</option>
-                            <option value="3">NXB Giáo Dục</option>
-                            <option value="4">NXB Lao Động</option>
-                            <option value="5">NXB Văn Học</option>
-                        </select></div>
+                <div class="row">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Category</label>
+                        <select name="categoryId" class="form-select">
+                            <c:forEach var="category" items="${categoryList}">
+                                <option value="${category.id}">${category.name}</option>
+                            </c:forEach>
+                        </select>
                     </div>
-                </fieldset>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Author</label>
+                        <select name="authorId" class="form-select">
+                            <c:forEach var="author" items="${authorList}">
+                                <option value="${author.id}">${author.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Publisher</label>
+                        <select name="publisherId" class="form-select">
+                            <c:forEach var="publisher" items="${publisherList}">
+                                <option value="${publisher.id}">${publisher.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="mb-4"><label for="imageURL" class="form-label fw-semibold">Upload Book Cover(s)</label>
                     <input type="file" name="imageURL" id="imageURL" class="form-control" accept="image/*" multiple>
                     <div class="form-text">Choose one or more image files (JPEG, PNG).</div>

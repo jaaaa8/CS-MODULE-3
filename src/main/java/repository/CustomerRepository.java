@@ -1,6 +1,8 @@
 package repository;
 
+import dto.CustomerDto;
 import entity.Customer;
+import repository.impl.ICustomerRepostitory;
 import util.ConnectDB;
 
 import java.sql.Connection;
@@ -10,26 +12,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerRepository implements IRepostitory<Customer> {
-    private final String SELECT_ALL = "select * from customer";
+public class CustomerRepository implements ICustomerRepostitory {
+    private final String SELECT_ALL = "select c.*, a.username as username from customer c left join account a on c.account_id = a.account_id";
     private final String INSERT_INTO ="insert into customer(account_id,name,email,phone,address) values (?,?,?,?,?)";
     private final String DELETE ="delete from customer where customer_id=?";
     private final String UPDATE ="update customer set account_id=?,name=?,email=?,phone=?,address=? where customer_id= ?";
     private final String FIND_BY_ACCOUNT_ID ="select * from customer where account_id=? limit 1";
+    private final String SEARCH_NAME= "select c.*, a.username as username from customer c left join account a on c.account_id = a.account_id where c.name like ?";
     @Override
-    public List<Customer> findAll() {
-        List<Customer> customers = new ArrayList<>();
+    public List<CustomerDto> findAll() {
+        List<CustomerDto> customers = new ArrayList<>();
         try(Connection connection = ConnectDB.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
                 int customer_id = resultSet.getInt("customer_id");
-                int account_id = resultSet.getInt("account_id");
                 String name = resultSet.getString("name");
                 String email = resultSet.getString("email");
                 String phone = resultSet.getString("phone");
                 String address = resultSet.getString("address");
-                Customer customer = new Customer(customer_id,account_id,name,email,phone,address);
+                String username = resultSet.getString("username");
+                CustomerDto customer = new CustomerDto(customer_id,name,email,phone,address,username);
                 customers.add(customer);
             }
         } catch (SQLException e) {
@@ -55,18 +58,53 @@ public class CustomerRepository implements IRepostitory<Customer> {
         return false;
     }
 
-    @Override
-    public boolean delete(int id) {
-        try(Connection connection=ConnectDB.getConnection()){
-            PreparedStatement preparedStatement=connection.prepareStatement(DELETE);
-            preparedStatement.setInt(1,id);
-            int effectRow=preparedStatement.executeUpdate();
-            return effectRow ==1;
+    public boolean delete(int customerId) {
+        Connection conn = null;
+        try {
+            conn = ConnectDB.getConnection(); // ✅ BẮT BUỘC
+            conn.setAutoCommit(false);
+
+            // 1. delete orderitem
+            PreparedStatement ps1 = conn.prepareStatement(
+                    "DELETE FROM orderitem WHERE order_id IN " +
+                            "(SELECT order_id FROM orders WHERE customer_id = ?)"
+            );
+            ps1.setInt(1, customerId);
+            ps1.executeUpdate();
+
+            // 2. delete orders
+            PreparedStatement ps2 = conn.prepareStatement(
+                    "DELETE FROM orders WHERE customer_id = ?"
+            );
+            ps2.setInt(1, customerId);
+            ps2.executeUpdate();
+
+            // 3. delete customer
+            PreparedStatement ps3 = conn.prepareStatement(
+                    "DELETE FROM customer WHERE customer_id = ?"
+            );
+            ps3.setInt(1, customerId);
+            int rows = ps3.executeUpdate();
+
+            conn.commit();
+            return rows > 0; // ✅ QUAN TRỌNG
+
         } catch (SQLException e) {
-            System.out.println("Delete Customer Error");
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException ignored) {}
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (SQLException ignored) {}
         }
-        return false;
     }
+
 
     @Override
     public boolean update(Customer customer) {
@@ -86,11 +124,29 @@ public class CustomerRepository implements IRepostitory<Customer> {
     }
 
     @Override
-    public boolean search(Customer customer) {
-        return false;
-    }
+    public List<CustomerDto> search(String name) {
+        List<CustomerDto> customerList = new ArrayList<>();
+        try (Connection connection = ConnectDB.getConnection()) {
+            PreparedStatement preparedStatement =  connection.prepareStatement(SEARCH_NAME);
+            preparedStatement.setString(1, "%" + name + "%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                customerList.add(new CustomerDto(
+                        resultSet.getInt("customer_id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("email"),
+                        resultSet.getString("phone"),
+                        resultSet.getString("address"),
+                        resultSet.getString("username")
+                ));
+            }
 
-    @Override
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+      return customerList;
+    }
+        @Override
     public Customer findById(int id) {
         String sql = "SELECT * FROM customer WHERE customer_id = ?";
         try (Connection connection = ConnectDB.getConnection();

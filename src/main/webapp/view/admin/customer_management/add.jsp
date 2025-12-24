@@ -10,6 +10,7 @@
   Description: Form thêm mới Customer
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Add New Customer</title>
@@ -30,8 +31,12 @@
             <form action="/customer?action=add" method="post">
 
                 <div class="mb-3">
-                    <label for="accountId" class="form-label fw-semibold">Account ID <span class="text-danger">*</span></label>
-                    <input type="number" name="accountId" id="accountId" class="form-control" placeholder="Enter associated Account ID (e.g., 1)" required min="1">
+                    <label class="form-label fw-semibold">Account</label>
+                    <select name="accountId" class="form-select">
+                        <c:forEach var="account" items="${accountList}">
+                            <option value="${account.id}">${account.username}</option>
+                        </c:forEach>
+                    </select>
                 </div>
 
                 <div class="mb-3">

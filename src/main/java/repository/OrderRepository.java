@@ -120,8 +120,6 @@ public class OrderRepository implements IOrderRepository {
 
     public boolean updateStatus(int orderId, String newStatus, int confirmedByAccountId) {
         String sql;
-
-        // Chỉ cập nhật confirmed_by khi chuyển sang trạng thái CONFIRMED
         if ("CONFIRMED".equalsIgnoreCase(newStatus)) {
             sql = UPDATE_STATUS_CONFIRMED_SQL;
         } else {
@@ -133,12 +131,9 @@ public class OrderRepository implements IOrderRepository {
             preparedStatement.setString(1, newStatus);
 
             if ("CONFIRMED".equalsIgnoreCase(newStatus)) {
-                // Tham số 2: confirmed_by
                 preparedStatement.setInt(2, confirmedByAccountId);
-                // Tham số 3: order_id
                 preparedStatement.setInt(3, orderId);
             } else {
-                // Tham số 2: order_id
                 preparedStatement.setInt(2, orderId);
             }
 
@@ -147,19 +142,11 @@ public class OrderRepository implements IOrderRepository {
 
         } catch (SQLException e) {
             System.out.println("Update status order unsuccessfully: " + e.getMessage());
-            // Log chi tiết lỗi
         }
         return false;
     }
-
-    // ------------------------------------------------------------------------
-    // Các phương thức cũ (findAll, add, delete, update, findById) giữ nguyên
-    // ... (Đặt code của các hàm này vào đây) ...
-
-    // Cần sửa lại phương thức này để khớp với IRepository (nếu bạn dùng nó)
     @Override
     public boolean updateStatus(int id, String newStatus) {
-        // Mặc định truyền 0 nếu không cần confirmed_by, hoặc nên dùng phương thức trên
         return updateStatus(id, newStatus, 0);
     }
 }

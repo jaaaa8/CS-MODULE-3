@@ -1,15 +1,17 @@
 package service;
 
+import dto.CustomerDto;
 import entity.Customer;
 import repository.CustomerRepository;
-import repository.IRepostitory;
+import repository.impl.ICustomerRepostitory;
+import service.impl.ICustomerService;
 
 import java.util.List;
 
-public class CustomerService implements IService<Customer>{
-    IRepostitory<Customer> customerRepostitory= new CustomerRepository();
+public class CustomerService implements ICustomerService {
+    ICustomerRepostitory customerRepostitory = new CustomerRepository();
     @Override
-    public List<Customer> findAll() {
+    public List<CustomerDto> findAll() {
         return customerRepostitory.findAll();
     }
 
@@ -29,8 +31,8 @@ public class CustomerService implements IService<Customer>{
     }
 
     @Override
-    public boolean search(Customer customer) {
-        return customerRepostitory.search(customer);
+    public List<CustomerDto> search(String name) {
+        return customerRepostitory.search(name);
     }
 
     @Override
@@ -38,7 +40,8 @@ public class CustomerService implements IService<Customer>{
         return customerRepostitory.findById(id);
     }
 
-    public Customer findByAccountId(int accountId){
-        return ((CustomerRepository) customerRepostitory).findByAccountId(accountId);
+    @Override
+    public Customer findByAccountId(int accountId) {
+        return customerRepostitory.findByAccountId(accountId);
     }
 }

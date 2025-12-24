@@ -1,6 +1,8 @@
 package repository;
 
 import dto.ProductDto;
+import entity.Book;
+import repository.impl.IProductRepository;
 import util.ConnectDB;
 
 import java.sql.Connection;
@@ -57,6 +59,88 @@ public class ProductRepository implements IProductRepository {
                     JOIN Publisher p ON b.publisher_id = p.publisher_id
                     WHERE b.book_id = ?;
                     """;
+    private final String INSERT_INTO ="insert into book(category_id,author_id,publisher_id,title,description,price,stock,image_url) values (?,?,?,?,?,?,?,?)";
+    private final String DELETE ="delete from book where book_id=?";
+    private final String UPDATE ="update book set category_id=?,author_id=?,publisher_id=?,title=?,description=?,price=?,stock=?,image_url=? where book_id= ?";
+    @Override
+    public boolean add(Book book) {
+        try(Connection connection= ConnectDB.getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO);
+            preparedStatement.setInt(1, book.getCategoryId());
+            preparedStatement.setInt(2, book.getAuthorId());
+            preparedStatement.setInt(3, book.getPublisherId());
+            preparedStatement.setString(4, book.getTitle());
+            preparedStatement.setString(5, book.getDescription());
+            preparedStatement.setDouble(6, book.getPrice());
+            preparedStatement.setInt(7, book.getStock());
+            preparedStatement.setString(8, book.getImgURL());
+            int effectRow = preparedStatement.executeUpdate();
+            return effectRow == 1;
+        } catch (SQLException e) {
+            System.out.println("Error inserting Book");
+        }
+        return false;
+    }
+
+    @Override
+    public boolean delete(int id) {
+        Connection conn = null;
+        try {
+            conn = ConnectDB.getConnection();
+            conn.setAutoCommit(false);
+
+            String sqlDeleteItem = "DELETE FROM OrderItem WHERE book_id = ?";
+            try(PreparedStatement psItem = conn.prepareStatement(sqlDeleteItem)) {
+                psItem.setInt(1, id);
+                psItem.executeUpdate();
+            }
+
+            try(PreparedStatement psBook = conn.prepareStatement(DELETE)) {
+                psBook.setInt(1, id);
+                int rowsAffected = psBook.executeUpdate();
+                conn.commit();
+                return rowsAffected > 0;
+            }
+
+        } catch (SQLException e) {
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            System.out.println("Errol Delete Book (Foreign Key): " + e.getMessage());
+            return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean update(Book book) {
+        try(Connection connection = ConnectDB.getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
+            preparedStatement.setInt(1, book.getCategoryId());
+            preparedStatement.setInt(2, book.getAuthorId());
+            preparedStatement.setInt(3, book.getPublisherId());
+            preparedStatement.setString(4, book.getTitle());
+            preparedStatement.setString(5, book.getDescription());
+            preparedStatement.setDouble(6, book.getPrice());
+            preparedStatement.setInt(7, book.getStock());
+            preparedStatement.setString(8, book.getImgURL());
+            preparedStatement.setInt(9, book.getId());
+            int effectRow = preparedStatement.executeUpdate();
+            return effectRow == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public List<ProductDto> findAll() {
