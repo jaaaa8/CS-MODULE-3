@@ -18,7 +18,7 @@ public class CustomerRepository implements ICustomerRepository {
     private final String DELETE ="delete from customer where customer_id=?";
     private final String UPDATE ="update customer set account_id=?,name=?,email=?,phone=?,address=? where customer_id= ?";
     private final String FIND_BY_ACCOUNT_ID ="select * from customer where account_id=? limit 1";
-    private final String CREATE_NEW_BY_ACCOUNT_ID ="insert into customer(name,email,phone,address) values (?,?,?,?)";
+    private final String CREATE_NEW_BY_ACCOUNT_ID ="insert into customer(account_id,name,email,phone,address) values (?,?,?,?,?)";
     @Override
     public List<Customer> findAll() {
         List<Customer> customers = new ArrayList<>();
@@ -139,21 +139,31 @@ public class CustomerRepository implements ICustomerRepository {
     }
 
     @Override
-    public Customer createNewCustomerByAccountId(Account account, String name, String email, String phone, String address) {
-        Customer customer = new Customer();
-        customer.setAccountId(account.getId());
-        try(Connection connection = ConnectDB.getConnection()){
-            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_NEW_BY_ACCOUNT_ID);
-            preparedStatement.setString(1,name);
-            preparedStatement.setString(2,email);
-            preparedStatement.setString(3,phone);
-            preparedStatement.setString(4,address);
-            int effectRow = preparedStatement.executeUpdate();
-            if (effectRow == 1){
-                return customer;
+    public Customer createNewCustomerByAccountId(int accountId, String name, String email, String phone, String address) {
+        if (findByAccountId(accountId) != null) {
+            return null;
+        }
+        try (Connection connection = ConnectDB.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(CREATE_NEW_BY_ACCOUNT_ID);
+            ps.setInt(1, accountId);
+            ps.setString(2, name);
+            ps.setString(3, email);
+            ps.setString(4, phone);
+            ps.setString(5, address);
+
+            int rows = ps.executeUpdate();
+            if (rows == 1) {
+                Customer c = new Customer();
+                c.setAccountId(accountId);
+                c.setName(name);
+                c.setEmail(email);
+                c.setPhone(phone);
+                c.setAddress(address);
+                return c;
             }
+
         } catch (SQLException e) {
-            System.out.println("Insert into Customer Error");;
+            e.printStackTrace();
         }
         return null;
     }

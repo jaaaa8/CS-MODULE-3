@@ -149,6 +149,12 @@
             }, false);
         });
     })();
+    // Disable submit button on form submit to prevent multiple submissions
+        document.querySelector("form").addEventListener("submit", function () {
+        document.getElementById("submitBtn").disabled = true;
+    });
+
+
 </script>
 </body>
 </html>

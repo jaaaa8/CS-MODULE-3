@@ -12,6 +12,6 @@ public interface ICustomerRepository {
     boolean update(Customer customer);
     boolean search(Customer customer);
     Customer findById(int id);
-    Customer createNewCustomerByAccountId(Account account, String name, String email, String phone, String address);
+    Customer createNewCustomerByAccountId(int accountId, String name, String email, String phone, String address);
     Customer findByAccountId(int id);
 }

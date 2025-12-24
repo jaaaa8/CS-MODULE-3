@@ -46,8 +46,8 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public Customer createNewCustomerByAccountId(Account account, String name, String email, String phone, String address) {
-        return customerRepository.createNewCustomerByAccountId(account, name, email, phone, address);
+    public Customer createNewCustomerByAccountId(int accountId, String name, String email, String phone, String address) {
+        return customerRepository.createNewCustomerByAccountId(accountId, name, email, phone, address);
     }
 
 }

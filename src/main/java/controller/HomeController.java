@@ -18,20 +18,27 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
+        if (session == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+            return;
+        }
         Account account = (Account) session.getAttribute("account");
-
+        if (account == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+            return;
+        }
         if ("ADMIN".equals(account.getRole())) {
             req.getRequestDispatcher("/view/admin/book/home.jsp").forward(req, resp);
         } else {
-            Customer customer = new CustomerService().findById(account.getId());
-            if(customer == null){
-                // Nếu chưa có thông tin khách hàng, chuyển hướng đến trang tạo thông tin khách hàng
+            Customer customer = new CustomerService().findByAccountId(account.getId());
+            if (customer == null) {
                 resp.sendRedirect(req.getContextPath() + "/customer?action=addByCustomer");
                 return;
             }
             req.getRequestDispatcher("/view/customer/home/home.jsp").forward(req, resp);
         }
     }
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
