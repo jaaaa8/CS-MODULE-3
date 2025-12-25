@@ -15,6 +15,8 @@ import service.impl.IOrderItemService;
 import service.impl.IOrdersService;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @WebServlet(name = "OrderController", urlPatterns="/order")
@@ -45,9 +47,7 @@ public class OrderController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
         if (action == null) action = "";
 
@@ -86,10 +86,10 @@ public class OrderController extends HttpServlet {
             int deleteId = Integer.parseInt(req.getParameter("deleteId"));
             boolean isSuccess = orderService.deleteOrder(deleteId);
             mess = isSuccess
-                    ? "Xoá đơn hàng ID " + deleteId + " thành công"
-                    : "Xoá đơn hàng thất bại";
+                    ? "Xoa don hang " + deleteId + " thanh cong"
+                    : "Xoa don hang that bai ";
         } catch (NumberFormatException e) {
-            mess = "Lỗi: ID không hợp lệ.";
+            mess = "Loi id 0 hop le.";
         }
         resp.sendRedirect(req.getContextPath() + "/order?mess=" + mess);
     }
@@ -124,7 +124,8 @@ public class OrderController extends HttpServlet {
         } catch (NumberFormatException e) {
             mess = "ID đơn hàng không hợp lệ.";
         }
-        resp.sendRedirect(req.getContextPath() + "/order?mess=" + mess);
+        String encodedMess = URLEncoder.encode(mess, StandardCharsets.UTF_8);
+        resp.sendRedirect(req.getContextPath() + "/order?mess=" + encodedMess);
     }
 
     // ADMIN: CONFIRMED -> SHIPPED
@@ -141,7 +142,8 @@ public class OrderController extends HttpServlet {
         } catch (NumberFormatException e) {
             mess = "ID đơn hàng không hợp lệ.";
         }
-        resp.sendRedirect(req.getContextPath() + "/order?mess=" + mess);
+        String encodedMess = URLEncoder.encode(mess, StandardCharsets.UTF_8);
+        resp.sendRedirect(req.getContextPath() + "/order?mess=" + encodedMess);
     }
 
     // CLIENT: SHIPPED -> COMPLETED
@@ -178,7 +180,6 @@ public class OrderController extends HttpServlet {
         } catch (NumberFormatException e) {
             req.setAttribute("mess", "ID đơn hàng không hợp lệ");
             req.getRequestDispatcher(JSP_PATH + "home.jsp").forward(req, resp);
-
         }
     }
 

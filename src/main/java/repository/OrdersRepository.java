@@ -16,7 +16,6 @@ import java.util.List;
 public class OrdersRepository implements IOrderRepository {
     private final String SELECT_ALL_ORDERS = "select o.order_id, c.name as customer_name, o.status, o.total, o.created_at, a.username as confirmed_by_name from Orders o join customer c on o.customer_id = c.customer_id left join account a on o.confirmed_by = a.account_id;";
     private final String UPDATE_ORDER = "UPDATE orders SET customer_id = ?, order_date = ?, status = ? WHERE order_id = ?";
-    private final String DELETE_ORDER = "DELETE FROM orders WHERE order_id = ?";
     private final String FIND_ORDER_BY_ID = "SELECT * FROM orders WHERE order_id = ?";
     private final String FIND_CART_BY_CUSTOMER_ID = "SELECT * FROM orders WHERE customer_id = ? AND status = 'CART' ORDER BY order_id DESC LIMIT 1";
     private final String CREATE_CART_FOR_CUSTOMER = "INSERT INTO orders (customer_id, status) VALUES (?, 'CART')";
@@ -48,16 +47,44 @@ public class OrdersRepository implements IOrderRepository {
 
     @Override
     public boolean deleteOrder(int orderId) {
-        try(Connection connection = ConnectDB.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ORDER);){
-            preparedStatement.setInt(1, orderId);
-            int affectedRows = preparedStatement.executeUpdate();
-            return affectedRows > 0;
+        Connection conn = null;
+        try {
+            conn = ConnectDB.getConnection();
+            conn.setAutoCommit(false);
+
+            PreparedStatement ps1 = conn.prepareStatement("DELETE FROM OrderItem WHERE order_id = ?");
+            ps1.setInt(1, orderId);
+            ps1.executeUpdate();
+
+            PreparedStatement ps2 = conn.prepareStatement("DELETE FROM Orders WHERE order_id = ?");
+            ps2.setInt(1, orderId);
+            int rows = ps2.executeUpdate();
+
+            conn.commit();
+            return rows > 0;
+
         } catch (SQLException e) {
-            System.err.println("Error deleting order!");
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException ignored) {}
+            }
         }
         return false;
     }
+
+
+
 
     @Override
     public Orders findOrderById(int orderId) {
