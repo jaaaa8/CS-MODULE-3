@@ -19,7 +19,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-@WebServlet(name = "OrderController", urlPatterns="/order")
+@WebServlet(name = "OrderController", urlPatterns="/admin/order")
 public class OrderController extends HttpServlet {
 
     private final IOrdersService orderService = new OrdersService();
@@ -91,7 +91,7 @@ public class OrderController extends HttpServlet {
         } catch (NumberFormatException e) {
             mess = "Loi id 0 hop le.";
         }
-        resp.sendRedirect(req.getContextPath() + "/order?mess=" + mess);
+        resp.sendRedirect(req.getContextPath() + "/admin/order?mess=" + mess);
     }
 
     private void confirmAdmin(HttpServletRequest req, HttpServletResponse resp)
@@ -125,7 +125,7 @@ public class OrderController extends HttpServlet {
             mess = "ID đơn hàng không hợp lệ.";
         }
         String encodedMess = URLEncoder.encode(mess, StandardCharsets.UTF_8);
-        resp.sendRedirect(req.getContextPath() + "/order?mess=" + encodedMess);
+        resp.sendRedirect(req.getContextPath() + "/admin/order?mess=" + encodedMess);
     }
 
     // ADMIN: CONFIRMED -> SHIPPED
@@ -143,7 +143,7 @@ public class OrderController extends HttpServlet {
             mess = "ID đơn hàng không hợp lệ.";
         }
         String encodedMess = URLEncoder.encode(mess, StandardCharsets.UTF_8);
-        resp.sendRedirect(req.getContextPath() + "/order?mess=" + encodedMess);
+        resp.sendRedirect(req.getContextPath() + "/admin/order?mess=" + encodedMess);
     }
 
     // CLIENT: SHIPPED -> COMPLETED
@@ -160,7 +160,7 @@ public class OrderController extends HttpServlet {
         } catch (NumberFormatException e) {
             mess = "ID đơn hàng không hợp lệ.";
         }
-        resp.sendRedirect(req.getContextPath() + "/order?mess=" + mess);
+        resp.sendRedirect(req.getContextPath() + "/admin/order?mess=" + mess);
     }
     private void showDetail(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

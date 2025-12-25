@@ -15,7 +15,7 @@ import service.impl.IAccountService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "CustomerManagementController", value = "/customer")
+@WebServlet(name = "CustomerManagementController", value = "/admin/customer")
 public class CustomerManagementController extends HttpServlet {
     ICustomerService customerService = new CustomerService();
     IAccountService accountService = new AccountService();
@@ -104,7 +104,7 @@ public class CustomerManagementController extends HttpServlet {
         int deleteId = Integer.parseInt(req.getParameter("deleteId"));
         boolean isSuccess = customerService.delete(deleteId);
         String mess = isSuccess ? "Delete Successfully" : "Delete Errol";
-        resp.sendRedirect("/customer?mess=" + mess);
+        resp.sendRedirect("/admin/customer?mess=" + mess);
     }
 
     private void save(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -118,9 +118,9 @@ public class CustomerManagementController extends HttpServlet {
             boolean isSuccess = customerService.add(customer);
 
             String mess = isSuccess ? "Add Successfully" : "Add Error";
-            resp.sendRedirect("/customer?mess=" + mess);
+            resp.sendRedirect("/admin/customer?mess=" + mess);
         } catch (Exception e) {
-            resp.sendRedirect("/customer");
+            resp.sendRedirect("/admin/customer");
         }
     }
 
@@ -149,9 +149,9 @@ public class CustomerManagementController extends HttpServlet {
 
             boolean isSuccess = customerService.update(customer);
             String mess = isSuccess ? "Update Successfully" : "Update Error";
-            resp.sendRedirect("/customer?mess=" + mess);
+            resp.sendRedirect("/admin/customer?mess=" + mess);
         } catch (Exception e) {
-            resp.sendRedirect("/customer");
+            resp.sendRedirect("/admin/customer");
         }
     }
 

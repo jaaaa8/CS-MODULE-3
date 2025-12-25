@@ -47,7 +47,7 @@
     <%-- Thanh công cụ (Thêm mới và Tìm kiếm) --%>
     <div class="row mb-3 d-flex justify-content-between align-items-center">
         <div class="col-auto">
-            <a class="btn btn-success" href="/book?action=add">
+            <a class="btn btn-success" href="${pageContext.request.contextPath}/admin/book?action=add">
                 <i class="bi bi-plus-circle"></i> Add New Book
             </a>
         </div>
@@ -148,7 +148,7 @@
                                         data-bs-toggle="modal" data-bs-target="#deleteModal">
                                     <i class="bi bi-trash"></i> Delete
                                 </button>
-                                <a href="/book?action=showUpdate&id=${book.id}"
+                                <a href="${pageContext.request.contextPath}/admin/book?action=showUpdate&id=${book.id}"
                                    class="btn btn-outline-primary action-btn">
                                     <i class="bi bi-pencil-square"></i> Update
                                 </a>
@@ -173,7 +173,7 @@
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/book?action=delete" method="post">
+            <form action="${pageContext.request.contextPath}/admin/book?action=delete" method="post">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title" id="deleteModalLabel"><i class="bi bi-exclamation-triangle"></i> Confirm Deletion</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>

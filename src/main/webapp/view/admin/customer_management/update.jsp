@@ -28,7 +28,7 @@
         </div>
 
         <div class="card-body p-4">
-            <form action="/customer?action=update" method="post">
+            <form action="${pageContext.request.contextPath}/admin/customer?action=update" method="post">
 
                 <!-- hidden id -->
                 <input type="hidden" name="id" value="${customer.id}">
@@ -81,7 +81,7 @@
                     <button type="submit" class="btn btn-primary btn-lg fw-semibold">
                         <i class="bi bi-save me-2"></i> Update Customer
                     </button>
-                    <a href="/customer" class="btn btn-outline-secondary">
+                    <a href="${pageContext.request.contextPath}/admin/customer" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left"></i> Back
                     </a>
                 </div>

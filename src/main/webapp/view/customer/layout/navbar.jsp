@@ -254,7 +254,7 @@
             <!-- SEARCH -->
             <form class="d-flex flex-grow-1 mx-md-4 my-2 my-md-0"
                   role="search"
-                  action="${pageContext.request.contextPath}/products"
+                  action="${pageContext.request.contextPath}/customer/products"
                   method="get">
 
                 <input type="hidden" name="action" value="search">
@@ -276,7 +276,7 @@
                 <!-- CART -->
                 <li class="nav-item cart-wrapper me-3">
                     <a class="btn text-white position-relative"
-                       href="${pageContext.request.contextPath}/cart">
+                       href="${pageContext.request.contextPath}/customer/cart">
                         <i class="bi bi-cart-fill"></i> Giỏ hàng
                         <span class="cart-count" id="cartCount">0</span>
                     </a>
@@ -297,11 +297,11 @@
 
                         <div class="mini-cart-footer">
                             <a class="btn btn-sm btn-outline-secondary flex-grow-1"
-                               href="${pageContext.request.contextPath}/cart">
+                               href="${pageContext.request.contextPath}/customer/cart">
                                 <i class="bi bi-cart"></i> Xem giỏ hàng
                             </a>
                             <a class="btn btn-sm btn-danger flex-grow-1"
-                               href="${pageContext.request.contextPath}/payments">
+                               href="${pageContext.request.contextPath}/customer/payments">
                                 <i class="bi bi-credit-card"></i> Thanh toán
                             </a>
                         </div>
@@ -409,7 +409,7 @@
 <script>
     // Hàm load mini cart từ server
     function loadMiniCart() {
-        fetch('${pageContext.request.contextPath}/cart?action=miniCart')
+        fetch('${pageContext.request.contextPath}/customer/cart?action=miniCart')
             .then(response => response.json())
             .then(data => {
                 updateMiniCartUI(data);

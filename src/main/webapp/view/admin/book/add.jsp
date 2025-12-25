@@ -84,7 +84,7 @@
                     <button type="submit" class="btn btn-primary btn-lg fw-semibold"><i class="bi bi-save me-2"></i>
                         Save Book
                     </button>
-                    <a href="/book" class="btn btn-outline-secondary"> <i class="bi bi-arrow-left"></i> Back to List
+                    <a href="${pageContext.request.contextPath}/admin/book" class="btn btn-outline-secondary"> <i class="bi bi-arrow-left"></i> Back to List
                     </a></div>
             </form>
         </div>

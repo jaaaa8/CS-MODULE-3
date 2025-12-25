@@ -21,7 +21,7 @@
         </div>
 
         <div class="card-body p-4">
-            <form action="/book?action=update" method="post">
+            <form action="${pageContext.request.contextPath}/admin/book?action=update" method="post">
 
                 <!-- ID (hidden) -->
                 <input type="hidden" name="id" value="${book.id}">
@@ -125,7 +125,7 @@
                     <button type="submit" class="btn btn-warning btn-lg fw-semibold">
                         Update Book
                     </button>
-                    <a href="/book" class="btn btn-outline-secondary">
+                    <a href="${pageContext.request.contextPath}/admin/book" class="btn btn-outline-secondary">
                         Back to List
                     </a>
                 </div>

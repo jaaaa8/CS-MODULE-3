@@ -103,7 +103,7 @@
               </td>
 
               <td class="text-center">
-                <a href="<c:url value='/order?action=detail&orderId=${order.id}'/>"
+                <a href="<c:url value='/admin/order?action=detail&orderId=${order.id}'/>"
                    class="btn btn-outline-primary action-btn">
                   <i class="bi bi-eye"></i> Detail
                 </a>
@@ -139,7 +139,7 @@
 <div class="modal fade" id="deleteModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="<c:url value='/order?action=delete'/>" method="post">
+      <form action="<c:url value='/admin/order?action=delete'/>" method="post">
         <div class="modal-header bg-danger text-white">
           <h5 class="modal-title">Confirm Deletion</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
