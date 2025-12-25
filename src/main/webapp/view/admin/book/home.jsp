@@ -52,7 +52,7 @@
             </a>
         </div>
         <div class="col-md-8">
-            <form action="/book" method="get" class="row g-2 align-items-center">
+            <form action="${pageContext.request.contextPath}/admin/book" method="get" class="row g-2 align-items-center">
                 <input type="hidden" name="action" value="search">
                 <!-- Search by Title -->
                 <div class="col-auto">

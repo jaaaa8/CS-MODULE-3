@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <style>
     .table th, .table td { vertical-align: middle; }
-    .action-column { min-width: 200px; }
+    .action-column { min-width: 250px; }
     .action-btn { padding: .25rem .5rem; font-size: .875rem; }
   </style>
 </head>
@@ -57,66 +57,91 @@
           <tbody>
           <c:forEach var="order" items="${orderList}">
             <tr>
+              <!-- Customer Name -->
               <td>${order.customerName}</td>
 
+              <!-- Order Date -->
               <td>
                 <c:if test="${order.createAt != null}">
                   <fmt:formatDate value="${order.createAt}" pattern="yyyy-MM-dd HH:mm"/>
                 </c:if>
               </td>
 
+              <!-- Total Amount -->
               <td>
-                <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="$"/>
+                <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="VND"/>
               </td>
 
+              <!-- Status -->
               <td>
                 <c:set var="statusClass" value="bg-secondary"/>
-
-                <c:if test="${order.status == 'COMPLETED'}">
-                  <c:set var="statusClass" value="bg-success"/>
-                </c:if>
-                <c:if test="${order.status == 'SHIPPED'}">
-                  <c:set var="statusClass" value="bg-info text-dark"/>
-                </c:if>
-                <c:if test="${order.status == 'CONFIRMED'}">
-                  <c:set var="statusClass" value="bg-primary"/>
-                </c:if>
-                <c:if test="${order.status == 'PENDING'}">
-                  <c:set var="statusClass" value="bg-warning text-dark"/>
-                </c:if>
-                <c:if test="${order.status == 'CANCELLED'}">
-                  <c:set var="statusClass" value="bg-danger"/>
-                </c:if>
-
-                <span class="badge ${statusClass}">
-                    ${order.status}
-                </span>
+                <c:if test="${order.status == 'COMPLETED'}"><c:set var="statusClass" value="bg-success"/></c:if>
+                <c:if test="${order.status == 'SHIPPED'}"><c:set var="statusClass" value="bg-info text-dark"/></c:if>
+                <c:if test="${order.status == 'CONFIRMED'}"><c:set var="statusClass" value="bg-primary"/></c:if>
+                <c:if test="${order.status == 'PENDING'}"><c:set var="statusClass" value="bg-warning text-dark"/></c:if>
+                <c:if test="${order.status == 'CANCELLED'}"><c:set var="statusClass" value="bg-danger"/></c:if>
+                <span class="badge ${statusClass}">${order.status}</span>
               </td>
 
-              <td>
-                <c:if test="${not empty order.confirmByName}">
-                  ${order.confirmByName}
-                </c:if>
-                <c:if test="${empty order.confirmByName}">
-                  -
-                </c:if>
-              </td>
-
+              <!-- Confirmed By -->
               <td class="text-center">
+                <c:choose>
+                  <c:when test="${not empty order.confirmByName}">
+                    ${order.confirmByName}
+                  </c:when>
+                  <c:otherwise>-</c:otherwise>
+                </c:choose>
+              </td>
+
+              <!-- Action Column -->
+              <td class="text-center">
+                <c:choose>
+                  <c:when test="${order.status == 'PENDING'}">
+                    <!-- Confirm Button -->
+                    <form action="<c:url value='/admin/order?action=admin_confirm'/>" method="post" style="display:inline;">
+                      <input type="hidden" name="orderId" value="${order.id}">
+                      <button type="submit" class="btn btn-warning action-btn text-dark">
+                        <i class="bi bi-check-circle"></i> Confirm
+                      </button>
+                    </form>
+                  </c:when>
+                  <c:when test="${order.status == 'CONFIRMED'}">
+                    <!-- Shipped Button -->
+                    <form action="<c:url value='/admin/order?action=admin_shipped'/>" method="post" style="display:inline;">
+                      <input type="hidden" name="orderId" value="${order.id}">
+                      <button type="submit" class="btn btn-info action-btn text-dark">
+                        <i class="bi bi-truck"></i> Shipped
+                      </button>
+                    </form>
+                  </c:when>
+                  <c:when test="${order.status == 'SHIPPED'}">
+                    <!-- Complete Button -->
+                    <form id="confirmForm" method="post" action="<c:url value='/admin/order?action=client_complete'/>">
+                      <input type="hidden" name="orderId" id="confirmOrderId">
+                    </form>
+                  </c:when>
+                  <c:when test="${order.status == 'COMPLETED'}">
+                    <span class="text-success fw-bold"><i class="bi bi-check-all"></i> Đã Xong</span>
+                  </c:when>
+                  <c:otherwise>
+                    <a href='<c:url value="/admin/order?action=detail&id=${order.id}"/>' class="btn btn-secondary action-btn">Detail</a>
+                  </c:otherwise>
+                </c:choose>
                 <a href="<c:url value='/admin/order?action=detail&orderId=${order.id}'/>"
                    class="btn btn-outline-primary action-btn">
                   <i class="bi bi-eye"></i> Detail
                 </a>
+                <!-- Delete Button -->
                 <c:if test="${order.status == 'PENDING' || order.status == 'CART' || order.status == 'CANCELLED'}">
                   <button onclick="getInfoToDelete('${order.id}')"
-                          type="button"
-                          class="btn btn-outline-danger action-btn"
+                          type="button" class="btn btn-outline-danger action-btn ms-1"
                           data-bs-toggle="modal"
                           data-bs-target="#deleteModal">
                     <i class="bi bi-trash"></i>
                   </button>
                 </c:if>
               </td>
+
             </tr>
           </c:forEach>
 

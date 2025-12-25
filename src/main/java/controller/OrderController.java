@@ -111,16 +111,13 @@ public class OrderController extends HttpServlet {
         }
         try {
             int orderId = Integer.parseInt(req.getParameter("orderId"));
-            Integer adminId = (Integer) req.getSession().getAttribute("adminId");
+            int adminId = account.getId(); // Lấy từ object Account đã lấy từ session
 
-            if (adminId == null) {
-                mess = "Vui lòng đăng nhập admin.";
-            } else {
-                boolean isSuccess = orderService.confirmOrder(orderId, adminId);
-                mess = isSuccess
-                        ? "Đã xác nhận đơn hàng ID " + orderId
-                        : "Xác nhận thất bại.";
-            }
+
+            boolean isSuccess = orderService.confirmOrder(orderId, adminId);
+            mess = isSuccess
+                    ? "Đã xác nhận đơn hàng ID " + orderId
+                    : "Xác nhận thất bại.";
         } catch (NumberFormatException e) {
             mess = "ID đơn hàng không hợp lệ.";
         }
@@ -129,8 +126,7 @@ public class OrderController extends HttpServlet {
     }
 
     // ADMIN: CONFIRMED -> SHIPPED
-    private void shippedAdmin(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+    private void shippedAdmin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         String mess;
         try {
