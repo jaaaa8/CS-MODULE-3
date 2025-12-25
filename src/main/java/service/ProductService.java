@@ -40,4 +40,9 @@ public class ProductService implements IProductService {
         return productRepository.findById(id);
     }
 
+    @Override
+    public List<ProductDto> filter(String name, Integer categoryId, Integer authorId, Integer publisherId) {
+        return productRepository.filter(name, categoryId, authorId, publisherId);
+    }
+
 }

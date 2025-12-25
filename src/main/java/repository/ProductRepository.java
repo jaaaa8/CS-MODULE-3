@@ -234,4 +234,64 @@ public class ProductRepository implements IProductRepository {
         }
         return null;
     }
+    @Override
+    public List<ProductDto> filter(String name, Integer categoryId, Integer authorId, Integer publisherId) {
+        List<ProductDto> productList = new ArrayList<>();
+        try (Connection connection = ConnectDB.getConnection()) {
+
+            String sql = "SELECT b.book_id AS id, b.title, b.price, b.stock, " +
+                    "c.name AS categoryName, a.name AS authorName, p.name AS publisherName, b.description, b.image_url AS imgURL " +
+                    "FROM Book b " +
+                    "JOIN Category c ON b.category_id = c.category_id " +
+                    "JOIN Author a ON b.author_id = a.author_id " +
+                    "JOIN Publisher p ON b.publisher_id = p.publisher_id " +
+                    "WHERE 1=1 ";
+
+            List<Object> params = new ArrayList<>();
+
+            if (name != null && !name.isEmpty()) {
+                sql += " AND b.title LIKE ? ";
+                params.add("%" + name + "%");
+            }
+            if (categoryId != null) {
+                sql += " AND b.category_id = ? ";
+                params.add(categoryId);
+            }
+            if (authorId != null) {
+                sql += " AND b.author_id = ? ";
+                params.add(authorId);
+            }
+            if (publisherId != null) {
+                sql += " AND b.publisher_id = ? ";
+                params.add(publisherId);
+            }
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                productList.add(new ProductDto(
+                        rs.getInt("id"),
+                        rs.getString("categoryName"),
+                        rs.getString("authorName"),
+                        rs.getString("publisherName"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getInt("stock"),
+                        rs.getString("imgURL")
+                ));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return productList;
+    }
+
 }

@@ -168,14 +168,24 @@ public class BookController extends HttpServlet {
       }
     }
     private void search(HttpServletRequest req, HttpServletResponse resp) {
-        String name = req.getParameter("name");
-        List<ProductDto> productList = productService.search(name);
-
-        req.setAttribute("productList", productList);
-
-
         try {
+            String name = req.getParameter("name");
+            Integer categoryId = req.getParameter("categoryId") != null && !req.getParameter("categoryId").isEmpty()
+                    ? Integer.parseInt(req.getParameter("categoryId")) : null;
+            Integer authorId = req.getParameter("authorId") != null && !req.getParameter("authorId").isEmpty()
+                    ? Integer.parseInt(req.getParameter("authorId")) : null;
+            Integer publisherId = req.getParameter("publisherId") != null && !req.getParameter("publisherId").isEmpty()
+                    ? Integer.parseInt(req.getParameter("publisherId")) : null;
+
+            List<ProductDto> productList = productService.filter(name, categoryId, authorId, publisherId);
+
+            req.setAttribute("productList", productList);
+            req.setAttribute("categoryList", categoryService.findAll());
+            req.setAttribute("authorList", authorService.findAll());
+            req.setAttribute("publisherList", publisherService.findAll());
+
             req.getRequestDispatcher("/view/admin/book/home.jsp").forward(req, resp);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

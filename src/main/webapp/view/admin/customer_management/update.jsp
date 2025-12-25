@@ -51,32 +51,32 @@
                     <label class="form-label fw-semibold">
                         Full Name <span class="text-danger">*</span>
                     </label>
-                    <input type="text" name="name" class="form-control"
+                    <input type="text" name="name" class="form-control" oninput="checkValidate()"
                            value="${customer.name}" required>
                 </div>
-
+                <small id="errorName" class="text-danger"></small>
                 <!-- EMAIL -->
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Email</label>
-                    <input type="email" name="email" class="form-control"
+                    <input type="email" name="email" class="form-control" oninput="checkValidate()"
                            value="${customer.email}">
                 </div>
-
+                <small id="errorEmail" class="text-danger"></small>
                 <!-- PHONE -->
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Phone</label>
-                    <input type="text" name="phone" class="form-control"
+                    <input type="text" name="phone" class="form-control" oninput="checkValidate()"
                            value="${customer.phone}">
                 </div>
-
+                <small id="errorPhone" class="text-danger"></small>
                 <!-- ADDRESS -->
                 <div class="mb-4">
                     <label class="form-label fw-semibold">Address</label>
-                    <textarea name="address" class="form-control" rows="3">
+                    <textarea name="address" class="form-control" rows="3" oninput="checkValidate()">
                         ${customer.address}</textarea>
                 </div>
 
-                <!-- BUTTON -->
+                <small id="errorAddress" class="text-danger"></small>                <!-- BUTTON -->
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-primary btn-lg fw-semibold">
                         <i class="bi bi-save me-2"></i> Update Customer
@@ -91,4 +91,72 @@
     </div>
 </div>
 </body>
+<script>
+    function checkValidate() {
+        // Lấy giá trị từ form
+        let name = document.getElementById("name").value.trim();
+        let email = document.getElementById("email").value.trim();
+        let phone = document.getElementById("phone").value.trim();
+        let address = document.getElementById("address").value.trim();
+
+        let isName = false;
+        let isEmail = false;
+        let isPhone = false;
+        let isAddress = false;
+
+        // Validate tên
+        if (name === "") {
+            document.getElementById("errorName").innerText = "Full Name can not blank";
+            isName = false;
+        } else {
+            document.getElementById("errorName").innerText = "";
+            isName = true;
+        }
+
+        // Validate email
+        if (email !== "") {
+            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                document.getElementById("errorEmail").innerText = "Invalid email!";
+                isEmail = false;
+            } else {
+                document.getElementById("errorEmail").innerText = "";
+                isEmail = true;
+            }
+        } else {
+            document.getElementById("errorEmail").innerText = "";
+            isEmail = true;
+        }
+
+        // Validate phone
+        if (phone !== "") {
+            let phonePattern = /^[0-9]{10,15}$/;
+            if (!phonePattern.test(phone)) {
+                document.getElementById("errorPhone").innerText = "Invalid Phone Number, type again!";
+                isPhone = false;
+            } else {
+                document.getElementById("errorPhone").innerText = "";
+                isPhone = true;
+            }
+        } else {
+            document.getElementById("errorPhone").innerText = "";
+            isPhone = true;
+        }
+
+        if(address===""){
+            document.getElementById("errorAddress").innerText = "Address can not blank";
+            isAddress = false;
+        }else{
+            document.getElementById("errorAddress").innerText = "";
+            isAddress = true;
+        }
+
+        // Bật/tắt nút submit
+        if (isName && isAddress && isEmail && isPhone) {
+            document.getElementById("btn-save").disabled = false;
+        } else {
+            document.getElementById("btn-save").disabled = true;
+        }
+    }
+</script>
 </html>

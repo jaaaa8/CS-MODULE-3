@@ -51,13 +51,53 @@
                 <i class="bi bi-plus-circle"></i> Add New Book
             </a>
         </div>
-        <div class="col-md-4">
-            <form action="/book" method="get" class="d-flex">
+        <div class="col-md-8">
+            <form action="/book" method="get" class="row g-2 align-items-center">
                 <input type="hidden" name="action" value="search">
-                <input type="text" name="name" class="form-control me-2" placeholder="Search by Title..." value="${param.search}">
-                <button type="submit" class="btn btn-outline-primary">
-                    <i class="bi bi-search"></i> Search
-                </button>
+                <!-- Search by Title -->
+                <div class="col-auto">
+                    <input type="text" name="name" class="form-control" placeholder="Search by Title..."
+                           value="${param.name}">
+                </div>
+                <!-- Filter by Category -->
+                <div class="col-auto">
+                    <select name="categoryId" class="form-select">
+                        <option value="">All Categories</option>
+                        <c:forEach var="cat" items="${categoryList}">
+                            <option value="${cat.id}" ${param.categoryId == cat.id.toString() ? 'selected' : ''}>
+                                    ${cat.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <!-- Filter by Author -->
+                <div class="col-auto">
+                    <select name="authorId" class="form-select">
+                        <option value="">All Authors</option>
+                        <c:forEach var="auth" items="${authorList}">
+                            <option value="${auth.id}" ${param.authorId == auth.id.toString() ? 'selected' : ''}>
+                                    ${auth.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <!-- Filter by Publisher -->
+                <div class="col-auto">
+                    <select name="publisherId" class="form-select">
+                        <option value="">All Publishers</option>
+                        <c:forEach var="pub" items="${publisherList}">
+                            <option value="${pub.id}" ${param.publisherId == pub.id.toString() ? 'selected' : ''}>
+                                    ${pub.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <!-- Submit -->
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                </div>
             </form>
         </div>
     </div>

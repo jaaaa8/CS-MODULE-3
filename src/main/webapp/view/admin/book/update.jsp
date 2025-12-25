@@ -34,30 +34,34 @@
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Title</label>
-                        <input name="title" class="form-control"
+                        <input name="title" class="form-control" onchange="checkValidate()"
                                value="${book.title}" required>
                     </div>
-
+                    <small id="errorName" class="text-danger"></small>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Description</label>
-                        <textarea name="description" class="form-control"
+                        <textarea name="description" class="form-control" onchange="checkValidate()"
                                   rows="3">${book.description}</textarea>
                     </div>
-
+                    <small id="errorDescription" class="text-danger"></small>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold">Price (VND)</label>
                             <input type="number" name="price"
                                    class="form-control text-end"
+                                   onchange="checkValidate()"
                                    value="${book.price}" min="0" step="1000">
                         </div>
+                        <small id="errorPrice" class="text-danger"></small>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold">Stock</label>
                             <input type="number" name="stock"
                                    class="form-control text-end"
+                                   onchange="checkValidate()"
                                    value="${book.stock}" min="0" required>
                         </div>
+                        <small id="errorStock" class="text-danger"></small>
                     </div>
                 </fieldset>
 
@@ -67,7 +71,10 @@
                     <select name="categoryId" class="form-select">
                         <c:forEach var="category" items="${categoryList}">
                             <option value="${category.id}"
-                                ${category.id == book.category.id ? 'selected' : ''}>
+                                    <c:if test="${category.name == book.categoryName}">
+                                        selected
+                                    </c:if>
+                            >
                                     ${category.name}
                             </option>
                         </c:forEach>
@@ -79,7 +86,10 @@
                     <select name="authorId" class="form-select">
                         <c:forEach var="author" items="${authorList}">
                             <option value="${author.id}"
-                                ${author.id == book.author.id ? 'selected' : ''}>
+                                    <c:if test="${author.name == book.authorName}">
+                                        selected
+                                    </c:if>
+                            >
                                     ${author.name}
                             </option>
                         </c:forEach>
@@ -92,9 +102,13 @@
                     <select name="publisherId" class="form-select">
                         <c:forEach var="publisher" items="${publisherList}">
                             <option value="${publisher.id}"
-                                ${publisher.id == book.publisher.id ? 'selected' : ''}>
+                                    <c:if test="${publisher.name == book.publisherName}">
+                                        selected
+                                    </c:if>
+                            >
                                     ${publisher.name}
                             </option>
+
                         </c:forEach>
                     </select>
                 </div>
@@ -122,4 +136,64 @@
 </div>
 
 </body>
+<script>
+    function checkValidate() {
+        let name = document.getElementById("title").value;
+        let description = document.getElementById("description").value;
+        let price = document.getElementById("price").value;
+        let stock = document.getElementById("stock").value;
+        let isName = false;
+        let isPrice = false;
+        let isStock = false;
+        let isDescription = false;
+        if (name === "") {
+            document.getElementById("errorName").innerHTML = "Product Name can not blank";
+            isName = false;
+        } else {
+            document.getElementById("errorName").innerHTML = ""
+            isName = true;
+        }
+        if (description === "") {
+            document.getElementById("errorDescription").innerHTML = "Description can not blank";
+            isDescription = false;
+        } else {
+            document.getElementById("errorDescription").innerHTML = ""
+            isDescription = true;
+        }
+        if (price === "") {
+            document.getElementById("errorPrice").innerHTML = "Price can not blank"
+            isPrice = false;
+        } else if (!(/^[0-9]+$/.test(price))) {
+            document.getElementById("errorPrice").innerHTML = "Invalid Price!"
+            isPrice = false;
+        } else if (Number(price) < 10000) {
+            document.getElementById("errorPrice").innerHTML = "Price should be larger than 10.000!"
+            isPrice = false;
+
+        } else {
+            document.getElementById("errorPrice").innerHTML = ""
+            isPrice = true;
+        }
+        if (stock === "") {
+            document.getElementById("errorStock").innerHTML = "Quantity can not blank!"
+            isStock = false;
+        } else if (!(/^[0-9]+$/.test(price))) {
+            document.getElementById("errorStock").innerHTML = "Invalid quantity!"
+            isStock = false;
+        } else if (Number(stock) <= 0) {
+            document.getElementById("errorStock").innerHTML = "Quantity should be larger than 0!"
+            isStock = false;
+
+        } else {
+            document.getElementById("errorStock").innerHTML = ""
+            isStock = true;
+        }
+
+        if (isName && isDescription && isPrice && isStock) {
+            document.getElementById("btn-save").disabled = false;
+        } else {
+            document.getElementById("btn-save").disabled = true;
+        }
+    }
+</script>
 </html>

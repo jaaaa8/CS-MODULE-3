@@ -12,4 +12,5 @@ public interface IProductService {
  List<ProductDto> findAll();
  List<ProductDto> search(String keyword);
  ProductDto findById(int id);
+ List<ProductDto> filter(String name, Integer categoryId, Integer authorId, Integer publisherId);
 }
