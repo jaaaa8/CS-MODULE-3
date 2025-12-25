@@ -14,7 +14,7 @@ import service.AccountService;
 
 import java.io.IOException;
 
-@WebServlet("/profile")
+@WebServlet(name = "CustomerProfile", urlPatterns = "/customer/profile")
 public class CustomerProfileController extends HttpServlet {
 
     private final CustomerService customerService = new CustomerService();
@@ -57,7 +57,7 @@ public class CustomerProfileController extends HttpServlet {
             account.setPassword(newPassword);
             session.setAttribute("account", account);
 
-            resp.sendRedirect("/profile");
+            resp.sendRedirect("/customer/profile");
         }
     }
 }

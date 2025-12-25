@@ -32,7 +32,7 @@
 
 <c:import url="../layout/navbar.jsp" />
 
-<form action="${pageContext.request.contextPath}/payments" method="post">
+<form action="${pageContext.request.contextPath}/customer/payments" method="post">
     <div class="container py-5">
         <div class="row g-4">
 

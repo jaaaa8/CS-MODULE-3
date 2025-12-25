@@ -28,7 +28,7 @@
         </div>
 
         <div class="card-body p-4">
-            <form action="/customer?action=add" method="post">
+            <form action="${pageContext.request.contextPath}/admin/customer?action=add" method="post">
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Account</label>
@@ -63,7 +63,7 @@
                     <button type="submit" id="btn-save" class="btn btn-success btn-lg fw-semibold">
                         <i class="bi bi-save me-2"></i> Save New Customer
                     </button>
-                    <a href="${pageContext.request.contextPath}/customer" class="btn btn-outline-secondary">
+                    <a href="${pageContext.request.contextPath}/admin/customer" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left"></i> Back to Customer List
                     </a>
                 </div>

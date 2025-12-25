@@ -35,26 +35,60 @@ public class AuthFilter implements Filter {
             req.setAttribute("currentUser", account);
         }
 
+        /* ===================== */
+        /* PUBLIC URL - AI CŨNG VÀO ĐƯỢC */
+        /* ===================== */
         if (uri.equals(context + "/home")
                 || uri.startsWith(context + "/product")
                 || uri.startsWith(context + "/css")
                 || uri.startsWith(context + "/js")
                 || uri.startsWith(context + "/images")
-                || uri.startsWith(context + "/auth")) {
+                || uri.startsWith(context + "/auth")
+                || uri.startsWith(context + "/customer/products")) {
 
             chain.doFilter(request, response);
             return;
         }
 
-        if (uri.startsWith(context + "/checkout")
-                || uri.startsWith(context + "/payment")
-                || uri.startsWith(context + "/cart")) {
+        if (uri.startsWith(context + "/admin")) {
 
             if (account == null) {
                 resp.sendRedirect(context + "/auth?action=login");
                 return;
             }
+
+            if (!"ADMIN".equals(account.getRole())) {
+                resp.sendRedirect(context + "/error?code=403");
+                return;
+            }
+
+            chain.doFilter(request, response);
+            return;
         }
+
+        /* ===================== */
+        /* CUSTOMER URL */
+        /* ===================== */
+        if (uri.startsWith(context + "/customer")) {
+
+            if (account == null) {
+                resp.sendRedirect(context + "/auth?action=login");
+                return;
+            }
+
+            if (!"CUSTOMER".equals(account.getRole())) {
+                resp.sendError(HttpServletResponse.SC_FORBIDDEN); // 403
+                return;
+            }
+
+            chain.doFilter(request, response);
+            return;
+        }
+
+        /* ===================== */
+        /* FALLBACK */
+        /* ===================== */
         chain.doFilter(request, response);
     }
+
 }

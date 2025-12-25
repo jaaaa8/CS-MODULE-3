@@ -15,7 +15,7 @@ import service.impl.IOrdersService;
 
 import java.io.IOException;
 
-@WebServlet (name = "PaymentController", urlPatterns = "/payments")
+@WebServlet (name = "PaymentController", urlPatterns = "/customer/payments")
 public class PaymentController extends HttpServlet {
     private final IOrdersService orderService = new OrdersService();
     private final CustomerService customerService = new CustomerService();
@@ -59,9 +59,9 @@ public class PaymentController extends HttpServlet {
         boolean success = orderService.checkout(customer.getId());
 
         if (success) {
-            resp.sendRedirect(req.getContextPath() + "/cart?action=done");
+            resp.sendRedirect(req.getContextPath() + "/customer/cart?action=done");
         } else {
-            resp.sendRedirect(req.getContextPath() + "/cart?action=error");
+            resp.sendRedirect(req.getContextPath() + "/customer/cart?action=error");
         }
     }
 }

@@ -48,7 +48,7 @@
     <%-- Thanh công cụ (Thêm mới và Tìm kiếm) --%>
     <div class="row mb-3 d-flex justify-content-between align-items-center">
         <div class="col-auto">
-            <a class="btn btn-success" href="/customer?action=add">
+            <a class="btn btn-success" href="${pageContext.request.contextPath}/admin/customer?action=add">
                 <i class="bi bi-person-plus-fill"></i> Add New Customer
             </a>
         </div>
@@ -96,7 +96,7 @@
                                         data-bs-toggle="modal" data-bs-target="#deleteModal">
                                     <i class="bi bi-trash"></i>
                                 </button>
-                                <a href="/customer?action=showUpdate&id=${customer.id}"
+                                <a href="${pageContext.request.contextPath}/admin/customer?action=showUpdate&id=${customer.id}"
                                    class="btn btn-outline-primary action-btn">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
@@ -122,7 +122,7 @@
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/customer?action=delete" method="post">
+            <form action="${pageContext.request.contextPath}/admin/customer?action=delete" method="post">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title" id="deleteModalLabel"><i class="bi bi-exclamation-triangle"></i> Confirm
                         Deletion</h5>

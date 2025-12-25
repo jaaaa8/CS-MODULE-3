@@ -103,7 +103,7 @@
             </div>
 
             <!-- ===== ĐỔI MẬT KHẨU ===== -->
-            <form action="${pageContext.request.contextPath}/profile" method="post">
+            <form action="${pageContext.request.contextPath}/customer/profile" method="post">
                 <input type="hidden" name="action" value="changePassword">
 
                 <div class="mb-3">

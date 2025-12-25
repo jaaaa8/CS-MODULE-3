@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-@WebServlet(name = "ProductController", urlPatterns = "/products")
+@WebServlet(name = "ProductController", urlPatterns = "/customer/products")
 public class ProductController extends HttpServlet {
 
     private IProductService productService = new ProductService();

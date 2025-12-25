@@ -13,6 +13,6 @@
     </title>
 </head>
 <body>
-<a href="${pageContext.request.contextPath}/products"> vo day</a>
+<a href="${pageContext.request.contextPath}/home"> vo day</a>
 </body>
 </html>

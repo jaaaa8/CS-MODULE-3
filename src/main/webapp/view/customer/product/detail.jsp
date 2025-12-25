@@ -120,43 +120,21 @@
             </p>
 
             <!-- QUANTITY & ADD TO CART -->
-                <%-- Hiển thị thông báo lỗi nếu có --%>
-                <c:if test="${param.error == 'stock'}">
-                    <div class="alert alert-danger" role="alert">
-                        Số lượng trong kho không đủ để thực hiện yêu cầu!
-                    </div>
-                </c:if>
+            <form action="${pageContext.request.contextPath}/customer/cart" method="post">
+                <input type="hidden" name="action" value="add">
+                <input type="hidden" name="bookId" value="${product.id}">
 
-                <h4 class="mb-3">Số lượng tồn kho: <span class="text-muted">${product.stock}</span></h4>
+                <div class="quantity-control">
+                    <label class="fw-bold">Số lượng:</label>
+                    <button type="button" class="qty-btn" onclick="decreaseQty()">−</button>
+                    <input type="number" id="quantityInput" name="quantity"
+                           class="qty-input" value="1" min="1" max="${product.stock}" readonly>
+                    <button type="button" class="qty-btn" onclick="increaseQty()">+</button>
+                </div>
 
-                <form action="${pageContext.request.contextPath}/cart" method="post">
-                    <input type="hidden" name="action" value="add">
-
-                    <input type="hidden" name="bookId" value="${product.id}">
-
-                    <div class="d-flex align-items-center mb-3">
-                        <label for="quantity" class="me-3 fw-bold">Số lượng:</label>
-
-                        <%-- Input nhập số lượng --%>
-                        <input type="number"
-                               id="quantity"
-                               name="quantity"
-                               class="form-control text-center me-3"
-                               value="1"
-                               min="1"
-                               max="${product.stock}"
-                               style="width: 80px;"
-                               onchange="checkStock(this, ${product.stock})">
-
-                        <%-- Nút thêm vào giỏ --%>
-                        <button type="submit" class="btn btn-primary shadow-0"
-                        ${product.stock <= 0 ? 'disabled' : ''}>
-                            <i class="me-1 fa fa-shopping-basket"></i>
-                            ${product.stock > 0 ? 'Thêm vào giỏ' : 'Hết hàng'}
-                        </button>
-                    </div>
-                </form>
-
+                <button type="submit" class="btn btn-primary btn-lg mt-3">
+                    <i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng
+                </button>
             </form>
 
             <!-- EXTRA INFO -->
@@ -195,17 +173,6 @@
         } else {
             alert('Số lượng tối thiểu là 1');
         }
-    }
-
-        // Script nhỏ để ngăn người dùng nhập quá số lượng tồn kho bằng bàn phím
-        function checkStock(input, maxStock) {
-        if (parseInt(input.value) > maxStock) {
-        alert("Số lượng mua không được vượt quá tồn kho (" + maxStock + ")");
-        input.value = maxStock;
-    }
-        if (parseInt(input.value) < 1) {
-        input.value = 1;
-    }
     }
 </script>
 

@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet (name = "CartController", urlPatterns = "/cart")
+@WebServlet (name = "CartController", urlPatterns = "/customer/cart")
 public class CartController extends HttpServlet {
     private final IOrdersService orderService = new OrdersService();
     private final IOrderItemService orderItemService = new OrderItemService();
@@ -64,119 +64,80 @@ public class CartController extends HttpServlet {
 
     private void addNewItemToCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            // 1. Kiểm tra Session (Giữ nguyên)
+            // Kiểm tra session
             HttpSession session = req.getSession(false);
-            if (session == null || session.getAttribute("account") == null) {
+            if (session == null) {
                 resp.sendRedirect(req.getContextPath() + "/auth?action=login");
                 return;
             }
-            Account account = (Account) session.getAttribute("account");
 
-            // 2. Lấy tham số (Thêm lấy quantity từ input)
+            // Kiểm tra account
+            Account account = (Account) session.getAttribute("account");
+            if (account == null) {
+                resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+                return;
+            }
+
+            // Lấy bookId từ request
             String bookIdParam = req.getParameter("bookId");
             if (bookIdParam == null || bookIdParam.trim().isEmpty()) {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Sách không hợp lệ");
                 return;
             }
-            int bookId = Integer.parseInt(bookIdParam);
 
-            // Mặc định là 1, nếu có tham số quantity thì lấy theo tham số
-            int quantity = 1;
+            int bookId;
             try {
-                String qtyParam = req.getParameter("quantity");
-                if (qtyParam != null && !qtyParam.isEmpty()) {
-                    quantity = Integer.parseInt(qtyParam);
-                }
-            } catch (NumberFormatException e) { /* Bỏ qua lỗi format */ }
-
-            // 3. Lấy thông tin khách hàng và giỏ hàng (Giữ nguyên)
-            Customer customer = customerService.findByAccountId(account.getId());
-            if (customer == null) {
-                resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Lỗi thông tin khách hàng.");
+                bookId = Integer.parseInt(bookIdParam);
+            } catch (NumberFormatException e) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID sách không hợp lệ");
                 return;
             }
 
-            Orders cart = orderService.findCartByCustomerId(customer.getId());
-            if (cart == null) {
-                cart = orderService.getOrCreateCart(customer.getId());
+            // Tìm customer theo account ID
+            Customer customer = customerService.findByAccountId(account.getId());
+            if (customer == null) {
+                resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Thông tin khách hàng không tồn tại. Vui lòng cập nhật hồ sơ.");
+                return;
             }
 
-            // 4. KIỂM TRA TỒN KHO & TRỪ KHO (Dùng ProductService)
-            ProductDto product = productService.findById(bookId); // Dùng ProductDto
+            // Lấy giỏ hàng hiện tại
+            Orders cart = orderService.findCartByCustomerId(customer.getId());
+
+            // Nếu chưa có giỏ hàng, tạo mới
+            if (cart == null) {
+
+                cart = orderService.getOrCreateCart(customer.getId());
+                if (cart == null) {
+                    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi hệ thống khi tạo giỏ hàng.");
+                    return;
+                }
+            }
+
+            // Lấy giá sách từ database
+            ProductDto product = productService.findById(bookId);
             if (product == null) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Sách không tồn tại");
                 return;
             }
 
-            if (product.getStock() < quantity) {
-                // Nếu kho không đủ -> Quay lại trang chi tiết báo lỗi
-                resp.sendRedirect(req.getContextPath() + "/product?action=detail&id=" + bookId + "&error=stock");
-                return;
-            }
+            double bookPrice = product.getPrice();
 
-            // --- TRỪ KHO ---
-            productService.updateStock(bookId, -quantity);
-
-            // 5. Thêm vào OrderItem
+            // Kiểm tra xem sách đã có trong giỏ hàng chưa
             boolean exists = orderItemService.existItemInOrder(cart.getId(), bookId);
+
             if (exists) {
-                orderItemService.increaseQuantity(cart.getId(), bookId, quantity);
+                // Nếu đã có, tăng số lượng
+                orderItemService.increaseQuantity(cart.getId(), bookId, 1);
             } else {
-                orderItemService.addItem(cart.getId(), bookId, quantity, product.getPrice());
+                // Nếu chưa có, thêm mới với giá đúng
+                orderItemService.addItem(cart.getId(), bookId, 1, bookPrice);
             }
 
-            resp.sendRedirect(req.getContextPath() + "/cart");
+            resp.sendRedirect(req.getContextPath() + "/customer/cart");
 
         } catch (Exception e) {
             e.printStackTrace();
             handleError(resp, "Lỗi khi thêm sách vào giỏ hàng");
-        }
-    }
-
-    private void removeItem(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        try {
-            String orderItemIdParam = req.getParameter("orderItemId");
-            if (orderItemIdParam == null || orderItemIdParam.trim().isEmpty()) {
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID sản phẩm không hợp lệ");
-                return;
-            }
-            int orderItemId = Integer.parseInt(orderItemIdParam);
-
-            // 1. Tìm item trong giỏ để lấy số lượng cần hoàn
-            // (Vì service chưa có hàm findById, ta lấy list ra rồi lọc)
-            HttpSession session = req.getSession(false);
-            Account account = (Account) session.getAttribute("account");
-            Customer customer = customerService.findByAccountId(account.getId());
-            Orders cart = orderService.findCartByCustomerId(customer.getId());
-
-            OrderItemDto itemToRemove = null;
-            if (cart != null) {
-                List<OrderItemDto> items = orderItemService.getItemsByOrderId(cart.getId());
-                for (OrderItemDto item : items) {
-                    if (item.getOrderItemId() == orderItemId) {
-                        itemToRemove = item;
-                        break;
-                    }
-                }
-            }
-
-            // 2. HOÀN KHO & XÓA ITEM
-            if (itemToRemove != null) {
-                // Hoàn lại kho (số dương)
-                productService.updateStock(itemToRemove.getBookId(), itemToRemove.getQuantity());
-
-                // Xóa khỏi giỏ
-                orderItemService.removeItem(orderItemId);
-            } else {
-                // Trường hợp item rác (không tìm thấy trong list nhưng vẫn có ID request)
-                orderItemService.removeItem(orderItemId);
-            }
-
-            resp.sendRedirect(req.getContextPath() + "/cart");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            handleError(resp, "Lỗi khi xóa sản phẩm khỏi giỏ hàng");
         }
     }
 
@@ -254,6 +215,36 @@ public class CartController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             handleError(resp, "Lỗi xử lý yêu cầu");
+        }
+    }
+
+    private void removeItem(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            String orderItemIdParam = req.getParameter("orderItemId");
+            if (orderItemIdParam == null || orderItemIdParam.trim().isEmpty()) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID sản phẩm không hợp lệ");
+                return;
+            }
+
+            int orderItemId;
+            try {
+                orderItemId = Integer.parseInt(orderItemIdParam);
+            } catch (NumberFormatException e) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID sản phẩm không hợp lệ");
+                return;
+            }
+
+            boolean removed = orderItemService.removeItem(orderItemId);
+            if (!removed) {
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Không thể xóa sản phẩm. Vui lòng thử lại.");
+                return;
+            }
+
+            resp.sendRedirect(req.getContextPath() + "/customer/cart");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            handleError(resp, "Lỗi khi xóa sản phẩm khỏi giỏ hàng");
         }
     }
 
