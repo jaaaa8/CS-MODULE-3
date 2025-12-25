@@ -34,10 +34,6 @@ public class AuthFilter implements Filter {
         if (account != null) {
             req.setAttribute("currentUser", account);
         }
-
-        /* ===================== */
-        /* PUBLIC URL - AI CŨNG VÀO ĐƯỢC */
-        /* ===================== */
         if (uri.equals(context + "/home")
                 || uri.startsWith(context + "/product")
                 || uri.startsWith(context + "/css")
@@ -66,9 +62,6 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        /* ===================== */
-        /* CUSTOMER URL */
-        /* ===================== */
         if (uri.startsWith(context + "/customer")) {
 
             if (account == null) {
@@ -85,9 +78,6 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        /* ===================== */
-        /* FALLBACK */
-        /* ===================== */
         chain.doFilter(request, response);
     }
 
