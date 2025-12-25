@@ -55,7 +55,6 @@ public class PaymentController extends HttpServlet {
 
         Customer customer = customerService.findByAccountId(account.getId());
 
-
         boolean success = orderService.checkout(customer.getId());
 
         if (success) {
