@@ -87,4 +87,9 @@ public class OrdersService implements IOrdersService {
             return false;
         }
     }
+
+    @Override
+    public List<OrdersDto> search(String keyword) {
+        return ordersRepository.search(keyword);
+    }
 }

@@ -31,7 +31,36 @@
   <h1 class="mb-4 text-primary">
     <i class="bi bi-receipt me-2"></i> Order List Management
   </h1>
+  <div class="card bg-light border-0 shadow-sm mb-4">
+    <div class="card-body py-3">
+      <form action="<c:url value='/admin/order'/>" method="get" class="row g-2 align-items-center">
+        <input type="hidden" name="action" value="search">
 
+        <div class="col-auto">
+          <label class="fw-bold text-secondary"><i class="bi bi-search me-1"></i>Search:</label>
+        </div>
+
+        <div class="col-md-4">
+          <input type="text" name="keyword" class="form-control"
+                 placeholder="Enter customer name..."
+                 value="${keyword}">
+        </div>
+
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary">
+            Find Order
+          </button>
+
+          <%-- Nút Reset chỉ hiện khi đang tìm kiếm --%>
+          <c:if test="${not empty keyword}">
+            <a href="<c:url value='/admin/order'/>" class="btn btn-outline-secondary ms-1">
+              Reset
+            </a>
+          </c:if>
+        </div>
+      </form>
+    </div>
+  </div>
   <c:if test="${not empty param.mess}">
     <div class="alert alert-info alert-dismissible fade show" role="alert">
         ${param.mess}

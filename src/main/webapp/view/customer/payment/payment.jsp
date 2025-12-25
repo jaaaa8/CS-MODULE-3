@@ -33,122 +33,89 @@
 <c:import url="../layout/navbar.jsp" />
 
 <form action="${pageContext.request.contextPath}/customer/payments" method="post">
+    <input type="hidden" name="action" value="checkout">
+    <input type="hidden" name="orderId" value="${sessionScope.cart.id}">
+
     <div class="container py-5">
-        <div class="row g-4">
+        <div class="row justify-content-center"> <div class="col-lg-8">
 
-            <!-- LEFT -->
-            <div class="col-lg-8">
+            <h3 class="fw-bold text-center mb-4 text-uppercase">Xác nhận thanh toán</h3>
 
-                <!-- SHIPPING INFO -->
-                <div class="card p-4 shadow-sm mb-4">
-                    <h4 class="fw-bold mb-3">Thông tin giao hàng</h4>
+            <div class="card p-4 shadow-sm mb-4">
+                <h5 class="fw-bold mb-3 border-bottom pb-2">
+                    <i class="fa fa-map-marker me-2 text-danger"></i>Thông tin giao hàng
+                </h5>
 
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Họ tên</label>
-                            <input name="fullname" required class="form-control">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Số điện thoại</label>
-                            <input name="phone" required class="form-control">
-                        </div>
-
-                        <div class="col-12">
-                            <label class="form-label">Địa chỉ</label>
-                            <input name="address" required class="form-control">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PAYMENT METHOD -->
-                <div class="card p-4 shadow-sm">
-                    <h4 class="fw-bold mb-3">Phương thức thanh toán</h4>
-
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio"
-                               name="paymentMethod" value="COD" checked>
-                        <label class="form-check-label fw-semibold">
-                            Thanh toán khi nhận hàng (COD)
-                        </label>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Họ tên người nhận</label>
+                        <input name="fullname" required class="form-control"
+                               value="${customer.name}" placeholder="Nhập họ tên...">
                     </div>
 
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio"
-                               name="paymentMethod" value="BANK">
-                        <label class="form-check-label fw-semibold">
-                            Chuyển khoản ngân hàng
-                        </label>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Số điện thoại</label>
+                        <input name="phone" required class="form-control"
+                               value="${customer.phone}" placeholder="Nhập số điện thoại...">
                     </div>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio"
-                               name="paymentMethod" value="EWALLET">
-                        <label class="form-check-label fw-semibold">
-                            Ví Momo / ZaloPay
-                        </label>
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Địa chỉ nhận hàng</label>
+                        <input name="address" required class="form-control"
+                               value="${customer.address}" placeholder="Số nhà, đường, phường/xã...">
                     </div>
                 </div>
             </div>
 
-            <!-- RIGHT -->
-            <div class="col-lg-4">
-                <div class="card p-4 shadow-sm position-sticky" style="top: 90px">
-                    <h5 class="fw-bold mb-3">Tóm tắt đơn hàng</h5>
+            <div class="card p-4 shadow-sm mb-4">
+                <h5 class="fw-bold mb-3 border-bottom pb-2">
+                    <i class="fa fa-credit-card me-2 text-primary"></i>Phương thức thanh toán
+                </h5>
 
-                    <%-- SỬA 1: Duyệt qua orderItems thay vì cart.items --%>
-                    <c:forEach items="${orderItems}" var="item">
-                        <div class="d-flex justify-content-between small mb-1">
-                                <%-- SỬA 2: Dùng item.bookName và item.subtotal (tùy format tiền tệ) --%>
-                            <span>${item.bookName} × ${item.quantity}</span>
-                            <span>
+                <div class="form-check mb-3 p-3 border rounded bg-white">
+                    <input class="form-check-input" type="radio" name="paymentMethod" value="COD" checked id="cod">
+                    <label class="form-check-label fw-semibold w-100" for="cod">
+                        Thanh toán khi nhận hàng (COD)
+                        <div class="small text-muted">Bạn sẽ thanh toán tiền mặt cho shipper khi nhận được hàng.</div>
+                    </label>
+                </div>
+
+                <div class="form-check mb-3 p-3 border rounded bg-white">
+                    <input class="form-check-input" type="radio" name="paymentMethod" value="BANK" id="bank">
+                    <label class="form-check-label fw-semibold w-100" for="bank">
+                        Chuyển khoản ngân hàng (QR Code)
+                        <div class="small text-muted">Quét mã QR để chuyển khoản nhanh chóng.</div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2">
+                <c:forEach items="${orderItems}" var="item">
+                    <div class="d-flex justify-content-between small mb-1">
+
+                        <span>${item.bookName} × ${item.quantity}</span>
+                        <span>
                     <fmt:formatNumber value="${item.price * item.quantity}" type="currency" currencySymbol="₫"/>
                 </span>
-                        </div>
-                    </c:forEach>
-
-                    <hr>
-
-                    <%-- Các biến subtotal, tax, total cần được tính toán và truyền từ Controller sang JSP để hiển thị --%>
-                    <div class="d-flex justify-content-between">
-                        <span>Tạm tính</span>
-                        <span><fmt:formatNumber value="${subtotal}" type="currency" currencySymbol="₫"/></span>
                     </div>
+                </c:forEach>
+                <form action="${pageContext.request.contextPath}/payment" method="post">
+                    <input type="hidden" name="action" value="checkout">
 
-                    <div class="d-flex justify-content-between">
-                        <span>VAT (8%)</span>
-                        <span><fmt:formatNumber value="${tax}" type="currency" currencySymbol="₫"/></span>
-                    </div>
+                    <input type="hidden" name="orderId" value="${cart.id}">
 
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Phí ship</span>
-                        <span><fmt:formatNumber value="${shipping}" type="currency" currencySymbol="₫"/></span>
-                    </div>
-
-                    <hr>
-
-                    <div class="d-flex justify-content-between fw-bold fs-5 mb-3">
-                        <span>TỔNG CỘNG</span>
-                        <span class="text-danger">
-                <fmt:formatNumber value="${total}" type="currency" currencySymbol="₫"/>
-            </span>
-                    </div>
-
-                    <form action="${pageContext.request.contextPath}/payment" method="post">
-                        <input type="hidden" name="action" value="checkout">
-
-                        <%-- CHỈ GỬI ORDER ID --%>
-                        <input type="hidden" name="orderId" value="${cart.id}">
-
-                        <%-- Các input hidden giá tiền NÊN BỎ đi để tránh rủi ro bảo mật --%>
-
-                        <button type="submit" class="btn btn-danger w-100 py-2 fw-bold">
-                            ĐẶT HÀNG
-                        </button>
-                    </form>
+                    <button type="submit" class="btn btn-danger w-100 py-2 fw-bold">
+                        ĐẶT HÀNG
+                    </button>
+                </form>
+                <div class="text-center mt-2">
+                    <a href="${pageContext.request.contextPath}/customer/cart" class="text-decoration-none text-secondary">
+                        <i class="fa fa-arrow-left me-1"></i> Quay lại giỏ hàng để xem chi tiết & giá
+                    </a>
                 </div>
             </div>
 
+        </div>
         </div>
     </div>
 </form>
@@ -157,3 +124,7 @@
 
 </body>
 </html>
+
+
+
+

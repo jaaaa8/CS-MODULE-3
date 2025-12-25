@@ -17,4 +17,5 @@ public interface IOrderRepository {
 
     boolean updateOrderStatusAndTotalPrice(int orderId, double totalPrice, String status);
     boolean updateStatusAndTotal(int orderId, double total);
+    List<OrdersDto> search(String keyword);
 }

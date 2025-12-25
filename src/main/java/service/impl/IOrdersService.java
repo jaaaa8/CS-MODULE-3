@@ -16,4 +16,5 @@ public interface IOrdersService {
     Orders getOrCreateCart(int customerId);
 
     boolean checkout(int customerId);
+    List<OrdersDto> search(String keyword);
 }
