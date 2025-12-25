@@ -34,7 +34,7 @@
                 <div class="card-body">
 
                     <form method="post"
-                          action="${pageContext.request.contextPath}/customer"
+                          action="${pageContext.request.contextPath}/customer/profile"
                           class="needs-validation"
                           novalidate>
 
