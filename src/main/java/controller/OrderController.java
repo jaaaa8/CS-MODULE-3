@@ -40,6 +40,9 @@ public class OrderController extends HttpServlet {
             case "detail":
                 showDetail(req, resp);
                 break;
+            case "search":
+                search(req, resp);
+                break;
             default:
                 showOrderList(req, resp);
                 break;
@@ -181,6 +184,20 @@ public class OrderController extends HttpServlet {
             req.setAttribute("mess", "ID đơn hàng không hợp lệ");
             req.getRequestDispatcher(JSP_PATH + "home.jsp").forward(req, resp);
         }
+    }
+    private void search(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        String keyword = req.getParameter("keyword");
+        List<OrdersDto> ordersList;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            ordersList = orderService.search(keyword);
+        } else {
+            ordersList = orderService.findAllOrders();
+        }
+        req.setAttribute("orderList", ordersList);
+        req.setAttribute("keyword", keyword); // Giữ lại từ khóa ở ô input
+        req.getRequestDispatcher(JSP_PATH + "home.jsp").forward(req, resp);
     }
 
 }

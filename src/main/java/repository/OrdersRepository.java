@@ -1,5 +1,6 @@
 package repository;
 
+import dto.CustomerDto;
 import dto.OrdersDto;
 import entity.Orders;
 import repository.impl.IOrderRepository;
@@ -15,6 +16,15 @@ import java.util.List;
 
 public class OrdersRepository implements IOrderRepository {
     private final String SELECT_ALL_ORDERS = "SELECT o.order_id, c.name AS customer_name, o.status, SUM(oi.price * oi.quantity) AS total, o.created_at, a.username AS confirmed_by_name FROM Orders o JOIN Customer c ON o.customer_id = c.customer_id LEFT JOIN Account a ON o.confirmed_by = a.account_id JOIN OrderItem oi ON o.order_id = oi.order_id WHERE o.status <> 'CART' GROUP BY o.order_id, c.name, o.status, o.created_at, a.username;";
+    private final String SEARCH_NAME =
+            "SELECT o.order_id, c.name AS customer_name, o.status, " +
+                    "SUM(oi.price * oi.quantity) AS total, o.created_at, a.username AS confirmed_by_name " +
+                    "FROM Orders o " +
+                    "JOIN Customer c ON o.customer_id = c.customer_id " +
+                    "LEFT JOIN Account a ON o.confirmed_by = a.account_id " +
+                    "JOIN OrderItem oi ON o.order_id = oi.order_id " +
+                    "WHERE o.status <> 'CART' AND c.name LIKE ? " + // <-- Đã thêm dòng này
+                    "GROUP BY o.order_id, c.name, o.status, o.created_at, a.username;";
     private final String UPDATE_ORDER = "UPDATE orders SET customer_id = ?, order_date = ?, status = ? WHERE order_id = ?";
     private final String FIND_ORDER_BY_ID = "SELECT * FROM orders WHERE order_id = ?";
     private final String FIND_CART_BY_CUSTOMER_ID = "SELECT * FROM orders WHERE customer_id = ? AND status = 'CART' ORDER BY order_id DESC LIMIT 1";
@@ -202,5 +212,32 @@ public class OrdersRepository implements IOrderRepository {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public List<OrdersDto> search(String keyword) {
+        List<OrdersDto> orderList = new ArrayList<>();
+        try (Connection connection = ConnectDB.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SEARCH_NAME)) { // Thêm try-with-resources cho PreparedStatement
+
+            preparedStatement.setString(1, "%" + keyword + "%");
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                // SỬA TÊN CỘT Ở ĐÂY ĐỂ KHỚP VỚI SQL
+                orderList.add(new OrdersDto(
+                        resultSet.getInt("order_id"),          // Sửa "id" -> "order_id"
+                        resultSet.getString("customer_name"),  // Sửa "customerName" -> "customer_name"
+                        resultSet.getString("status"),
+                        resultSet.getDouble("total"),          // Sửa "totalPrice" -> "total"
+                        resultSet.getDate("created_at"),       // Sửa "createAt" -> "created_at"
+                        resultSet.getString("confirmed_by_name") // Sửa "confirmedByName" -> "confirmed_by_name"
+                ));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // Nên in lỗi ra để dễ debug
+        }
+        return orderList;
     }
 }
