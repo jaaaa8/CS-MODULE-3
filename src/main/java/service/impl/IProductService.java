@@ -13,4 +13,5 @@ public interface IProductService {
   List<ProductDto> search(String keyword);
   ProductDto findById(int id);
   List<ProductDto> filter(String name, Integer categoryId, Integer authorId, Integer publisherId);
+  void updateStock(int bookId, int quantityChange);
 }

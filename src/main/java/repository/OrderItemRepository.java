@@ -19,9 +19,13 @@ public class    OrderItemRepository implements IOrderItemRepository {
     private final String FIND_ITEMS_BY_ORDER_ID = "SELECT * FROM orderitem WHERE order_id = ? AND book_id = ?";
     private final String CALCULATE_TOTAL_PRICE = "SELECT SUM(price * quantity) AS total_price FROM orderitem WHERE order_id = ?";
     private final String CANCEL_ITEMS_BY_ORDER_ID = "DELETE FROM orderitem WHERE order_id = ?";
-    private final String SHOW_ALL_ITEMS_IN_ORDERS = "SELECT oi.order_item_id, oi.order_id, b.title AS book_name, oi.quantity, b.price, b.stock FROM orderitem oi JOIN book b ON oi.book_id = b.book_id WHERE oi.order_id = ?";
     private final String FIND_BY_ORDER_AND_BOOK = "SELECT * FROM orderitem WHERE order_id = ? AND book_id = ?";
     private final String UPDATE_QUANTITY_BY_ORDER_AND_BOOK = "UPDATE orderitem SET quantity = quantity + ? WHERE order_id = ? AND book_id = ?";
+    private static final String SELECT_ITEMS_BY_ORDER_ID =
+            "SELECT oi.order_item_id, oi.book_id, b.title, oi.quantity, oi.price, b.stock " + // <-- Thêm oi.book_id
+                    "FROM OrderItem oi " +
+                    "JOIN Book b ON oi.book_id = b.book_id " +
+                    "WHERE oi.order_id = ?";
 
     @Override
     public boolean addItem(int orderId, int bookId, int quantity, double price) {
@@ -68,26 +72,30 @@ public class    OrderItemRepository implements IOrderItemRepository {
 
     @Override
     public List<OrderItemDto> getItemsByOrderId(int orderId) {
-        List<OrderItemDto> itemsList = new ArrayList<>();
-        try(Connection connection = ConnectDB.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SHOW_ALL_ITEMS_IN_ORDERS);){
-            preparedStatement.setInt(1, orderId);
-            System.out.println(preparedStatement);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()){
-                int itemId = rs.getInt("order_item_id");
-                String bookName = rs.getString("book_name");
-                int quantity = rs.getInt("quantity");
-                double price = rs.getDouble("price");
-                int stock = rs.getInt("stock");
-                OrderItemDto item = new OrderItemDto(itemId, bookName, quantity, price, stock);
-                itemsList.add(item);
+        List<OrderItemDto> items = new ArrayList<>();
+        try (Connection connection = ConnectDB.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_ITEMS_BY_ORDER_ID)) {
+
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                // Đọc book_id từ ResultSet
+                int bookId = rs.getInt("book_id");
+
+                items.add(new OrderItemDto(
+                        rs.getInt("order_item_id"),
+                        bookId,                     // <-- Truyền bookId vào Constructor mới
+                        rs.getString("title"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price"),
+                        rs.getInt("stock")
+                ));
             }
-        }catch (SQLException e){
-            System.err.println("Error getting items by order ID!");
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return itemsList;
+        return items;
     }
 
     @Override
