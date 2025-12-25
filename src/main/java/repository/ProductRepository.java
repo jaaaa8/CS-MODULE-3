@@ -1,6 +1,8 @@
 package repository;
 
 import dto.ProductDto;
+import entity.Book;
+import repository.impl.IProductRepository;
 import util.ConnectDB;
 
 import java.sql.Connection;
@@ -57,6 +59,88 @@ public class ProductRepository implements IProductRepository {
                     JOIN Publisher p ON b.publisher_id = p.publisher_id
                     WHERE b.book_id = ?;
                     """;
+    private final String INSERT_INTO ="insert into book(category_id,author_id,publisher_id,title,description,price,stock,image_url) values (?,?,?,?,?,?,?,?)";
+    private final String DELETE ="delete from book where book_id=?";
+    private final String UPDATE ="update book set category_id=?,author_id=?,publisher_id=?,title=?,description=?,price=?,stock=?,image_url=? where book_id= ?";
+    @Override
+    public boolean add(Book book) {
+        try(Connection connection= ConnectDB.getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO);
+            preparedStatement.setInt(1, book.getCategoryId());
+            preparedStatement.setInt(2, book.getAuthorId());
+            preparedStatement.setInt(3, book.getPublisherId());
+            preparedStatement.setString(4, book.getTitle());
+            preparedStatement.setString(5, book.getDescription());
+            preparedStatement.setDouble(6, book.getPrice());
+            preparedStatement.setInt(7, book.getStock());
+            preparedStatement.setString(8, book.getImgURL());
+            int effectRow = preparedStatement.executeUpdate();
+            return effectRow == 1;
+        } catch (SQLException e) {
+            System.out.println("Error inserting Book");
+        }
+        return false;
+    }
+
+    @Override
+    public boolean delete(int id) {
+        Connection conn = null;
+        try {
+            conn = ConnectDB.getConnection();
+            conn.setAutoCommit(false);
+
+            String sqlDeleteItem = "DELETE FROM OrderItem WHERE book_id = ?";
+            try(PreparedStatement psItem = conn.prepareStatement(sqlDeleteItem)) {
+                psItem.setInt(1, id);
+                psItem.executeUpdate();
+            }
+
+            try(PreparedStatement psBook = conn.prepareStatement(DELETE)) {
+                psBook.setInt(1, id);
+                int rowsAffected = psBook.executeUpdate();
+                conn.commit();
+                return rowsAffected > 0;
+            }
+
+        } catch (SQLException e) {
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            System.out.println("Errol Delete Book (Foreign Key): " + e.getMessage());
+            return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean update(Book book) {
+        try(Connection connection = ConnectDB.getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
+            preparedStatement.setInt(1, book.getCategoryId());
+            preparedStatement.setInt(2, book.getAuthorId());
+            preparedStatement.setInt(3, book.getPublisherId());
+            preparedStatement.setString(4, book.getTitle());
+            preparedStatement.setString(5, book.getDescription());
+            preparedStatement.setDouble(6, book.getPrice());
+            preparedStatement.setInt(7, book.getStock());
+            preparedStatement.setString(8, book.getImgURL());
+            preparedStatement.setInt(9, book.getId());
+            int effectRow = preparedStatement.executeUpdate();
+            return effectRow == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public List<ProductDto> findAll() {
@@ -150,4 +234,64 @@ public class ProductRepository implements IProductRepository {
         }
         return null;
     }
+    @Override
+    public List<ProductDto> filter(String name, Integer categoryId, Integer authorId, Integer publisherId) {
+        List<ProductDto> productList = new ArrayList<>();
+        try (Connection connection = ConnectDB.getConnection()) {
+
+            String sql = "SELECT b.book_id AS id, b.title, b.price, b.stock, " +
+                    "c.name AS categoryName, a.name AS authorName, p.name AS publisherName, b.description, b.image_url AS imgURL " +
+                    "FROM Book b " +
+                    "JOIN Category c ON b.category_id = c.category_id " +
+                    "JOIN Author a ON b.author_id = a.author_id " +
+                    "JOIN Publisher p ON b.publisher_id = p.publisher_id " +
+                    "WHERE 1=1 ";
+
+            List<Object> params = new ArrayList<>();
+
+            if (name != null && !name.isEmpty()) {
+                sql += " AND b.title LIKE ? ";
+                params.add("%" + name + "%");
+            }
+            if (categoryId != null) {
+                sql += " AND b.category_id = ? ";
+                params.add(categoryId);
+            }
+            if (authorId != null) {
+                sql += " AND b.author_id = ? ";
+                params.add(authorId);
+            }
+            if (publisherId != null) {
+                sql += " AND b.publisher_id = ? ";
+                params.add(publisherId);
+            }
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                productList.add(new ProductDto(
+                        rs.getInt("id"),
+                        rs.getString("categoryName"),
+                        rs.getString("authorName"),
+                        rs.getString("publisherName"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getInt("stock"),
+                        rs.getString("imgURL")
+                ));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return productList;
+    }
+
 }

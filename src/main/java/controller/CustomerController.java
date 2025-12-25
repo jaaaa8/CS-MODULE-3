@@ -1,15 +1,16 @@
 package controller;
 
-import entity.Account;
+import dto.CustomerDto;
 import entity.Customer;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import service.AccountService;
 import service.CustomerService;
 import service.impl.ICustomerService;
+import service.impl.IAccountService;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,24 +18,27 @@ import java.util.List;
 @WebServlet(name = "CustomerController", value = "/customer")
 public class CustomerController extends HttpServlet {
     ICustomerService customerService = new CustomerService();
+    IAccountService accountService = new AccountService();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action=req.getParameter("action");
-        if(action==null) action="";
-        switch(action){
+        String action = req.getParameter("action");
+        if (action == null) action = "";
+        switch (action) {
             case "add":
-                req.getRequestDispatcher("/view/admin/customer_management/add.jsp").forward(req,resp);
+                showFormAdd(req, resp);
                 break;
             case "showUpdate":
-                showUpdate(req,resp);
+                showUpdate(req, resp);
+                break;
+            case "search":
+                search(req, resp);
                 break;
             case "addByCustomer":
                 showFormAddByCustomer(req,resp);
                 break;
             default:
-                List<Customer> customerList=customerService.findAll();
-                req.setAttribute("customerList",customerList);
-                req.getRequestDispatcher("/view/admin/customer_management/home.jsp").forward(req,resp);
+                showList(req, resp);
                 break;
         }
 
@@ -50,84 +54,79 @@ public class CustomerController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action=req.getParameter("action");
-        if(action==null) action="";
-        switch(action){
+        String action = req.getParameter("action");
+        if (action == null) action = "";
+        switch (action) {
             case "add":
-                save(req,resp);
+                save(req, resp);
                 break;
             case "delete":
-                deleteById(req,resp);
+                deleteById(req, resp);
                 break;
             case "update":
-                update(req,resp);
+                update(req, resp);
+                break;
+            case "search":
+                search(req, resp);
                 break;
             case "addByCustomer":
                 addNewByCustomer(req,resp);
                 break;
             default:
-                List<Customer> customerList=customerService.findAll();
-                req.setAttribute("customerList",customerList);
-                req.getRequestDispatcher("/view/admin/customer_management/home.jsp").forward(req,resp);
+                showList(req, resp);
                 break;
         }
     }
 
-    private void addNewByCustomer(HttpServletRequest req, HttpServletResponse resp) {
-        try{
-            HttpSession session = req.getSession(false);
-            if (session == null) {
-                resp.sendRedirect(req.getContextPath() + "/auth?action=login");
-                return;
-            }
-            Account account = (Account) session.getAttribute("account");
-            if (account == null) {
-                resp.sendRedirect(req.getContextPath() + "/auth?action=login");
-                return;
-            }
-            String name = req.getParameter("name");
-            String email = req.getParameter("email");
-            String phone = req.getParameter("phone");
-            String address = req.getParameter("address");
-            Customer newCustomer = customerService.createNewCustomerByAccountId(account.getId(),name,email,phone,address);
-            if (newCustomer != null) {
-                resp.sendRedirect(req.getContextPath() + "/home");
-            } else {
-                resp.sendRedirect(req.getContextPath() + "/customer?action=addByCustomer&error=1");
-            }
+    private void showFormAdd(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            req.setAttribute("accountList", accountService.getAllAccounts());
+            req.getRequestDispatcher("/view/admin/customer_management/add.jsp").forward(req, resp);
 
-        }catch(Exception e){
-            try {
-                resp.sendRedirect("/home?mess=Lỗi định dạng dữ liệu, thêm sách thất bại.");
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showList(HttpServletRequest req, HttpServletResponse resp) {
+        List<CustomerDto> customerList = customerService.findAll();
+        req.setAttribute("customerList", customerList);
+        req.setAttribute("accountList", accountService.getAllAccounts());
+        try {
+            req.getRequestDispatcher("/view/admin/customer_management/home.jsp").forward(req, resp);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void deleteById(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         int deleteId = Integer.parseInt(req.getParameter("deleteId"));
         boolean isSuccess = customerService.delete(deleteId);
-        String mess = isSuccess ? "Xoá thành công" : "Xoá thất bại";
+        String mess = isSuccess ? "Delete Successfully" : "Delete Errol";
         resp.sendRedirect("/customer?mess=" + mess);
     }
 
     private void save(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        try{
-        int accountId = Integer.parseInt(req.getParameter("accountId"));
-        String name = req.getParameter("name");
-        String email = req.getParameter("email");
-        String phone = req.getParameter("phone");
-        String address = req.getParameter("address");
-        Customer customer = new Customer(0,accountId,name,email,phone,address);
-        boolean isSuccess = customerService.add(customer);
+        try {
+            int accountId = Integer.parseInt(req.getParameter("accountId"));
+            String name = req.getParameter("name");
+            String email = req.getParameter("email");
+            String phone = req.getParameter("phone");
+            String address = req.getParameter("address");
+            Customer customer = new Customer(0, accountId, name, email, phone, address);
+            boolean isSuccess = customerService.add(customer);
 
-        String mess = isSuccess ? "Thêm mới thành công" : "Thêm mới thất bại";
-        resp.sendRedirect("/customer?mess=" + mess);
-        }catch(Exception e){
-            resp.sendRedirect("/customer?mess=Lỗi định dạng dữ liệu, thêm sách thất bại.");
+            String mess = isSuccess ? "Add Successfully" : "Add Error";
+            resp.sendRedirect("/customer?mess=" + mess);
+        } catch (Exception e) {
+            resp.sendRedirect("/customer");
         }
     }
+
     private void showUpdate(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -135,21 +134,41 @@ public class CustomerController extends HttpServlet {
         Customer customer = customerService.findById(id);
 
         req.setAttribute("customer", customer);
+        req.setAttribute("accountList", accountService.getAllAccounts());
         req.getRequestDispatcher("/view/admin/customer_management/update.jsp").forward(req, resp);
     }
+
     private void update(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+        try {
+            int id = Integer.parseInt(req.getParameter("id"));
+            int accountId = Integer.parseInt(req.getParameter("accountId"));
+            String name = req.getParameter("name");
+            String email = req.getParameter("email");
+            String phone = req.getParameter("phone");
+            String address = req.getParameter("address");
 
-        int id = Integer.parseInt(req.getParameter("id"));
-        int accountId = Integer.parseInt(req.getParameter("accountId"));
+            Customer customer = new Customer(id, accountId, name, email, phone, address);
+
+            boolean isSuccess = customerService.update(customer);
+            String mess = isSuccess ? "Update Successfully" : "Update Error";
+            resp.sendRedirect("/customer?mess=" + mess);
+        } catch (Exception e) {
+            resp.sendRedirect("/customer");
+        }
+    }
+
+    private void search(HttpServletRequest req, HttpServletResponse resp) {
         String name = req.getParameter("name");
-        String email = req.getParameter("email");
-        String phone = req.getParameter("phone");
-        String address = req.getParameter("address");
+        List<CustomerDto> customerList = customerService.search(name);
 
-        Customer customer = new Customer(id,accountId,name,email,phone,address);
+        req.setAttribute("customerList", customerList);
 
-        customerService.update(customer);
-        resp.sendRedirect("/customer");
+
+        try {
+            req.getRequestDispatcher("/view/admin/customer_management/home.jsp").forward(req, resp);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

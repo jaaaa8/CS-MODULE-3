@@ -6,16 +6,18 @@ public class CustomerDto {
     private String email;
     private String phone;
     private String address;
+    private String username;
 
     public CustomerDto() {
     }
 
-    public CustomerDto(int id, String name, String email, String phone, String address) {
-        this.address = address;
-        this.email = email;
+    public CustomerDto(int id, String name, String email, String phone, String address,  String username) {
         this.id = id;
         this.name = name;
+        this.email = email;
         this.phone = phone;
+        this.address = address;
+        this.username = username;
     }
 
     public String getAddress() {
@@ -56,5 +58,13 @@ public class CustomerDto {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

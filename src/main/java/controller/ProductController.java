@@ -6,7 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.IProductService;
+import service.impl.IProductService;
 import service.ProductService;
 
 import java.io.IOException;
@@ -14,7 +14,8 @@ import java.util.List;
 
 
 @WebServlet(name = "ProductController", urlPatterns = "/products")
-public class    ProductController extends HttpServlet {
+public class ProductController extends HttpServlet {
+
     private IProductService productService = new ProductService();
 
     @Override
