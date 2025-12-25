@@ -231,7 +231,7 @@
 
             <!-- Buttons -->
             <div class="button-group">
-                <a href="${pageContext.request.contextPath}/products" class="btn-shop">
+                <a href="${pageContext.request.contextPath}/customer/products" class="btn-shop">
                     <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
                 </a>
                 <a href="${pageContext.request.contextPath}/customer/profile" class="btn-account">

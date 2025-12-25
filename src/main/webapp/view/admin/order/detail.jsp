@@ -32,7 +32,7 @@
       Order Detail – ID #${orderId}
     </h2>
 
-    <a href="${pageContext.request.contextPath}/order"
+    <a href="${pageContext.request.contextPath}/admin/order"
        class="btn btn-secondary">
       <i class="bi bi-arrow-left"></i> Back to Order List
     </a>

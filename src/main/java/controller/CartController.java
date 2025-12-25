@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet (name = "CartController", urlPatterns = "/cart")
+@WebServlet (name = "CartController", urlPatterns = "/customer/cart")
 public class CartController extends HttpServlet {
     private final IOrdersService orderService = new OrdersService();
     private final IOrderItemService orderItemService = new OrderItemService();
@@ -133,7 +133,7 @@ public class CartController extends HttpServlet {
                 orderItemService.addItem(cart.getId(), bookId, 1, bookPrice);
             }
 
-            resp.sendRedirect(req.getContextPath() + "/cart");
+            resp.sendRedirect(req.getContextPath() + "/customer/cart");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -240,7 +240,7 @@ public class CartController extends HttpServlet {
                 return;
             }
 
-            resp.sendRedirect(req.getContextPath() + "/cart");
+            resp.sendRedirect(req.getContextPath() + "/customer/cart");
 
         } catch (Exception e) {
             e.printStackTrace();

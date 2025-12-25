@@ -24,7 +24,7 @@ import service.impl.IPublisherService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name="BookController" ,urlPatterns="/book")
+@WebServlet(name="BookController" ,urlPatterns="/admin/book")
 @MultipartConfig
 public class BookController extends HttpServlet {
     IProductService productService = new ProductService();
@@ -107,7 +107,7 @@ public class BookController extends HttpServlet {
         int deleteId = Integer.parseInt(req.getParameter("deleteId"));
         boolean isSuccess = productService.delete(deleteId);
         String mess = isSuccess ? "Delete Successfully" : "Delete Error";
-        resp.sendRedirect("/book?mess=" + mess);
+        resp.sendRedirect("/admin/book?mess=" + mess);
     }
 
     private void save(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -125,9 +125,9 @@ public class BookController extends HttpServlet {
             boolean isSuccess = productService.add(book);
 
             String mess = isSuccess ? "Add Successfully" : "Add Error";
-            resp.sendRedirect("/book?mess=" + mess);
+            resp.sendRedirect("/admin/book?mess=" + mess);
         }catch(Exception e) {
-            resp.sendRedirect("/book");
+            resp.sendRedirect("/admin/book");
         }
     }
     private void showUpdate(HttpServletRequest req, HttpServletResponse resp)
@@ -162,9 +162,9 @@ public class BookController extends HttpServlet {
         boolean isSuccess = productService.update(book);
 
         String mess = isSuccess ? "Update Successfully" : "Update Error";
-        resp.sendRedirect("/book?mess=" + mess);
+        resp.sendRedirect("/admin/book?mess=" + mess);
       }catch(Exception e) {
-        resp.sendRedirect("/book");
+        resp.sendRedirect("/admin/book");
       }
     }
     private void search(HttpServletRequest req, HttpServletResponse resp) {

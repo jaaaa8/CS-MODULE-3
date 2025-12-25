@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 public class OrdersRepository implements IOrderRepository {
-    private final String SELECT_ALL_ORDERS = "select o.order_id, c.name as customer_name, o.status, o.total, o.created_at, a.username as confirmed_by_name from Orders o join customer c on o.customer_id = c.customer_id left join account a on o.confirmed_by = a.account_id;";
+    private final String SELECT_ALL_ORDERS = "SELECT o.order_id, c.name AS customer_name, o.status, SUM(oi.price * oi.quantity) AS total, o.created_at, a.username AS confirmed_by_name FROM Orders o JOIN Customer c ON o.customer_id = c.customer_id LEFT JOIN Account a ON o.confirmed_by = a.account_id JOIN OrderItem oi ON o.order_id = oi.order_id WHERE o.status <> 'CART' GROUP BY o.order_id, c.name, o.status, o.created_at, a.username;";
     private final String UPDATE_ORDER = "UPDATE orders SET customer_id = ?, order_date = ?, status = ? WHERE order_id = ?";
     private final String FIND_ORDER_BY_ID = "SELECT * FROM orders WHERE order_id = ?";
     private final String FIND_CART_BY_CUSTOMER_ID = "SELECT * FROM orders WHERE customer_id = ? AND status = 'CART' ORDER BY order_id DESC LIMIT 1";
@@ -82,9 +82,6 @@ public class OrdersRepository implements IOrderRepository {
         }
         return false;
     }
-
-
-
 
     @Override
     public Orders findOrderById(int orderId) {

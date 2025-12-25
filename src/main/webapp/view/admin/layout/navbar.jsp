@@ -28,19 +28,19 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/book">
+                    <a class="nav-link active" aria-current="page" href="${pageContext.request.contextPath}/admin/book">
                         <i class="bi bi-book me-1"></i> Book Management
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/customer">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/admin/customer">
                         <i class="bi bi-people-fill me-1"></i> Customer Management
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/order">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/admin/order">
                         <i class="bi bi-receipt me-1"></i> Order Management
                     </a>
                 </li>

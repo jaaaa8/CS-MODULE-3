@@ -83,7 +83,7 @@
               <i class="bi bi-bag-x"></i>
               <h4>Giỏ hàng của bạn đang trống</h4>
               <p class="text-muted">Hãy thêm sản phẩm để tiếp tục mua sắm</p>
-              <a href="${pageContext.request.contextPath}/products" class="btn btn-danger mt-3">
+              <a href="${pageContext.request.contextPath}/customer/products" class="btn btn-danger mt-3">
                 <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
               </a>
             </div>
@@ -116,7 +116,7 @@
                     </p>
                   </div>
                   <div class="col-md-1 text-end">
-                    <form method="post" action="${pageContext.request.contextPath}/cart" style="display:inline;"
+                    <form method="post" action="${pageContext.request.contextPath}/customer/cart" style="display:inline;"
                           onsubmit="return confirm('Bạn chắc chắn muốn xóa?')">
                       <input type="hidden" name="action" value="remove">
                       <input type="hidden" name="orderItemId" value="${item.orderItemId}">
@@ -184,7 +184,7 @@
               </button>
             </c:when>
             <c:otherwise>
-              <a href="${pageContext.request.contextPath}/payments" class="btn btn-primary w-100 py-2">
+              <a href="${pageContext.request.contextPath}/customer/payments" class="btn btn-primary w-100 py-2">
                 <i class="bi bi-lock-fill"></i> TIẾN HÀNH THANH TOÁN
               </a>
             </c:otherwise>

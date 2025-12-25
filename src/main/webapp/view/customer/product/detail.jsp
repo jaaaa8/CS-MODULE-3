@@ -120,7 +120,7 @@
             </p>
 
             <!-- QUANTITY & ADD TO CART -->
-            <form action="${pageContext.request.contextPath}/cart" method="post">
+            <form action="${pageContext.request.contextPath}/customer/cart" method="post">
                 <input type="hidden" name="action" value="add">
                 <input type="hidden" name="bookId" value="${product.id}">
 
