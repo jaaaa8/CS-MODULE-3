@@ -16,73 +16,147 @@
 </head>
 <body>
 
-<c:set var="customer" value="${requestScope.customer}"/>
+<c:set var="customer" value="${customer}" />
 
 <div class="container my-5 d-flex justify-content-center">
     <div class="card shadow-lg border-0" style="max-width: 550px; width: 100%;">
 
         <div class="card-header bg-primary text-white text-center py-3">
-            <h4 class="mb-0 fw-bold"><i class="bi bi-person-lines-fill me-2"></i> Update Customer Information</h4>
+            <h4 class="mb-0 fw-bold">
+                <i class="bi bi-person-lines-fill me-2"></i> Update Customer
+            </h4>
         </div>
 
         <div class="card-body p-4">
-            <%-- POST form đến action=update --%>
             <form action="/customer?action=update" method="post">
 
-                <%-- Trường ẩn chứa ID khách hàng (rất quan trọng cho việc cập nhật) --%>
+                <!-- hidden id -->
                 <input type="hidden" name="id" value="${customer.id}">
 
-                <div class="alert alert-warning text-center">
-                    **Customer ID:** ${customer.id} | **Name:** ${customer.name}
+                <!-- ACCOUNT SELECT -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Account</label>
+                    <select name="accountId" class="form-select" required>
+                        <c:forEach var="account" items="${accountList}">
+                            <option value="${account.id}"
+                                ${account.id == customer.accountId ? "selected" : ""}>
+                                    ${account.username}
+                            </option>
+                        </c:forEach>
+                    </select>
                 </div>
 
+                <!-- NAME -->
                 <div class="mb-3">
-                    <label for="accountId" class="form-label fw-semibold">Account ID <span class="text-danger">*</span></label>
-                    <%-- Điền giá trị cũ vào trường input --%>
-                    <input type="number" name="accountId" id="accountId" class="form-control"
-                           placeholder="Enter associated Account ID (e.g., 1)"
-                           value="${customer.accountId}" required min="1">
-                </div>
-
-                <div class="mb-3">
-                    <label for="name" class="form-label fw-semibold">Full Name <span
-                            class="text-danger">*</span></label>
-                    <input type="text" name="name" id="name" class="form-control"
-                           placeholder="Enter customer's full name"
+                    <label class="form-label fw-semibold">
+                        Full Name <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" name="name" class="form-control" oninput="checkValidate()"
                            value="${customer.name}" required>
                 </div>
-
+                <small id="errorName" class="text-danger"></small>
+                <!-- EMAIL -->
                 <div class="mb-3">
-                    <label for="email" class="form-label fw-semibold">Email</label>
-                    <input type="email" name="email" id="email" class="form-control"
-                           placeholder="Enter email address (e.g., example@domain.com)"
+                    <label class="form-label fw-semibold">Email</label>
+                    <input type="email" name="email" class="form-control" oninput="checkValidate()"
                            value="${customer.email}">
                 </div>
-
+                <small id="errorEmail" class="text-danger"></small>
+                <!-- PHONE -->
                 <div class="mb-3">
-                    <label for="phone" class="form-label fw-semibold">Phone Number</label>
-                    <input type="tel" name="phone" id="phone" class="form-control"
-                           placeholder="Enter phone number"
+                    <label class="form-label fw-semibold">Phone</label>
+                    <input type="text" name="phone" class="form-control" oninput="checkValidate()"
                            value="${customer.phone}">
                 </div>
-
+                <small id="errorPhone" class="text-danger"></small>
+                <!-- ADDRESS -->
                 <div class="mb-4">
-                    <label for="address" class="form-label fw-semibold">Address</label>
-                    <textarea name="address" id="address" class="form-control" rows="3"
-                              placeholder="Enter full address">${customer.address}</textarea>
+                    <label class="form-label fw-semibold">Address</label>
+                    <textarea name="address" class="form-control" rows="3" oninput="checkValidate()">
+                        ${customer.address}</textarea>
                 </div>
 
+                <small id="errorAddress" class="text-danger"></small>                <!-- BUTTON -->
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-primary btn-lg fw-semibold">
-                        <i class="bi bi-save me-2"></i> Save Changes
+                        <i class="bi bi-save me-2"></i> Update Customer
                     </button>
                     <a href="/customer" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left"></i> Cancel and Back
+                        <i class="bi bi-arrow-left"></i> Back
                     </a>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
 </body>
+<script>
+    function checkValidate() {
+        // Lấy giá trị từ form
+        let name = document.getElementById("name").value.trim();
+        let email = document.getElementById("email").value.trim();
+        let phone = document.getElementById("phone").value.trim();
+        let address = document.getElementById("address").value.trim();
+
+        let isName = false;
+        let isEmail = false;
+        let isPhone = false;
+        let isAddress = false;
+
+        // Validate tên
+        if (name === "") {
+            document.getElementById("errorName").innerText = "Full Name can not blank";
+            isName = false;
+        } else {
+            document.getElementById("errorName").innerText = "";
+            isName = true;
+        }
+
+        // Validate email
+        if (email !== "") {
+            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                document.getElementById("errorEmail").innerText = "Invalid email!";
+                isEmail = false;
+            } else {
+                document.getElementById("errorEmail").innerText = "";
+                isEmail = true;
+            }
+        } else {
+            document.getElementById("errorEmail").innerText = "";
+            isEmail = true;
+        }
+
+        // Validate phone
+        if (phone !== "") {
+            let phonePattern = /^[0-9]{10,15}$/;
+            if (!phonePattern.test(phone)) {
+                document.getElementById("errorPhone").innerText = "Invalid Phone Number, type again!";
+                isPhone = false;
+            } else {
+                document.getElementById("errorPhone").innerText = "";
+                isPhone = true;
+            }
+        } else {
+            document.getElementById("errorPhone").innerText = "";
+            isPhone = true;
+        }
+
+        if(address===""){
+            document.getElementById("errorAddress").innerText = "Address can not blank";
+            isAddress = false;
+        }else{
+            document.getElementById("errorAddress").innerText = "";
+            isAddress = true;
+        }
+
+        // Bật/tắt nút submit
+        if (isName && isAddress && isEmail && isPhone) {
+            document.getElementById("btn-save").disabled = false;
+        } else {
+            document.getElementById("btn-save").disabled = true;
+        }
+    }
+</script>
 </html>

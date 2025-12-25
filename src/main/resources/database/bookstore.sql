@@ -17,7 +17,7 @@ CREATE TABLE Customer (
     email VARCHAR(100) UNIQUE,
     phone VARCHAR(20),
     address VARCHAR(255),
-    FOREIGN KEY (account_id) REFERENCES Account(account_id)
+    FOREIGN KEY (account_id) REFERENCES Account(account_id) on update cascade on delete cascade
 );
 
 CREATE TABLE Author (
@@ -49,9 +49,9 @@ CREATE TABLE Book (
     stock INT DEFAULT 0,
     image_url VARCHAR(255),
 
-    FOREIGN KEY (category_id) REFERENCES Category(category_id),
-    FOREIGN KEY (author_id) REFERENCES Author(author_id),
-    FOREIGN KEY (publisher_id) REFERENCES Publisher(publisher_id)
+    FOREIGN KEY (category_id) REFERENCES Category(category_id) on update cascade on delete cascade,
+    FOREIGN KEY (author_id) REFERENCES Author(author_id) on update cascade on delete cascade,
+    FOREIGN KEY (publisher_id) REFERENCES Publisher(publisher_id) on update cascade on delete cascade
 );
 
 CREATE TABLE Orders (
@@ -62,8 +62,8 @@ CREATE TABLE Orders (
     total DECIMAL(10,2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     confirmed_by INT,
-    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
-    FOREIGN KEY (confirmed_by) REFERENCES Account(account_id)
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id) on update cascade on delete cascade,
+    FOREIGN KEY (confirmed_by) REFERENCES Account(account_id) on update cascade on delete cascade
 );
 
 CREATE TABLE OrderItem (
@@ -72,8 +72,8 @@ CREATE TABLE OrderItem (
     book_id INT,
     quantity INT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
-    FOREIGN KEY (book_id) REFERENCES Book(book_id)
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id) on update cascade on delete cascade,
+    FOREIGN KEY (book_id) REFERENCES Book(book_id) on update cascade on delete cascade
 );
 
 INSERT INTO publisher (name, address, phone) VALUES

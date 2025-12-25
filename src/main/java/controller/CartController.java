@@ -105,12 +105,8 @@ public class CartController extends HttpServlet {
 
             // Nếu chưa có giỏ hàng, tạo mới
             if (cart == null) {
-                int cartId = orderService.createCartForCustomer(customer.getId());
-                if (cartId <= 0) {
-                    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Không thể tạo giỏ hàng. Vui lòng thử lại.");
-                    return;
-                }
-                cart = orderService.findOrderById(cartId);
+
+                cart = orderService.getOrCreateCart(customer.getId());
                 if (cart == null) {
                     resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi hệ thống khi tạo giỏ hàng.");
                     return;
@@ -173,12 +169,7 @@ public class CartController extends HttpServlet {
 
             // Nếu chưa có giỏ hàng, tạo mới
             if (cart == null) {
-                int cartId = orderService.createCartForCustomer(customer.getId());
-                if (cartId <= 0) {
-                    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Không thể tạo giỏ hàng. Vui lòng thử lại.");
-                    return;
-                }
-                cart = orderService.findOrderById(cartId);
+                cart = orderService.getOrCreateCart(customer.getId());
                 if (cart == null) {
                     resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi hệ thống khi tạo giỏ hàng.");
                     return;

@@ -2,6 +2,7 @@ package dto;
 
 public class ProductDto {
     private int id;
+
     private String categoryName;
     private String authorName;
     private String publisherName;
