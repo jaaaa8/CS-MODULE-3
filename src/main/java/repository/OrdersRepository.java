@@ -187,18 +187,22 @@ public class OrdersRepository implements IOrderRepository {
 
     @Override
     public boolean updateOrderStatusAndTotalPrice(int orderId, double totalPrice, String status) {
+        String sql = "UPDATE orders SET status = ?, total = ? WHERE order_id = ?";
         try(Connection connection = ConnectDB.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS);){
-            preparedStatement.setDouble(1, totalPrice);
-            preparedStatement.setString(2, status);
-            preparedStatement.setInt(3, orderId);
-            int affectedRows = preparedStatement.executeUpdate();
+            PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, status);      // status ở vị trí 1
+            ps.setDouble(2, totalPrice);   // totalPrice ở vị trí 2
+            ps.setInt(3, orderId);         // order_id ở vị trí 3
+
+            int affectedRows = ps.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
+            e.printStackTrace();
             System.err.println("Error updating order status and total price!");
         }
         return false;
     }
+
     public boolean updateStatusAndTotal(int orderId, double total) {
         String sql = "UPDATE orders SET status = 'PENDING', total = ? WHERE order_id = ?";
         try (java.sql.Connection conn = util.ConnectDB.getConnection();
