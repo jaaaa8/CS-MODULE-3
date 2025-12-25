@@ -1,3 +1,4 @@
+
 <%--
   Created by IntelliJ IDEA.
   User: DELL G3
@@ -97,22 +98,22 @@
                             </div>
                         </div>
 
-<%--                        <!-- Category -->--%>
-<%--                        <div class="mb-3">--%>
-<%--                            <label class="form-label fw-semibold">Category</label>--%>
-<%--                            <select name="categoryId" class="form-select" required>--%>
-<%--                                <option value="">-- Select Category --</option>--%>
-<%--                                <c:forEach var="category" items="${categories}">--%>
-<%--                                    <option value="${category.id}"--%>
-<%--                                        ${param.categoryId == category.id ? "selected" : ""}>--%>
-<%--                                            ${category.name}--%>
-<%--                                    </option>--%>
-<%--                                </c:forEach>--%>
-<%--                            </select>--%>
-<%--                            <div class="invalid-feedback">--%>
-<%--                                Please select a category.--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
+                        <%--                        <!-- Category -->--%>
+                        <%--                        <div class="mb-3">--%>
+                        <%--                            <label class="form-label fw-semibold">Category</label>--%>
+                        <%--                            <select name="categoryId" class="form-select" required>--%>
+                        <%--                                <option value="">-- Select Category --</option>--%>
+                        <%--                                <c:forEach var="category" items="${categories}">--%>
+                        <%--                                    <option value="${category.id}"--%>
+                        <%--                                        ${param.categoryId == category.id ? "selected" : ""}>--%>
+                        <%--                                            ${category.name}--%>
+                        <%--                                    </option>--%>
+                        <%--                                </c:forEach>--%>
+                        <%--                            </select>--%>
+                        <%--                            <div class="invalid-feedback">--%>
+                        <%--                                Please select a category.--%>
+                        <%--                            </div>--%>
+                        <%--                        </div>--%>
 
                         <!-- Buttons -->
                         <div class="d-flex justify-content-end gap-2 mt-4">
@@ -150,7 +151,7 @@
         });
     })();
     // Disable submit button on form submit to prevent multiple submissions
-        document.querySelector("form").addEventListener("submit", function () {
+    document.querySelector("form").addEventListener("submit", function () {
         document.getElementById("submitBtn").disabled = true;
     });
 

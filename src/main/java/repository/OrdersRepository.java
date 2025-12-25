@@ -19,7 +19,7 @@ public class OrdersRepository implements IOrderRepository {
     private final String FIND_ORDER_BY_ID = "SELECT * FROM orders WHERE order_id = ?";
     private final String FIND_CART_BY_CUSTOMER_ID = "SELECT * FROM orders WHERE customer_id = ? AND status = 'CART' ORDER BY order_id DESC LIMIT 1";
     private final String CREATE_CART_FOR_CUSTOMER = "INSERT INTO orders (customer_id, status) VALUES (?, 'CART')";
-    private final String UPDATE_ORDER_STATUS = "UPDATE orders SET total = ?,status = ? WHERE order_id = ?";
+    private final String UPDATE_ORDER_STATUS = "UPDATE orders SET status = ? WHERE order_id = ?";
     private final String CONFIRM_ORDER = "UPDATE orders SET status = 'CONFIRMED', confirmed_by = ? WHERE order_id = ? AND status = 'PENDING'";
 
     @Override
@@ -120,7 +120,7 @@ public class OrdersRepository implements IOrderRepository {
     @Override
     public boolean updateOrderStatus(int orderId, String status) {
         try(Connection connection = ConnectDB.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ORDER);){
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS);){
             preparedStatement.setString(1, status);
             preparedStatement.setInt(2, orderId);
             int affectedRows = preparedStatement.executeUpdate();

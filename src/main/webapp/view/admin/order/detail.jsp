@@ -65,10 +65,10 @@
               <td>${item.bookName}</td>
               <td class="text-center">${item.quantity}</td>
               <td class="text-end">
-                <fmt:formatNumber value="${item.price}" type="currency" currencySymbol="$"/>
+                <fmt:formatNumber value="${item.price}" type="currency" currencySymbol="VND"/>
               </td>
               <td class="text-end">
-                <fmt:formatNumber value="${subtotal}" type="currency" currencySymbol="$"/>
+                <fmt:formatNumber value="${subtotal}" type="currency" currencySymbol="VND"/>
               </td>
             </tr>
           </c:forEach>
