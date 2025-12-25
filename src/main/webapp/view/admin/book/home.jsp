@@ -51,13 +51,53 @@
                 <i class="bi bi-plus-circle"></i> Add New Book
             </a>
         </div>
-        <div class="col-md-4">
-            <form action="/book" method="get" class="d-flex">
+        <div class="col-md-8">
+            <form action="/book" method="get" class="row g-2 align-items-center">
                 <input type="hidden" name="action" value="search">
-                <input type="text" name="search" class="form-control me-2" placeholder="Search by Title..." value="${param.search}">
-                <button type="submit" class="btn btn-outline-primary">
-                    <i class="bi bi-search"></i> Search
-                </button>
+                <!-- Search by Title -->
+                <div class="col-auto">
+                    <input type="text" name="name" class="form-control" placeholder="Search by Title..."
+                           value="${param.name}">
+                </div>
+                <!-- Filter by Category -->
+                <div class="col-auto">
+                    <select name="categoryId" class="form-select">
+                        <option value="">All Categories</option>
+                        <c:forEach var="cat" items="${categoryList}">
+                            <option value="${cat.id}" ${param.categoryId == cat.id.toString() ? 'selected' : ''}>
+                                    ${cat.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <!-- Filter by Author -->
+                <div class="col-auto">
+                    <select name="authorId" class="form-select">
+                        <option value="">All Authors</option>
+                        <c:forEach var="auth" items="${authorList}">
+                            <option value="${auth.id}" ${param.authorId == auth.id.toString() ? 'selected' : ''}>
+                                    ${auth.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <!-- Filter by Publisher -->
+                <div class="col-auto">
+                    <select name="publisherId" class="form-select">
+                        <option value="">All Publishers</option>
+                        <c:forEach var="pub" items="${publisherList}">
+                            <option value="${pub.id}" ${param.publisherId == pub.id.toString() ? 'selected' : ''}>
+                                    ${pub.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <!-- Submit -->
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -74,28 +114,28 @@
                     <thead class="table-light">
                     <tr>
                         <th class="text-center" style="width: 5%;">#</th>
-                        <th style="width: 5%;">ID</th>
                         <th>Title</th>
-                        <th style="width: 10%;">Category ID</th>
-                        <th style="width: 10%;">Author ID</th>
+                        <th style="width: 10%;">Category</th>
+                        <th style="width: 10%;">Author</th>
+                        <th style="width: 10%;">Publisher</th>
                         <th class="text-end" style="width: 10%;">Price</th>
                         <th class="text-center" style="width: 8%;">Stock</th>
                         <th class="text-center action-column">Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach var="book" items="${bookList}" varStatus="status">
+                    <c:forEach var="book" items="${productList}" varStatus="status">
                         <tr>
                             <td class="text-center">${status.count}</td>
-                            <td class="text-muted small">${book.id}</td>
                             <td>
                                 **${book.title}**
                                 <p class="mb-0 text-truncate small text-secondary" style="max-width: 250px;">
                                         ${book.description}
                                 </p>
                             </td>
-                            <td>${book.categoryId}</td>
-                            <td>${book.authorId}</td>
+                            <td>${book.categoryName}</td>
+                            <td>${book.authorName}</td>
+                            <td>${book.publisherName}</td>
                             <td class="text-end fw-bold text-success">
                                 <fmt:formatNumber value="${book.price}" type="number" pattern="#,##0"/>
                             </td>

@@ -10,6 +10,7 @@
   Description: Form thêm mới Customer
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Add New Customer</title>
@@ -30,32 +31,36 @@
             <form action="/customer?action=add" method="post">
 
                 <div class="mb-3">
-                    <label for="accountId" class="form-label fw-semibold">Account ID <span class="text-danger">*</span></label>
-                    <input type="number" name="accountId" id="accountId" class="form-control" placeholder="Enter associated Account ID (e.g., 1)" required min="1">
+                    <label class="form-label fw-semibold">Account</label>
+                    <select name="accountId" class="form-select">
+                        <c:forEach var="account" items="${accountList}">
+                            <option value="${account.id}">${account.username}</option>
+                        </c:forEach>
+                    </select>
                 </div>
 
                 <div class="mb-3">
                     <label for="name" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
-                    <input type="text" name="name" id="name" class="form-control" placeholder="Enter customer's full name" required>
+                    <input type="text" name="name" id="name" class="form-control" onchange="checkValidate()" placeholder="Enter customer's full name" required>
                 </div>
-
+                <small id="errorName" class="text-danger"></small>
                 <div class="mb-3">
                     <label for="email" class="form-label fw-semibold">Email</label>
-                    <input type="email" name="email" id="email" class="form-control" placeholder="Enter email address (e.g., example@domain.com)">
+                    <input type="email" name="email" id="email" class="form-control" onchange="checkValidate()" placeholder="Enter email address (e.g., example@domain.com)">
                 </div>
-
+                <small id="errorEmail" class="text-danger"></small>
                 <div class="mb-3">
                     <label for="phone" class="form-label fw-semibold">Phone Number</label>
-                    <input type="tel" name="phone" id="phone" class="form-control" placeholder="Enter phone number">
+                    <input type="tel" name="phone" id="phone" class="form-control" onchange="checkValidate()" placeholder="Enter phone number">
                 </div>
-
+                <small id="errorPhone" class="text-danger"></small>
                 <div class="mb-4">
                     <label for="address" class="form-label fw-semibold">Address</label>
-                    <textarea name="address" id="address" class="form-control" rows="3" placeholder="Enter full address"></textarea>
+                    <textarea name="address" id="address" class="form-control" onchange="checkValidate()" rows="3" placeholder="Enter full address"></textarea>
                 </div>
-
+                <small id="errorAddress" class="text-danger"></small>
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-success btn-lg fw-semibold">
+                    <button type="submit" id="btn-save" class="btn btn-success btn-lg fw-semibold">
                         <i class="bi bi-save me-2"></i> Save New Customer
                     </button>
                     <a href="${pageContext.request.contextPath}/customer" class="btn btn-outline-secondary">
@@ -67,4 +72,72 @@
     </div>
 </div>
 </body>
+<script>
+    function checkValidate() {
+        // Lấy giá trị từ form
+        let name = document.getElementById("name").value.trim();
+        let email = document.getElementById("email").value.trim();
+        let phone = document.getElementById("phone").value.trim();
+        let address = document.getElementById("address").value.trim();
+
+        let isName = false;
+        let isEmail = false;
+        let isPhone = false;
+        let isAddress = false;
+
+        // Validate tên
+        if (name === "") {
+            document.getElementById("errorName").innerText = "Full Name can not blank";
+            isName = false;
+        } else {
+            document.getElementById("errorName").innerText = "";
+            isName = true;
+        }
+
+        // Validate email
+        if (email !== "") {
+            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                document.getElementById("errorEmail").innerText = "Invalid email!";
+                isEmail = false;
+            } else {
+                document.getElementById("errorEmail").innerText = "";
+                isEmail = true;
+            }
+        } else {
+            document.getElementById("errorEmail").innerText = "";
+            isEmail = true;
+        }
+
+        // Validate phone
+        if (phone !== "") {
+            let phonePattern = /^[0-9]{10,15}$/;
+            if (!phonePattern.test(phone)) {
+                document.getElementById("errorPhone").innerText = "Invalid Phone Number, type again!";
+                isPhone = false;
+            } else {
+                document.getElementById("errorPhone").innerText = "";
+                isPhone = true;
+            }
+        } else {
+            document.getElementById("errorPhone").innerText = "";
+            isPhone = true;
+        }
+
+        if(address===""){
+            document.getElementById("errorAddress").innerText = "Address can not blank";
+            isAddress = false;
+        }else{
+            document.getElementById("errorAddress").innerText = "";
+            isAddress = true;
+        }
+
+        // Bật/tắt nút submit
+        if (isName && isAddress && isEmail && isPhone) {
+            document.getElementById("btn-save").disabled = false;
+        } else {
+            document.getElementById("btn-save").disabled = true;
+        }
+    }
+</script>
 </html>

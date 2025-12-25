@@ -18,9 +18,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        .table th, .table td { vertical-align: middle; }
-        .action-column { min-width: 150px; }
-        .action-btn { padding: .25rem .5rem; font-size: .875rem; }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        .action-column {
+            min-width: 150px;
+        }
+
+        .action-btn {
+            padding: .25rem .5rem;
+            font-size: .875rem;
+        }
     </style>
 </head>
 <body>
@@ -30,10 +39,9 @@
     <h1 class="mb-4 text-success"><i class="bi bi-people-fill me-2"></i> Customer List Management</h1>
 
     <%-- Hiển thị thông báo (ví dụ: ${requestScope.mess} hoặc ${param.mess}) --%>
-    <c:if test="${requestScope.mess != null && requestScope.mess != ''}">
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-                ${requestScope.mess}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <c:if test="${param.mess != null && param.mess != ''}">
+        <div class="alert alert-info alert-dismissible fade show">
+                ${param.mess}
         </div>
     </c:if>
 
@@ -47,7 +55,7 @@
         <div class="col-md-4">
             <form action="/customer" method="get" class="d-flex">
                 <input type="hidden" name="action" value="search">
-                <input type="text" name="search" class="form-control me-2" placeholder="Search by Name/Email...">
+                <input type="text" name="name" class="form-control me-2" placeholder="Search by Name...">
                 <button type="submit" class="btn btn-outline-primary">
                     <i class="bi bi-search"></i> Search
                 </button>
@@ -63,12 +71,11 @@
                     <thead class="table-dark">
                     <tr>
                         <th class="text-center" style="width: 5%;">#</th>
-                        <th style="width: 5%;">ID</th>
-                        <th style="width: 10%;">Account ID</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th style="width: 10%;">Phone</th>
                         <th>Address</th>
+                        <th style="width: 10%;">username</th>
                         <th class="text-center action-column">Action</th>
                     </tr>
                     </thead>
@@ -77,12 +84,12 @@
                     <c:forEach var="customer" items="${requestScope.customerList}" varStatus="status">
                         <tr>
                             <td class="text-center">${status.count}</td>
-                            <td class="text-muted small">${customer.id}</td>
-                            <td class="text-center">${customer.accountId}</td>
                             <td class="fw-bold">${customer.name}</td>
                             <td>${customer.email}</td>
                             <td>${customer.phone}</td>
-                            <td><span class="text-truncate" style="max-width: 250px; display: block;">${customer.address}</span></td>
+                            <td><span class="text-truncate"
+                                      style="max-width: 250px; display: block;">${customer.address}</span></td>
+                            <td class="text-center">${customer.username}</td>
                             <td class="text-center">
                                 <button onclick="getInfoToDelete('${customer.id}','${customer.name}')"
                                         type="button" class="btn btn-outline-danger action-btn me-1"
@@ -98,9 +105,11 @@
                     </c:forEach>
 
                     <c:if test="${requestScope.customerList == null || requestScope.customerList.isEmpty()}">
-                        <tr><td colspan="8" class="text-center text-muted py-4">
-                            <i class="bi bi-info-circle"></i> No customer found.
-                        </td></tr>
+                        <tr>
+                            <td colspan="8" class="text-center text-muted py-4">
+                                <i class="bi bi-info-circle"></i> No customer found.
+                            </td>
+                        </tr>
                     </c:if>
                     </tbody>
                 </table>
@@ -115,8 +124,10 @@
         <div class="modal-content">
             <form action="/customer?action=delete" method="post">
                 <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="deleteModalLabel"><i class="bi bi-exclamation-triangle"></i> Confirm Deletion</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="deleteModalLabel"><i class="bi bi-exclamation-triangle"></i> Confirm
+                        Deletion</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
@@ -137,7 +148,7 @@
 
 <script>
     // Hàm lấy thông tin để xóa
-    function getInfoToDelete(id, name){
+    function getInfoToDelete(id, name) {
         document.getElementById("deleteId").value = id;
         document.getElementById("deleteName").innerHTML = name;
     }
