@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import service.CustomerService;
 import service.OrderItemService;
 import service.OrdersService;
+import service.impl.ICustomerService;
 import service.impl.IOrderItemService;
 import service.impl.IOrdersService;
 
@@ -23,11 +24,10 @@ import java.util.List;
 public class CartController extends HttpServlet {
     private final IOrdersService orderService = new OrdersService();
     private final IOrderItemService orderItemService = new OrderItemService();
-    private final CustomerService customerService = new CustomerService();
+    private final ICustomerService customerService = new CustomerService();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String action = req.getParameter("action");
         if (action == null) action = "";
@@ -36,7 +36,8 @@ public class CartController extends HttpServlet {
             case "add":
                 // thường add dùng POST → không xử lý ở GET
                 break;
-            case "remove":
+            case "done":
+                showSuccessView(req, resp);
                 break;
             case "checkout":
                 break;
@@ -47,10 +48,18 @@ public class CartController extends HttpServlet {
         }
     }
 
+    private void showSuccessView(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            req.getRequestDispatcher("/view/customer/cart/success.jsp")
+                    .forward(req, resp);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 
-    private void addNewItemToCart(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
 
+    private void addNewItemToCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(false);
         if (session == null) {
             resp.sendRedirect(req.getContextPath() + "/auth?action=login");
@@ -111,6 +120,9 @@ public class CartController extends HttpServlet {
             }
 
             List<OrderItemDto> items = orderItemService.getItemsByOrderId(cart.getId());
+            if(items.isEmpty()){
+                req.setAttribute("mess","Giỏ hàng của bạn đang trống.");
+            }
 
             req.setAttribute("cart", cart);
             req.setAttribute("orderItems", items);
@@ -138,42 +150,19 @@ public class CartController extends HttpServlet {
                 removeItem(req, resp);
                 // Implement remove from cart logic here
                 break;
-            case "checkout":
-                // Implement checkout logic here
-                checkout(req, resp);
-                break;
             default:
                 // Implement default cart action here
                 break;
         }
     }
 
-    private void removeItem(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
+    private void removeItem(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         int orderItemId = Integer.parseInt(req.getParameter("orderItemId"));
         orderItemService.removeItem(orderItemId);
 
         resp.sendRedirect(req.getContextPath() + "/cart");
     }
 
-    private void checkout(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
-        HttpSession session = req.getSession(false);
-        Account account = (Account) session.getAttribute("account");
-
-        Customer customer = customerService.findByAccountId(account.getId());
-        Orders cart = orderService.findCartByCustomerId(customer.getId());
-
-        boolean success = orderService.checkout(cart.getId());
-
-        if (success) {
-            resp.sendRedirect(req.getContextPath() + "/order-success");
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/cart?error=checkout");
-        }
-    }
 
 
 }

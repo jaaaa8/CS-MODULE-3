@@ -99,6 +99,17 @@ public class OrderController extends HttpServlet {
             throws IOException {
 
         String mess;
+        HttpSession session = req.getSession(false);
+        if (session == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+            return;
+        }
+
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+            return;
+        }
         try {
             int orderId = Integer.parseInt(req.getParameter("orderId"));
             Integer adminId = (Integer) req.getSession().getAttribute("adminId");

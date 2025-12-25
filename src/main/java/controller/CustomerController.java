@@ -34,11 +34,22 @@ public class CustomerController extends HttpServlet {
             case "search":
                 search(req, resp);
                 break;
+            case "addByCustomer":
+                showFormAddByCustomer(req,resp);
+                break;
             default:
                 showList(req, resp);
                 break;
         }
 
+    }
+
+    private void showFormAddByCustomer(HttpServletRequest req, HttpServletResponse resp) {
+        try{
+            req.getRequestDispatcher("/view/customer/infor/customerdetail.jsp").forward(req,resp);
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -57,6 +68,9 @@ public class CustomerController extends HttpServlet {
                 break;
             case "search":
                 search(req, resp);
+                break;
+            case "addByCustomer":
+                addNewByCustomer(req,resp);
                 break;
             default:
                 showList(req, resp);

@@ -54,9 +54,7 @@ public class OrdersService implements IOrdersService {
 
     @Override
     public boolean checkout(int customerId) {
-        Connection conn = null;
-        try {
-            conn = ConnectDB.getConnection();
+        try (Connection conn = ConnectDB.getConnection()){
             conn.setAutoCommit(false);
             Orders cart = ordersRepository.findCartByCustomerId(customerId);
 
@@ -79,24 +77,9 @@ public class OrdersService implements IOrdersService {
             conn.commit();
             return true;
 
-        } catch (Exception e) {
-            try {
-                if (conn != null) conn.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.err.println("Error during checkout process!");
             return false;
-
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.setAutoCommit(true);
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
