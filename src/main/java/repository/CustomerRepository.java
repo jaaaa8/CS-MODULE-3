@@ -187,6 +187,7 @@ public class CustomerRepository implements ICustomerRepository {
                 return new Customer(customer_id, accountId, name, email, phone, address);
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             System.out.println("Find by Account ID Error");
         }
         return null;
