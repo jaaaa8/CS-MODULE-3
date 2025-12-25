@@ -16,28 +16,34 @@ import java.io.IOException;
 @WebServlet(name = "HomeController", value = "/home")
 public class HomeController extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
         HttpSession session = req.getSession(false);
-        if (session == null) {
-            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
-            return;
-        }
-        Account account = (Account) session.getAttribute("account");
+        Account account = (session != null)
+                ? (Account) session.getAttribute("account")
+                : null;
         if (account == null) {
-            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+            // Cho phép vào trang home customer
+            req.getRequestDispatcher("/view/customer/home/home.jsp").forward(req, resp);
             return;
         }
+
         if ("ADMIN".equals(account.getRole())) {
             req.getRequestDispatcher("/view/admin/book/home.jsp").forward(req, resp);
-        } else {
-            Customer customer = new CustomerService().findByAccountId(account.getId());
-            if (customer == null) {
-                req.getRequestDispatcher("/view/customer/infor/customerdetail.jsp").forward(req, resp);
-                return;
-            }
-            req.getRequestDispatcher("/view/customer/home/home.jsp").forward(req, resp);
+            return;
         }
+
+        Customer customer = new CustomerService().findByAccountId(account.getId());
+
+        if (customer == null) {
+            req.getRequestDispatcher("/customer/profile").forward(req, resp);
+            return;
+        }
+
+        req.getRequestDispatcher("/view/customer/home/home.jsp").forward(req, resp);
     }
+
 
 
     @Override
