@@ -30,20 +30,12 @@ public class Orders {
     public Orders() {
     }
 
-    public int getConfirmById() {
-        return confirmById;
+    public int getId() {
+        return id;
     }
 
-    public void setConfirmById(int confirmById) {
-        this.confirmById = confirmById;
-    }
-
-    public Date getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getCustomerId() {
@@ -52,14 +44,6 @@ public class Orders {
 
     public void setCustomerId(int customerId) {
         this.customerId = customerId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getStatus() {
@@ -78,4 +62,19 @@ public class Orders {
         this.total = totalPrice;
     }
 
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+
+    public int getConfirmById() {
+        return confirmById;
+    }
+
+    public void setConfirmById(int confirmById) {
+        this.confirmById = confirmById;
+    }
 }
