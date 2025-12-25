@@ -13,7 +13,7 @@ public interface IOrdersService {
     boolean updateOrderStatus(int orderId, String status);
 
     Orders findCartByCustomerId(int customerId);
-    int createCartForCustomer(int customerId);
+    Orders getOrCreateCart(int customerId);
 
     boolean checkout(int customerId);
 }

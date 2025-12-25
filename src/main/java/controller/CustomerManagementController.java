@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet(name = "CustomerController", value = "/customer")
-public class CustomerController extends HttpServlet {
+public class CustomerManagementController extends HttpServlet {
     ICustomerService customerService = new CustomerService();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,9 +32,16 @@ public class CustomerController extends HttpServlet {
                 showFormAddByCustomer(req,resp);
                 break;
             default:
-                List<Customer> customerList=customerService.findAll();
-                req.setAttribute("customerList",customerList);
-                req.getRequestDispatcher("/view/admin/customer_management/home.jsp").forward(req,resp);
+                HttpSession session = req.getSession(false);
+                Account account = (session != null) ? (Account) session.getAttribute("account") : null;
+
+                if (account != null && "ADMIN".equals(account.getRole())) {
+                    List<Customer> customerList = customerService.findAll();
+                    req.setAttribute("customerList", customerList);
+                    req.getRequestDispatcher("/view/admin/customer_management/home.jsp").forward(req, resp);
+                } else {
+                    resp.sendRedirect(req.getContextPath() + "/home");
+                }
                 break;
         }
 

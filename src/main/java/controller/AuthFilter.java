@@ -31,11 +31,9 @@ public class AuthFilter implements Filter {
                 ? (Account) session.getAttribute("account")
                 : null;
 
-        if (account != null) {
-            req.setAttribute("currentUser", account);
-        }
-
+        // ================== PUBLIC ==================
         if (uri.equals(context + "/home")
+                || uri.startsWith(context + "/bookDetail")
                 || uri.startsWith(context + "/product")
                 || uri.startsWith(context + "/css")
                 || uri.startsWith(context + "/js")
@@ -46,7 +44,9 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        if (uri.startsWith(context + "/checkout")
+        // ================== CART / PAYMENT (LOGIN REQUIRED) ==================
+        if (uri.startsWith(context + "/cart")
+                || uri.startsWith(context + "/checkout")
                 || uri.startsWith(context + "/payment")) {
 
             if (account == null) {
@@ -54,6 +54,24 @@ public class AuthFilter implements Filter {
                 return;
             }
         }
+
+        // ================== ADMIN ONLY ==================
+        if (uri.startsWith(context + "/admin")) {
+            if (account == null) {
+                resp.sendRedirect(context + "/auth?action=login");
+                return;
+            }
+            if (!"ADMIN".equals(account.getRole())) {
+                resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Không có quyền admin");
+                return;
+            }
+        }
+
+        // Gắn user hiện tại cho JSP
+        if (account != null) {
+            req.setAttribute("currentUser", account);
+        }
+
         chain.doFilter(request, response);
     }
 }
