@@ -96,46 +96,51 @@
                 <div class="card p-4 shadow-sm position-sticky" style="top: 90px">
                     <h5 class="fw-bold mb-3">Tóm tắt đơn hàng</h5>
 
-                    <c:forEach items="${cart.items}" var="item">
+                    <%-- SỬA 1: Duyệt qua orderItems thay vì cart.items --%>
+                    <c:forEach items="${orderItems}" var="item">
                         <div class="d-flex justify-content-between small mb-1">
-                            <span>${item.product.title} × ${item.quantity}</span>
-                            <span>${item.totalPrice} ₫</span>
+                                <%-- SỬA 2: Dùng item.bookName và item.subtotal (tùy format tiền tệ) --%>
+                            <span>${item.bookName} × ${item.quantity}</span>
+                            <span>
+                    <fmt:formatNumber value="${item.price * item.quantity}" type="currency" currencySymbol="₫"/>
+                </span>
                         </div>
                     </c:forEach>
 
                     <hr>
 
+                    <%-- Các biến subtotal, tax, total cần được tính toán và truyền từ Controller sang JSP để hiển thị --%>
                     <div class="d-flex justify-content-between">
                         <span>Tạm tính</span>
-                        <span>${subtotal} ₫</span>
+                        <span><fmt:formatNumber value="${subtotal}" type="currency" currencySymbol="₫"/></span>
                     </div>
 
                     <div class="d-flex justify-content-between">
                         <span>VAT (8%)</span>
-                        <span>${tax} ₫</span>
+                        <span><fmt:formatNumber value="${tax}" type="currency" currencySymbol="₫"/></span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-2">
                         <span>Phí ship</span>
-                        <span>${shipping} ₫</span>
+                        <span><fmt:formatNumber value="${shipping}" type="currency" currencySymbol="₫"/></span>
                     </div>
 
                     <hr>
 
                     <div class="d-flex justify-content-between fw-bold fs-5 mb-3">
                         <span>TỔNG CỘNG</span>
-                        <span class="text-danger">${total} ₫</span>
+                        <span class="text-danger">
+                <fmt:formatNumber value="${total}" type="currency" currencySymbol="₫"/>
+            </span>
                     </div>
 
                     <form action="${pageContext.request.contextPath}/payment" method="post">
                         <input type="hidden" name="action" value="checkout">
 
-                        <!-- gửi kèm thông tin cần thiết -->
+                        <%-- CHỈ GỬI ORDER ID --%>
                         <input type="hidden" name="orderId" value="${cart.id}">
-                        <input type="hidden" name="subtotal" value="${subtotal}">
-                        <input type="hidden" name="tax" value="${tax}">
-                        <input type="hidden" name="shipping" value="${shipping}">
-                        <input type="hidden" name="total" value="${total}">
+
+                        <%-- Các input hidden giá tiền NÊN BỎ đi để tránh rủi ro bảo mật --%>
 
                         <button type="submit" class="btn btn-danger w-100 py-2 fw-bold">
                             ĐẶT HÀNG

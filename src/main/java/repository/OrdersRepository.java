@@ -192,4 +192,18 @@ public class OrdersRepository implements IOrderRepository {
         }
         return false;
     }
+    public boolean updateStatusAndTotal(int orderId, double total) {
+        String sql = "UPDATE orders SET status = 'PENDING', total = ? WHERE order_id = ?";
+        try (java.sql.Connection conn = util.ConnectDB.getConnection();
+             java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setDouble(1, total);
+            ps.setInt(2, orderId);
+
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

@@ -53,7 +53,8 @@ public class PaymentController extends HttpServlet {
         HttpSession session = req.getSession(false);
         Account account = (Account) session.getAttribute("account");
 
-        Customer customer = customerService.findByAccountId(account.getId());
+        Customer customer = customerService.findById(account.getId());
+        Orders cart = orderService.findCartByCustomerId(customer.getId());
 
         boolean success = orderService.checkout(customer.getId());
 

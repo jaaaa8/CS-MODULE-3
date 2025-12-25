@@ -45,4 +45,8 @@ public class ProductService implements IProductService {
         return productRepository.filter(name, categoryId, authorId, publisherId);
     }
 
+    @Override
+    public void updateStock(int bookId, int quantityChange) {
+        productRepository.updateStock(bookId, quantityChange);
+    }
 }

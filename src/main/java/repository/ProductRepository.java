@@ -294,4 +294,23 @@ public class ProductRepository implements IProductRepository {
         return productList;
     }
 
+    // ... các phương thức khác giữ nguyên ...
+
+    @Override
+    public void updateStock(int bookId, int quantityChange) {
+        // quantityChange: số âm (-) để trừ kho, số dương (+) để hoàn kho
+        String sql = "UPDATE book SET stock = stock + ? WHERE book_id = ?";
+
+        try (Connection connection = ConnectDB.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, quantityChange);
+            ps.setInt(2, bookId);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Lỗi cập nhật kho: " + e.getMessage());
+        }
+    }
 }

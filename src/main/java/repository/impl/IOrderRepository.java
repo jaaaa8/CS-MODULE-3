@@ -16,4 +16,5 @@ public interface IOrderRepository {
     int createCartForCustomer(int customerId);
 
     boolean updateOrderStatusAndTotalPrice(int orderId, double totalPrice, String status);
+    boolean updateStatusAndTotal(int orderId, double total);
 }
