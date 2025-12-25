@@ -63,7 +63,7 @@
                     <button type="submit" id="btn-save" class="btn btn-success btn-lg fw-semibold">
                         <i class="bi bi-save me-2"></i> Save New Customer
                     </button>
-                    <a href="/customer" class="btn btn-outline-secondary">
+                    <a href="${pageContext.request.contextPath}/customer" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left"></i> Back to Customer List
                     </a>
                 </div>

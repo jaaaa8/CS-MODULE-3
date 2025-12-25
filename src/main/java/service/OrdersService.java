@@ -48,8 +48,13 @@ public class OrdersService implements IOrdersService {
     }
 
     @Override
-    public int createCartForCustomer(int customerId) {
-        return ordersRepository.createCartForCustomer(customerId);
+    public Orders getOrCreateCart(int customerId) {
+        Orders cart = ordersRepository.findCartByCustomerId(customerId);
+        if (cart == null) {
+            ordersRepository.createCartForCustomer(customerId);
+            cart = ordersRepository.findCartByCustomerId(customerId);
+        }
+        return cart;
     }
 
     @Override

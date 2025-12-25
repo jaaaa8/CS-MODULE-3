@@ -32,7 +32,7 @@ public class HomeController extends HttpServlet {
         } else {
             Customer customer = new CustomerService().findByAccountId(account.getId());
             if (customer == null) {
-                resp.sendRedirect(req.getContextPath() + "/customer?action=addByCustomer");
+                req.getRequestDispatcher("/view/customer/infor/customerdetail.jsp").forward(req, resp);
                 return;
             }
             req.getRequestDispatcher("/view/customer/home/home.jsp").forward(req, resp);

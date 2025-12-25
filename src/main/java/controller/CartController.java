@@ -42,7 +42,7 @@ public class CartController extends HttpServlet {
             case "checkout":
                 break;
             default:
-                // ✅ MẶC ĐỊNH LÀ XEM CART
+                // MẶC ĐỊNH LÀ XEM CART
                 showCartView(req, resp);
                 break;
         }
@@ -50,8 +50,7 @@ public class CartController extends HttpServlet {
 
     private void showSuccessView(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            req.getRequestDispatcher("/view/customer/cart/success.jsp")
-                    .forward(req, resp);
+            req.getRequestDispatcher("/view/customer/cart/success.jsp").forward(req, resp);
         } catch (ServletException | IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -76,11 +75,7 @@ public class CartController extends HttpServlet {
 
         Customer customer = customerService.findByAccountId(account.getId());
 
-        Orders cart = orderService.findCartByCustomerId(customer.getId());
-        if (cart == null) {
-            int cartId = orderService.createCartForCustomer(customer.getId());
-            cart = orderService.findOrderById(cartId);
-        }
+        Orders cart = orderService.getOrCreateCart(customer.getId());
 
         boolean exists = orderItemService.existItemInOrder(cart.getId(), bookId);
 
@@ -112,12 +107,7 @@ public class CartController extends HttpServlet {
                 throw new RuntimeException("Customer not found for accountId=" + account.getId());
             }
 
-            Orders cart = orderService.findCartByCustomerId(customer.getId());
-
-            if (cart == null) {
-                int cartId = orderService.createCartForCustomer(customer.getId());
-                cart = orderService.findOrderById(cartId);
-            }
+            Orders cart = orderService.getOrCreateCart(customer.getId());
 
             List<OrderItemDto> items = orderItemService.getItemsByOrderId(cart.getId());
             if(items.isEmpty()){
@@ -127,8 +117,7 @@ public class CartController extends HttpServlet {
             req.setAttribute("cart", cart);
             req.setAttribute("orderItems", items);
 
-            req.getRequestDispatcher("/view/customer/cart/cart.jsp")
-                    .forward(req, resp);
+            req.getRequestDispatcher("/view/customer/cart/cart.jsp").forward(req, resp);
 
         } catch (Exception e) {
             e.printStackTrace();

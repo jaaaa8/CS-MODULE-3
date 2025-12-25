@@ -15,8 +15,8 @@ import service.impl.IAccountService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "CustomerController", value = "/customer")
-public class CustomerController extends HttpServlet {
+@WebServlet(name = "CustomerManagementController", value = "/customer")
+public class CustomerManagementController extends HttpServlet {
     ICustomerService customerService = new CustomerService();
     IAccountService accountService = new AccountService();
 
@@ -68,9 +68,6 @@ public class CustomerController extends HttpServlet {
                 break;
             case "search":
                 search(req, resp);
-                break;
-            case "addByCustomer":
-                addNewByCustomer(req,resp);
                 break;
             default:
                 showList(req, resp);

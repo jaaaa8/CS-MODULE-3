@@ -2,7 +2,7 @@ package repository;
 
 import dto.CustomerDto;
 import entity.Customer;
-import repository.impl.ICustomerRepostitory;
+import repository.impl.ICustomerRepository;
 import util.ConnectDB;
 
 import java.sql.Connection;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerRepository implements ICustomerRepostitory {
+public class CustomerRepository implements ICustomerRepository {
     private final String SELECT_ALL = "select c.*, a.username as username from customer c left join account a on c.account_id = a.account_id";
     private final String INSERT_INTO ="insert into customer(account_id,name,email,phone,address) values (?,?,?,?,?)";
     private final String DELETE ="delete from customer where customer_id=?";

@@ -2,17 +2,21 @@ package controller;
 
 import dto.OrderItemDto;
 import dto.OrdersDto;
+import entity.Account;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import service.OrderItemService;
 import service.OrdersService;
 import service.impl.IOrderItemService;
 import service.impl.IOrdersService;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @WebServlet(name = "OrderController", urlPatterns="/order")
@@ -43,9 +47,7 @@ public class OrderController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
         if (action == null) action = "";
 
@@ -78,23 +80,20 @@ public class OrderController extends HttpServlet {
         req.getRequestDispatcher(JSP_PATH + "home.jsp").forward(req, resp);
     }
 
-    private void deleteById(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
+    private void deleteById(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String mess;
         try {
             int deleteId = Integer.parseInt(req.getParameter("deleteId"));
             boolean isSuccess = orderService.deleteOrder(deleteId);
             mess = isSuccess
-                    ? "Xoá đơn hàng ID " + deleteId + " thành công"
-                    : "Xoá đơn hàng thất bại";
+                    ? "Xoa don hang " + deleteId + " thanh cong"
+                    : "Xoa don hang that bai ";
         } catch (NumberFormatException e) {
-            mess = "Lỗi: ID không hợp lệ.";
+            mess = "Loi id 0 hop le.";
         }
         resp.sendRedirect(req.getContextPath() + "/order?mess=" + mess);
     }
 
-    // ADMIN: PENDING -> CONFIRMED
     private void confirmAdmin(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
@@ -125,7 +124,8 @@ public class OrderController extends HttpServlet {
         } catch (NumberFormatException e) {
             mess = "ID đơn hàng không hợp lệ.";
         }
-        resp.sendRedirect(req.getContextPath() + "/order?mess=" + mess);
+        String encodedMess = URLEncoder.encode(mess, StandardCharsets.UTF_8);
+        resp.sendRedirect(req.getContextPath() + "/order?mess=" + encodedMess);
     }
 
     // ADMIN: CONFIRMED -> SHIPPED
@@ -142,7 +142,8 @@ public class OrderController extends HttpServlet {
         } catch (NumberFormatException e) {
             mess = "ID đơn hàng không hợp lệ.";
         }
-        resp.sendRedirect(req.getContextPath() + "/order?mess=" + mess);
+        String encodedMess = URLEncoder.encode(mess, StandardCharsets.UTF_8);
+        resp.sendRedirect(req.getContextPath() + "/order?mess=" + encodedMess);
     }
 
     // CLIENT: SHIPPED -> COMPLETED
@@ -179,7 +180,6 @@ public class OrderController extends HttpServlet {
         } catch (NumberFormatException e) {
             req.setAttribute("mess", "ID đơn hàng không hợp lệ");
             req.getRequestDispatcher(JSP_PATH + "home.jsp").forward(req, resp);
-
         }
     }
 
